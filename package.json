@@ -11,19 +11,25 @@
     "start": "tsx server.ts",
     "lint": "next lint",
     "dev:indexer": "tsx watch scripts/run-indexer.ts",
-    "indexer": "tsx scripts/run-indexer.ts"
+    "indexer": "tsx scripts/run-indexer.ts",
+    "prisma:generate:supabase": "prisma generate --schema=./prisma/supabase/schema.prisma",
+    "prisma:generate:sqlite": "prisma generate --schema=./prisma/sqlite/schema.prisma",
+    "prisma:migrate:supabase": "prisma migrate dev --schema=./prisma/supabase/schema.prisma",
+    "prisma:migrate:sqlite": "prisma migrate dev --schema=./prisma/sqlite/schema.prisma"
   },
   "dependencies": {
     "@pm2/io": "^6.1.0",
     "@prisma/client": "^6.2.1",
     "dotenv": "^16.4.7",
     "next": "15.1.4",
+    "node-cron": "^4.2.1",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-icons": "^5.5.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@types/node": "^20.17.14",
+    "@types/node": "^20.19.9",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",

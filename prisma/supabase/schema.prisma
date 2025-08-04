@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../generated/supabase"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model BlockProgress {
+  id              Int      @id @default(autoincrement())
+  network         String   @unique
+  lastBlockHeight BigInt
+  updatedAt       DateTime @updatedAt
+}
+
+model EventTracking {
+  id              Int      @id @default(autoincrement())
+  eventType       String
+  blockHeight     BigInt
+  transactionHash String
+  processed       Boolean  @default(false)
+  error           String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @default(now())
+  network         String
+  sequenceNumber  String?
+
+  @@unique([network, transactionHash, sequenceNumber, eventType])
+  @@index([network, blockHeight])
+  @@index([network, eventType])
+  @@index([network])
+  @@index([network, processed])
+}
+
+model Pair {
+  id              Int      @id @default(autoincrement())
+  
+  network         String
+  token0Address   String
+  token1Address   String
+  
+  spikePairAddress String?
+
+  token0Symbol    String?
+  token1Symbol    String?
+
+  ohlcData        OhlcData[]
+
+  createdAt       DateTime @default(now())
+
+  @@unique([network, token0Address, token1Address])
+  @@unique([network, spikePairAddress])
+}
+
+model OhlcData {
+  id              Int      @id @default(autoincrement())
+  
+  network         String
+  ammSource       String
+  timeframe       String
+  timestamp       DateTime
+
+  open            Decimal
+  high            Decimal
+  low             Decimal
+  close           Decimal
+  volume          Decimal
+  tradeCount      Int
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  pairId          Int
+  pair            Pair     @relation(fields: [pairId], references: [id])
+
+  @@unique([network, ammSource, pairId, timeframe, timestamp])
+  @@index([pairId])
+  @@index([timestamp])
+}

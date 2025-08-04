@@ -1,26 +1,34 @@
-import pmx from '@pm2/io'
-
 const DEBUG_MODE = process.env.NEXT_PUBLIC_DEBUG_MODE === 'true'
 
 const logger = createLogger('utils');
 
+function safeStringify(arg: any): string {
+  if (arg === null) return 'null'
+  if (arg === undefined) return 'undefined'
+  if (typeof arg === 'bigint') return arg.toString()
+  if (typeof arg === 'object') {
+    try {
+      return JSON.stringify(arg)
+    } catch (error) {
+      return arg.toString()
+    }
+  }
+  return arg.toString()
+}
+
 export function createLogger(name: string) {
   return {
     debug: (...args: any[]) => {
-      const date = new Date().toISOString();
-      console.log(`[${date}][${name}] DEBUG:`, ...args);
+      console.log(`[${name}] DEBUG:`, ...args.map(safeStringify))
     },
     info: (...args: any[]) => {
-      const date = new Date().toISOString();
-      console.log(`[${date}][${name}] INFO:`, ...args);
+      console.log(`[${name}] INFO:`, ...args.map(safeStringify))
     },
     warn: (...args: any[]) => {
-      const date = new Date().toISOString();
-      console.log(`[${date}][${name}] WARN:`, ...args);
+      console.warn(`[${name}] WARN:`, ...args.map(safeStringify))
     },
     error: (...args: any[]) => {
-      const date = new Date().toISOString();
-      console.error(`[${date}][${name}] ERROR:`, ...args);
+      console.error(`[${name}] ERROR:`, ...args.map(safeStringify))
     }
   }
 }
@@ -42,9 +50,9 @@ export function deserializeVectorU8(hex: string): string {
   // Remove 0x prefix and convert hex to bytes
   const bytes = Buffer.from(hex.slice(2), 'hex')
   // Convert bytes to UTF-8 string
-  let str = bytes.toString('utf8');
-  logger.debug('str', str);
-  return bytes.toString('utf8').trim();
+  let str = bytes.toString('utf8')
+  logger.debug('str', str)
+  return str.trim()
 }
 
 /**
@@ -58,4 +66,4 @@ export function deserializeUint64(hex: string): bigint {
   }
   
   return BigInt(hex)
-} 
+}
