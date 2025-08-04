@@ -35,24 +35,49 @@ model EventTracking {
   @@index([network, processed])
 }
 
+model Token {
+  id              Int      @id @default(autoincrement())
+  network         String
+  
+  address         String
+  wrappedAddress  String?  @unique
+
+  symbol          String
+  name            String
+  decimals        Int
+
+  pairsAsToken0   Pair[]   @relation("token0")
+  pairsAsToken1   Pair[]   @relation("token1")
+
+  createdAt       DateTime @default(now())
+
+  @@unique([network, address])
+}
+
 model Pair {
   id              Int      @id @default(autoincrement())
   
   network         String
-  token0Address   String
-  token1Address   String
   
-  spikePairAddress String?
+  token0Id        Int
+  token1Id        Int
+  
+  spikeyAmmPairAddress String?
 
-  token0Symbol    String?
-  token1Symbol    String?
+  spikeyAmmReserve0    BigInt?
+  spikeyAmmReserve1    BigInt?
+
+  token0          Token    @relation("token0", fields: [token0Id], references: [id])
+  token1          Token    @relation("token1", fields: [token1Id], references: [id])
 
   ohlcData        OhlcData[]
 
   createdAt       DateTime @default(now())
 
-  @@unique([network, token0Address, token1Address])
-  @@unique([network, spikePairAddress])
+  @@unique([network, token0Id, token1Id])
+  @@unique([network, spikeyAmmPairAddress])
+  @@index([token0Id])
+  @@index([token1Id])
 }
 
 model OhlcData {

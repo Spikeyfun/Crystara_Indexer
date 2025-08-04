@@ -1,6 +1,7 @@
 import { createLogger } from '../app/indexer/utils';
 import cron, { ScheduledTask } from 'node-cron';
-import { executeOhlcAggregation } from './tasks/executeOhlcAggregation'; // <-- Nueva tarea
+import { executeOhlcAggregation } from './tasks/executeOhlcAggregation';
+import { synchronizeDatabases } from './tasks/executeSyncDb'; // <-- Importar la nueva tarea
 import { sqliteDb as prismadb } from '@/lib/prismadb';
 
 const logger = createLogger('task-processor');
@@ -18,38 +19,29 @@ interface SchedulerSetupConfig {
 
 let activeJobs: Map<string, ScheduledTask> = new Map();
 
-/**
- * Orquesta la ejecución de la agregación de OHLC para una red.
- */
-async function runAggregationCycle(networkConfig: NetworkConfig) {
-  logger.info(`[${networkConfig.networkName}] Starting OHLC aggregation cycle...`);
-  try {
-    await executeOhlcAggregation(networkConfig.networkName);
-    logger.info(`[${networkConfig.networkName}] OHLC aggregation cycle COMPLETED.`);
-  } catch (error) {
-    logger.error(`[${networkConfig.networkName}] Error during OHLC aggregation cycle:`, error);
-  }
-}
-
 async function runUpdateCycleForNetwork(networkConfig: NetworkConfig) {
-  logger.info(`Starting update cycle for ${networkConfig.networkName}...`);
-
+  logger.info(`[${networkConfig.networkName}] Starting update cycle...`);
   try {
-    logger.info(`[${networkConfig.networkName}] Executing GetReservesForAllPairs...`);
-    await runAggregationCycle(prismadb, networkConfig.networkName);
-    logger.info(`[${networkConfig.networkName}] GetReservesForAllPairs COMPLETED.`);
+    // Paso 1: Sincronizar DBs
+    logger.info(`[${networkConfig.networkName}] Executing DB Synchronization...`);
+    await synchronizeDatabases(networkConfig.networkName);
+    logger.info(`[${networkConfig.networkName}] DB Synchronization COMPLETED.`);
 
-    logger.info(`Update cycle for ${networkConfig.networkName} FINISHED successfully.`);
+    // Paso 2: Agregar OHLC
+    logger.info(`[${networkConfig.networkName}] Executing OHLC Aggregation...`);
+    await executeOhlcAggregation(networkConfig.networkName);
+    logger.info(`[${networkConfig.networkName}] OHLC Aggregation COMPLETED.`);
 
+    logger.info(`[${networkConfig.networkName}] Update cycle finished successfully.`);
   } catch (error) {
-    logger.error(`Error during update cycle for ${networkConfig.networkName}:`, error);
-    // Aquí podrías añadir notificaciones o reintentos si es necesario
+    logger.error(`[${networkConfig.networkName}] Error during update cycle:`, error);
   }
 }
 
 export function startScheduledTasks(setupConfig: SchedulerSetupConfig): void {
   if (activeJobs.size > 0) {
     logger.info('Scheduled tasks might already be initialized. Check activeJobs map if issues.');
+    return;
   }
 
   logger.info('Initializing/Updating scheduled tasks...');
@@ -68,24 +60,21 @@ export function startScheduledTasks(setupConfig: SchedulerSetupConfig): void {
   }
 
   networksToProcess.forEach(networkConfig => {
-    const masterUpdateTaskKey = `${networkConfig.networkName}-MasterUpdateCycle`;
+    const masterUpdateTaskKey = `${networkConfig.networkName}-OhlcAggregationCycle`;
 
     if (!activeJobs.has(masterUpdateTaskKey)) {
-      logger.info(`Setting up Master Update Cycle task for ${networkConfig.networkName}`);
+      logger.info(`Setting up OHLC Aggregation task for ${networkConfig.networkName}`);
 
-      // Configura esta tarea para que se ejecute cada 30 minutos (o la frecuencia deseada)
-      // Ejemplo: '*/30 * * * *' (cada 30 minutos: a :00 y :30 de cada hora)
-      // Ejemplo: '0 * * * *' (cada hora, al inicio de la hora)
-      const schedule = '0 * * * *'; // <--- AJUSTA ESTE SCHEDULE A TU NECESIDAD
+      // Ejecutar cada minuto.
+      const schedule = '* * * * *';
 
       const job: ScheduledTask = cron.schedule(schedule, async () => {
-        logger.info(`Triggering Master Update Cycle for ${networkConfig.networkName} (cron: ${schedule})`);
-        // Llamamos a la función que orquesta todas las sub-tareas secuencialmente
+        logger.info(`Triggering OHLC Aggregation for ${networkConfig.networkName} (cron: ${schedule})`);
         await runUpdateCycleForNetwork(networkConfig);
       }, { timezone: "UTC" });
 
       activeJobs.set(masterUpdateTaskKey, job);
-      logger.info(`Master Update Cycle task for ${networkConfig.networkName} scheduled with cron: ${schedule}.`);
+      logger.info(`OHLC Aggregation task for ${networkConfig.networkName} scheduled with cron: ${schedule}.`);
     } else {
       logger.info(`Master Update Cycle task for ${networkConfig.networkName} is already scheduled.`);
     }

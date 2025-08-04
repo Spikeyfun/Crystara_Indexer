@@ -14,7 +14,7 @@
     "indexer": "tsx scripts/run-indexer.ts",
     "prisma:generate:supabase": "prisma generate --schema=./prisma/supabase/schema.prisma",
     "prisma:generate:sqlite": "prisma generate --schema=./prisma/sqlite/schema.prisma",
-    "prisma:migrate:supabase": "prisma migrate dev --schema=./prisma/supabase/schema.prisma",
+    "prisma:migrate:supabase": "prisma migrate dev --schema=./prisma/supabase/schema.prisma --create-only",
     "prisma:migrate:sqlite": "prisma migrate dev --schema=./prisma/sqlite/schema.prisma"
   },
   "dependencies": {

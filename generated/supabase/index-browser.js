@@ -140,14 +140,25 @@ exports.Prisma.EventTrackingScalarFieldEnum = {
   sequenceNumber: 'sequenceNumber'
 };
 
+exports.Prisma.TokenScalarFieldEnum = {
+  id: 'id',
+  network: 'network',
+  address: 'address',
+  wrappedAddress: 'wrappedAddress',
+  symbol: 'symbol',
+  name: 'name',
+  decimals: 'decimals',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.PairScalarFieldEnum = {
   id: 'id',
   network: 'network',
-  token0Address: 'token0Address',
-  token1Address: 'token1Address',
-  spikePairAddress: 'spikePairAddress',
-  token0Symbol: 'token0Symbol',
-  token1Symbol: 'token1Symbol',
+  token0Id: 'token0Id',
+  token1Id: 'token1Id',
+  spikeyAmmPairAddress: 'spikeyAmmPairAddress',
+  spikeyAmmReserve0: 'spikeyAmmReserve0',
+  spikeyAmmReserve1: 'spikeyAmmReserve1',
   createdAt: 'createdAt'
 };
 
@@ -187,6 +198,7 @@ exports.Prisma.NullsOrder = {
 exports.Prisma.ModelName = {
   BlockProgress: 'BlockProgress',
   EventTracking: 'EventTracking',
+  Token: 'Token',
   Pair: 'Pair',
   OhlcData: 'OhlcData'
 };
