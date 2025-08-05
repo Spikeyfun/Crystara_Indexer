@@ -203,73 +203,92 @@ export async function executeOhlcAggregation(network: string) {
             return acc;
           }, {} as Record<string, typeof newSwaps>);
 
+          const upsertPromises = [];
+
           for (const timestampKey in swapsByMinute) {
             const minuteSwaps = swapsByMinute[timestampKey];
             const timestamp = new Date(timestampKey);
 
-            const processedSwaps = minuteSwaps.map(swap => {
-              const { token0, token1 } = swap.pair;
-              const normalize = (amount: bigint, decimals: number) => Number(amount) / (10 ** decimals);
-
-              let price = 0;
-              let volume = 0;
-
-              if (swap.amount0In > 0) {
-                const normalizedAmount0In = normalize(swap.amount0In, token0.decimals);
-                const normalizedAmount1Out = normalize(swap.amount1Out, token1.decimals);
-                if (normalizedAmount0In > 0) {
-                  price = normalizedAmount1Out / normalizedAmount0In;
-                }
-                volume = normalizedAmount1Out;
-              } else if (swap.amount1In > 0) {
-                const normalizedAmount1In = normalize(swap.amount1In, token1.decimals);
-                const normalizedAmount0Out = normalize(swap.amount0Out, token0.decimals);
-                if (normalizedAmount0Out > 0) {
-                  price = normalizedAmount1In / normalizedAmount0Out;
-                }
-                volume = normalizedAmount1In;
+            // Group swaps by their AMM source
+            const swapsByAmm = minuteSwaps.reduce((acc, swap) => {
+              if (!acc[swap.ammSource]) {
+                acc[swap.ammSource] = [];
               }
+              acc[swap.ammSource].push(swap);
+              return acc;
+            }, {} as Record<string, typeof minuteSwaps>);
 
-              return { price, volume, ammSource: swap.ammSource };
-            }).filter(s => s.price > 0 && isFinite(s.price));
+            for (const ammSource in swapsByAmm) {
+              const ammSwaps = swapsByAmm[ammSource];
 
-            if (processedSwaps.length === 0) continue;
+              const processedSwaps = ammSwaps.map(swap => {
+                const { token0, token1 } = swap.pair;
+                const normalize = (amount: bigint, decimals: number) => Number(amount) / (10 ** decimals);
 
-            const prices = processedSwaps.map(s => s.price);
-            const totalVolume = processedSwaps.reduce((sum, s) => sum + s.volume, 0);
-            const ammSource = processedSwaps[0].ammSource;
+                let price = 0;
+                let volume = 0;
 
-            const ohlc = {
-              open: prices[0],
-              high: Math.max(...prices),
-              low: Math.min(...prices),
-              close: prices[prices.length - 1],
-              volume: new Prisma.Decimal(totalVolume),
-              tradeCount: processedSwaps.length,
-            };
+                if (swap.amount0In > 0) {
+                  const normalizedAmount0In = normalize(swap.amount0In, token0.decimals);
+                  const normalizedAmount1Out = normalize(swap.amount1Out, token1.decimals);
+                  if (normalizedAmount0In > 0) {
+                    price = normalizedAmount1Out / normalizedAmount0In;
+                  }
+                  volume = normalizedAmount1Out;
+                } else if (swap.amount1In > 0) {
+                  const normalizedAmount1In = normalize(swap.amount1In, token1.decimals);
+                  const normalizedAmount0Out = normalize(swap.amount0Out, token0.decimals);
+                  if (normalizedAmount0Out > 0) {
+                    price = normalizedAmount1In / normalizedAmount0Out;
+                  }
+                  volume = normalizedAmount1In;
+                }
 
-            logger.info(`[${network}] Upserting OHLC for pair ${pair.id} from ${ammSource} at ${timestamp.toISOString()} (${timeframe})`);
+                return { price, volume };
+              }).filter(s => s.price > 0 && isFinite(s.price));
 
-            await supabaseDb.ohlcData.upsert({
-              where: {
-                network_ammSource_pairId_timeframe_timestamp: {
+              if (processedSwaps.length === 0) continue;
+
+              const prices = processedSwaps.map(s => s.price);
+              const totalVolume = processedSwaps.reduce((sum, s) => sum + s.volume, 0);
+
+              const ohlc = {
+                open: prices[0],
+                high: Math.max(...prices),
+                low: Math.min(...prices),
+                close: prices[prices.length - 1],
+                volume: new Prisma.Decimal(totalVolume),
+                tradeCount: processedSwaps.length,
+              };
+
+              logger.info(`[${network}] Preparing OHLC upsert for pair ${pair.id} from ${ammSource} at ${timestamp.toISOString()} (${timeframe})`);
+
+              upsertPromises.push(supabaseDb.ohlcData.upsert({
+                where: {
+                  network_ammSource_pairId_timeframe_timestamp: {
+                    network,
+                    ammSource: ammSource,
+                    pairId: pair.id,
+                    timeframe: timeframe,
+                    timestamp,
+                  },
+                },
+                update: ohlc,
+                create: {
                   network,
                   ammSource: ammSource,
                   pairId: pair.id,
                   timeframe: timeframe,
                   timestamp,
+                  ...ohlc,
                 },
-              },
-              update: ohlc,
-              create: {
-                network,
-                ammSource: ammSource,
-                pairId: pair.id,
-                timeframe: timeframe,
-                timestamp,
-                ...ohlc,
-              },
-            });
+              }));
+            }
+          }
+
+          if (upsertPromises.length > 0) {
+            logger.info(`[${network}] Executing batch upsert of ${upsertPromises.length} OHLC records for pair ${pair.id}.`);
+            await supabaseDb.$transaction(upsertPromises);
           }
         } else {
           // Logic for higher timeframes from 1m OHLC data

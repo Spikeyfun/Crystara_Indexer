@@ -1,53 +1,526 @@
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T19:00:00.000Z (15m)
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T19:45:00.000Z (15m)
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T19:45:00.000Z (15m)
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T19:15:00.000Z (15m)
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T19:15:00.000Z (15m)
-[ohlc-aggregator] INFO: [supra-mainnet] Processing pair 7 for timeframe 5m. Starting from: 2025-08-05T00:55:00.000Z
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:15:00.000Z (15m)
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:00:00.000Z (15m)
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T19:15:00.000Z (15m)
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:00:00.000Z (15m)
-[rpcClient] DEBUG: Fetched 0 events in total from https://rpc-testnet.supra.com/rpc/v1 for blocks 86171-86181
-[rpcClient] DEBUG: Fetching latest block height from https://rpc-testnet.supra.com/rpc/v1/block
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T19:15:00.000Z (15m)
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T19:45:00.000Z (15m)
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:00:00.000Z (15m)
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:00:00.000Z (15m)
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T19:45:00.000Z (15m)
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T19:45:00.000Z (15m)
-[ohlc-aggregator] INFO: [supra-mainnet] No new 1m OHLC data for pair 7 for timeframe 5m.
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:15:00.000Z (15m)
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:30:00.000Z (15m)
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T19:45:00.000Z (15m)
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:15:00.000Z (15m)
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T19:45:00.000Z (15m)
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:00:00.000Z (15m)
-[rpcClient] DEBUG: Fetched 0 events in total from https://rpc-mainnet.supra.com/rpc/v1 for blocks 19064239-19064246
+[poller] INFO: [supra-testnet] Updated latest block height from 26291958 to 26291963
+[poller] INFO: [supra-testnet] Processing blocks 26291959 to 26291963 (Latest: 26291963)
 [rpcClient] DEBUG: Fetching latest block height from https://rpc-mainnet.supra.com/rpc/v1/block
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:15:00.000Z (15m)
-[rpcClient] DEBUG: Latest block height from https://rpc-testnet.supra.com/rpc/v1: 26188252
-[poller] INFO: [supra-testnet] Updated latest block height from 26188249 to 26188252
-[poller] INFO: [supra-testnet] Processing blocks 86181 to 86190 (Latest: 26188252)
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:15:00.000Z (15m)
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:00:00.000Z (15m)
-[ohlc-aggregator] INFO: [supra-mainnet] Processing pair 8 for timeframe 5m. Starting from: 2025-08-05T00:50:00.000Z
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:30:00.000Z (15m)
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:00:00.000Z (15m)
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:45:00.000Z (15m)
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:00:00.000Z (15m)
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:15:00.000Z (15m)
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:30:00.000Z (15m)
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:00:00.000Z (15m)
-[rpcClient] DEBUG: Latest block height from https://rpc-mainnet.supra.com/rpc/v1: 19064245
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:30:00.000Z (15m)
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:30:00.000Z (15m)
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:15:00.000Z (15m)
-[ohlc-aggregator] INFO: [supra-mainnet] No new 1m OHLC data for pair 8 for timeframe 5m.
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:45:00.000Z (15m)
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:15:00.000Z (15m)
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T21:00:00.000Z (15m)
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:15:00.000Z (15m)
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:45:00.000Z (15m)
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:30:00.000Z (15m)
-[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:15:00.000Z (15m)
+[rpcClient] DEBUG: Latest block height from https://rpc-mainnet.supra.com/rpc/v1: 19100372
+[rpcClient] DEBUG: Fetched 0 events in total from https://rpc-testnet.supra.com/rpc/v1 for blocks 26291959-26291964
+[rpcClient] DEBUG: Fetching latest block height from https://rpc-testnet.supra.com/rpc/v1/block
+[rpcClient] DEBUG: Latest block height from https://rpc-testnet.supra.com/rpc/v1: 26291966
+[poller] INFO: [supra-testnet] Updated latest block height from 26291963 to 26291966
+[poller] INFO: [supra-testnet] Processing blocks 26291964 to 26291966 (Latest: 26291966)
+[rpcClient] DEBUG: Fetched 0 events in total from https://rpc-testnet.supra.com/rpc/v1 for blocks 26291964-26291967
+[rpcClient] DEBUG: Fetching latest block height from https://rpc-testnet.supra.com/rpc/v1/block
+[rpcClient] DEBUG: Fetching latest block height from https://rpc-mainnet.supra.com/rpc/v1/block
+[rpcClient] DEBUG: Latest block height from https://rpc-mainnet.supra.com/rpc/v1: 19100375
+[poller] INFO: [supra-mainnet] Updated latest block height from 19100372 to 19100375
+[poller] INFO: [supra-mainnet] Processing blocks 19100373 to 19100375 (Latest: 19100375)
+[rpcClient] DEBUG: Latest block height from https://rpc-testnet.supra.com/rpc/v1: 26291970
+[poller] INFO: [supra-testnet] Updated latest block height from 26291966 to 26291970
+[poller] INFO: [supra-testnet] Processing blocks 26291967 to 26291970 (Latest: 26291970)
+[rpcClient] DEBUG: Fetched 0 events in total from https://rpc-testnet.supra.com/rpc/v1 for blocks 26291967-26291971
+[rpcClient] DEBUG: Fetching latest block height from https://rpc-testnet.supra.com/rpc/v1/block
+[rpcClient] DEBUG: Fetched 0 events in total from https://rpc-mainnet.supra.com/rpc/v1 for blocks 19100373-19100376
+[rpcClient] DEBUG: Fetching latest block height from https://rpc-mainnet.supra.com/rpc/v1/block
+[rpcClient] DEBUG: Latest block height from https://rpc-mainnet.supra.com/rpc/v1: 19100377
+[poller] INFO: [supra-mainnet] Updated latest block height from 19100375 to 19100377
+[poller] INFO: [supra-mainnet] Processing blocks 19100376 to 19100377 (Latest: 19100377)
+[rpcClient] DEBUG: Latest block height from https://rpc-testnet.supra.com/rpc/v1: 26291976
+[poller] INFO: [supra-testnet] Updated latest block height from 26291970 to 26291976
+[poller] INFO: [supra-testnet] Processing blocks 26291971 to 26291976 (Latest: 26291976)
+[rpcClient] DEBUG: Fetched 0 events in total from https://rpc-mainnet.supra.com/rpc/v1 for blocks 19100376-19100378
+[rpcClient] DEBUG: Fetching latest block height from https://rpc-mainnet.supra.com/rpc/v1/block
+[rpcClient] DEBUG: Latest block height from https://rpc-mainnet.supra.com/rpc/v1: 19100377
+[rpcClient] DEBUG: Fetched 0 events in total from https://rpc-testnet.supra.com/rpc/v1 for blocks 26291971-26291977
+[rpcClient] DEBUG: Fetching latest block height from https://rpc-testnet.supra.com/rpc/v1/block
+[rpcClient] DEBUG: Latest block height from https://rpc-testnet.supra.com/rpc/v1: 26291979
+[poller] INFO: [supra-testnet] Updated latest block height from 26291976 to 26291979
+[poller] INFO: [supra-testnet] Processing blocks 26291977 to 26291979 (Latest: 26291979)
+[rpcClient] DEBUG: Fetching latest block height from https://rpc-mainnet.supra.com/rpc/v1/block
+[rpcClient] DEBUG: Fetched 0 events in total from https://rpc-testnet.supra.com/rpc/v1 for blocks 26291977-26291980
+[rpcClient] DEBUG: Fetching latest block height from https://rpc-testnet.supra.com/rpc/v1/block
+[rpcClient] DEBUG: Latest block height from https://rpc-mainnet.supra.com/rpc/v1: 19100379
+[poller] INFO: [supra-mainnet] Updated latest block height from 19100377 to 19100379
+[poller] INFO: [supra-mainnet] Processing blocks 19100378 to 19100379 (Latest: 19100379)
+[task-processor] INFO: Triggering OHLC Aggregation for supra-testnet (cron: * * * * *)
+[task-processor] INFO: [supra-testnet] Starting update cycle...
+[task-processor] INFO: [supra-testnet] Skipping DB Synchronization (no new data in SQLite).
+[task-processor] INFO: [supra-testnet] Executing OHLC Aggregation...
+[ohlc-aggregator] INFO: [supra-testnet] Starting OHLC aggregation for all timeframes.
+[task-processor] INFO: Triggering OHLC Aggregation for supra-mainnet (cron: * * * * *)
+[task-processor] INFO: [supra-mainnet] Starting update cycle...
+[task-processor] INFO: [supra-mainnet] Skipping DB Synchronization (no new data in SQLite).
+[task-processor] INFO: [supra-mainnet] Executing OHLC Aggregation...
+[ohlc-aggregator] INFO: [supra-mainnet] Starting OHLC aggregation for all timeframes.
+[rpcClient] DEBUG: Latest block height from https://rpc-testnet.supra.com/rpc/v1: 26291986
+[poller] INFO: [supra-testnet] Updated latest block height from 26291979 to 26291986
+[poller] INFO: [supra-testnet] Processing blocks 26291980 to 26291986 (Latest: 26291986)
+[rpcClient] DEBUG: Fetched 0 events in total from https://rpc-mainnet.supra.com/rpc/v1 for blocks 19100378-19100380
+[rpcClient] DEBUG: Fetching latest block height from https://rpc-mainnet.supra.com/rpc/v1/block
+[ohlc-aggregator] INFO: [supra-testnet] No pairs found to process.
+[task-processor] INFO: [supra-testnet] OHLC Aggregation COMPLETED.
+[task-processor] INFO: [supra-testnet] Update cycle finished successfully.
+[ohlc-aggregator] INFO: [supra-mainnet] Found 20 pairs to process.
+[ohlc-aggregator] INFO: [supra-mainnet] Processing timeframe: 1m
+[rpcClient] DEBUG: Latest block height from https://rpc-mainnet.supra.com/rpc/v1: 19100380
+[poller] INFO: [supra-mainnet] Updated latest block height from 19100379 to 19100380
+[poller] INFO: [supra-mainnet] Processing blocks 19100380 to 19100380 (Latest: 19100380)
+[ohlc-aggregator] INFO: [supra-mainnet] Processing pair 1 for timeframe 1m. Starting from: 2025-08-05T09:59:00.000Z
+[ohlc-aggregator] INFO: [supra-mainnet] No new swaps for pair 1 for 1m timeframe.
+[rpcClient] DEBUG: Fetched 0 events in total from https://rpc-testnet.supra.com/rpc/v1 for blocks 26291980-26291987
+[rpcClient] DEBUG: Fetching latest block height from https://rpc-testnet.supra.com/rpc/v1/block
+[rpcClient] DEBUG: Fetched 0 events in total from https://rpc-mainnet.supra.com/rpc/v1 for blocks 19100380-19100381
+[rpcClient] DEBUG: Fetching latest block height from https://rpc-mainnet.supra.com/rpc/v1/block
+[ohlc-aggregator] INFO: [supra-mainnet] Processing pair 2 for timeframe 1m. Starting from: 2025-08-05T12:44:00.000Z
+[ohlc-aggregator] INFO: [supra-mainnet] Found 3 new swaps for pair 2 for 1m timeframe.
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 2 from DexlynSwap at 2025-08-05T12:48:00.000Z (1m)
+[rpcClient] DEBUG: Latest block height from https://rpc-mainnet.supra.com/rpc/v1: 19100382
+[poller] INFO: [supra-mainnet] Updated latest block height from 19100380 to 19100382
+[poller] INFO: [supra-mainnet] Processing blocks 19100381 to 19100382 (Latest: 19100382)
+[rpcClient] DEBUG: Latest block height from https://rpc-testnet.supra.com/rpc/v1: 26291990
+[poller] INFO: [supra-testnet] Updated latest block height from 26291986 to 26291990
+[poller] INFO: [supra-testnet] Processing blocks 26291987 to 26291990 (Latest: 26291990)
+[ohlc-aggregator] INFO: [supra-mainnet] Processing pair 3 for timeframe 1m. Starting from: 2025-08-05T12:31:00.000Z
+[ohlc-aggregator] INFO: [supra-mainnet] No new swaps for pair 3 for 1m timeframe.
+[rpcClient] DEBUG: Fetched 0 events in total from https://rpc-mainnet.supra.com/rpc/v1 for blocks 19100381-19100383
+[rpcClient] DEBUG: Fetching latest block height from https://rpc-mainnet.supra.com/rpc/v1/block
+[ohlc-aggregator] INFO: [supra-mainnet] Processing pair 4 for timeframe 1m. Starting from: 2025-08-05T12:48:00.000Z
+[ohlc-aggregator] INFO: [supra-mainnet] Found 1 new swaps for pair 4 for 1m timeframe.
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 4 from DexlynSwap at 2025-08-05T12:48:00.000Z (1m)
+[rpcClient] DEBUG: Latest block height from https://rpc-mainnet.supra.com/rpc/v1: 19100383
+[poller] INFO: [supra-mainnet] Updated latest block height from 19100382 to 19100383
+[poller] INFO: [supra-mainnet] Processing blocks 19100383 to 19100383 (Latest: 19100383)
+[rpcClient] DEBUG: Fetched 0 events in total from https://rpc-testnet.supra.com/rpc/v1 for blocks 26291987-26291991
+[rpcClient] DEBUG: Fetching latest block height from https://rpc-testnet.supra.com/rpc/v1/block
+[rpcClient] DEBUG: Fetched 1 events in total from https://rpc-mainnet.supra.com/rpc/v1 for blocks 19100383-19100384
+[poller] INFO: [supra-mainnet] Fetched 1 events from blocks 19100383-19100383.
+[eventProcessor] DEBUG: Processing 1 RpcEvents in current batch.
+[eventProcessor] DEBUG: Starting transaction for event: Tx:unknown_tx_for_0xdc694898dff98a1b0447e0992d0413e123ea80da1021d464a4fbaf0265870d8::liquidity_pool::SwapEvent_block_19100383 Seq:0 Type:0xdc694898dff98a1b0447e0992d0413e123ea80da1021d464a4fbaf0265870d8::liquidity_pool::SwapEvent Net:supra-mainnet
+[dexlynSwapHandler] DEBUG: Processing DexlynSwapEvent {"curve":"0xdc694898dff98a1b0447e0992d0413e123ea80da1021d464a4fbaf0265870d8::curves::Uncorrelated","pair_x":"0x83e6ebf0e08121734b117daf65677c77185e151114364f7c53bc2366f2c64a12::LEO::LEO","pair_y":"0x1::supra_coin::SupraCoin","reserve_x":"238587714235043","reserve_y":"40963996653971","timestamp":"1754398142","x_in":"0","x_out":"580686824","y_in":"100000000","y_out":"0"}
+[dexlynSwapHandler] INFO: Full event object: {
+  "type": "0xdc694898dff98a1b0447e0992d0413e123ea80da1021d464a4fbaf0265870d8::liquidity_pool::SwapEvent",
+  "guid": {
+    "creation_number": "0",
+    "account_address": "0x0"
+  },
+  "sequence_number": "0",
+  "timestamp": 1754398142,
+  "data": {
+    "curve": "0xdc694898dff98a1b0447e0992d0413e123ea80da1021d464a4fbaf0265870d8::curves::Uncorrelated",
+    "pair_x": "0x83e6ebf0e08121734b117daf65677c77185e151114364f7c53bc2366f2c64a12::LEO::LEO",
+    "pair_y": "0x1::supra_coin::SupraCoin",
+    "reserve_x": "238587714235043",
+    "reserve_y": "40963996653971",
+    "timestamp": "1754398142",
+    "x_in": "0",
+    "x_out": "580686824",
+    "y_in": "100000000",
+    "y_out": "0"
+  },
+  "network": "supra-mainnet",
+  "blockHeight": 19100383,
+  "transactionHash": "unknown_tx_for_0xdc694898dff98a1b0447e0992d0413e123ea80da1021d464a4fbaf0265870d8::liquidity_pool::SwapEvent_block_19100383",
+  "processedTransactionHash": "unknown_tx_for_0xdc694898dff98a1b0447e0992d0413e123ea80da1021d464a4fbaf0265870d8::liquidity_pool::SwapEvent_block_19100383",
+  "processedSequenceNumber": "0"
+}
+[dexlynSwapHandler] INFO: New DexlynSwapEvent found. Creating...
+[dbUtils] DEBUG: [supra-mainnet] Token 0x83e6ebf0e08121734b117daf65677c77185e151114364f7c53bc2366f2c64a12::LEO::LEO is Coin-Legacy. Treating as primary.
+[dbUtils] INFO: [supra-mainnet] Primary token 0x83e6ebf0e08121734b117daf65677c77185e151114364f7c53bc2366f2c64a12::LEO::LEO appears to be Coin-Legacy. Attempting to fetch Coin-Legacy specific info using fetchCoinInfoResource.
+[fetchResource] DEBUG: Fetching resource from: https://rpc-mainnet.supra.com/rpc/v1/accounts/0x83e6ebf0e08121734b117daf65677c77185e151114364f7c53bc2366f2c64a12/resources/0x1%3A%3Acoin%3A%3ACoinInfo%3C0x83e6ebf0e08121734b117daf65677c77185e151114364f7c53bc2366f2c64a12%3A%3ALEO%3A%3ALEO%3E
+[ohlc-aggregator] INFO: [supra-mainnet] Processing pair 5 for timeframe 1m. Starting from: 2025-08-05T12:37:00.000Z
+[ohlc-aggregator] INFO: [supra-mainnet] Found 1 new swaps for pair 5 for 1m timeframe.
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 5 from DexlynSwap at 2025-08-05T12:48:00.000Z (1m)
+[rpcClient] DEBUG: Latest block height from https://rpc-testnet.supra.com/rpc/v1: 26291994
+[poller] INFO: [supra-testnet] Updated latest block height from 26291990 to 26291994
+[poller] INFO: [supra-testnet] Processing blocks 26291991 to 26291994 (Latest: 26291994)
+[fetchResource] DEBUG: Successfully fetched resource data: {"result":[{"decimals":6,"name":"Leo","supply":{"vec":[{"aggregator":{"vec":[]},"integer":{"vec":[{"limit":"340282366920938463463374607431768211455","value":"941839549680104"}]}}]},"symbol":"LEO"}]}
+[dbUtils] DEBUG: [supra-mainnet] Raw CoinInfo resource for 0x83e6ebf0e08121734b117daf65677c77185e151114364f7c53bc2366f2c64a12::LEO::LEO: {
+  "result": [
+    {
+      "decimals": 6,
+      "name": "Leo",
+      "supply": {
+        "vec": [
+          {
+            "aggregator": {
+              "vec": []
+            },
+            "integer": {
+              "vec": [
+                {
+                  "limit": "340282366920938463463374607431768211455",
+                  "value": "941839549680104"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "symbol": "LEO"
+    }
+  ]
+}
+[dbUtils] INFO: [supra-mainnet] Successfully fetched Coin-Legacy metadata for primary 0x83e6ebf0e08121734b117daf65677c77185e151114364f7c53bc2366f2c64a12::LEO::LEO: Name=Leo, Symbol=LEO, Decimals=6
+[dbUtils] DEBUG: [supra-mainnet] Token 0x1::supra_coin::SupraCoin is Coin-Legacy. Treating as primary.
+[dbUtils] INFO: [supra-mainnet] Primary token 0x1::supra_coin::SupraCoin appears to be Coin-Legacy. Attempting to fetch Coin-Legacy specific info using fetchCoinInfoResource.
+[fetchResource] DEBUG: Fetching resource from: https://rpc-mainnet.supra.com/rpc/v1/accounts/0x1/resources/0x1%3A%3Acoin%3A%3ACoinInfo%3C0x1%3A%3Asupra_coin%3A%3ASupraCoin%3E
+[fetchResource] DEBUG: Successfully fetched resource data: {"result":[{"decimals":8,"name":"Supra Coin","supply":{"vec":[{"aggregator":{"vec":[{"handle":"0x9115cf36a1bc37ccc0e3d1ceadcb72adddc65b19021dbd0623c06ce039e74fc1","key":"0x46ee43b58627dff22544be91ddce928242ede01f52a281da8b372813a683abd6","limit":"10000000000000000000"}]},"integer":{"vec":[]}}]},"symbol":"SUPRA"}]}
+[dbUtils] DEBUG: [supra-mainnet] Raw CoinInfo resource for 0x1::supra_coin::SupraCoin: {
+  "result": [
+    {
+      "decimals": 8,
+      "name": "Supra Coin",
+      "supply": {
+        "vec": [
+          {
+            "aggregator": {
+              "vec": [
+                {
+                  "handle": "0x9115cf36a1bc37ccc0e3d1ceadcb72adddc65b19021dbd0623c06ce039e74fc1",
+                  "key": "0x46ee43b58627dff22544be91ddce928242ede01f52a281da8b372813a683abd6",
+                  "limit": "10000000000000000000"
+                }
+              ]
+            },
+            "integer": {
+              "vec": []
+            }
+          }
+        ]
+      },
+      "symbol": "SUPRA"
+    }
+  ]
+}
+[dbUtils] INFO: [supra-mainnet] Successfully fetched Coin-Legacy metadata for primary 0x1::supra_coin::SupraCoin: Name=Supra Coin, Symbol=SUPRA, Decimals=8
+[dexlynSwapHandler] INFO: Successfully created DexlynSwapEvent.
+[eventProcessor] INFO: Successfully processed and committed transaction for event Tx:unknown_tx_for_0xdc694898dff98a1b0447e0992d0413e123ea80da1021d464a4fbaf0265870d8::liquidity_pool::SwapEvent_block_19100383 Seq:0 Type:0xdc694898dff98a1b0447e0992d0413e123ea80da1021d464a4fbaf0265870d8::liquidity_pool::SwapEvent Net:supra-mainnet.
+[ohlc-aggregator] INFO: [supra-mainnet] Processing pair 6 for timeframe 1m. Starting from: 2025-08-05T12:13:00.000Z
+[eventProcessor] INFO: Finished processing batch of 1 events.
+[ohlc-aggregator] INFO: [supra-mainnet] No new swaps for pair 6 for 1m timeframe.
+[rpcClient] DEBUG: Fetching latest block height from https://rpc-mainnet.supra.com/rpc/v1/block
+[rpcClient] DEBUG: Fetched 0 events in total from https://rpc-testnet.supra.com/rpc/v1 for blocks 26291991-26291995
+[rpcClient] DEBUG: Fetching latest block height from https://rpc-testnet.supra.com/rpc/v1/block
+[ohlc-aggregator] INFO: [supra-mainnet] Processing pair 7 for timeframe 1m. Starting from: 2025-08-05T12:00:00.000Z
+[ohlc-aggregator] INFO: [supra-mainnet] No new swaps for pair 7 for 1m timeframe.
+[rpcClient] DEBUG: Latest block height from https://rpc-mainnet.supra.com/rpc/v1: 19100383
+[ohlc-aggregator] INFO: [supra-mainnet] Processing pair 8 for timeframe 1m. Starting from: 2025-08-05T12:48:00.000Z
+[ohlc-aggregator] INFO: [supra-mainnet] No new swaps for pair 8 for 1m timeframe.
+[rpcClient] DEBUG: Latest block height from https://rpc-testnet.supra.com/rpc/v1: 26291999
+[poller] INFO: [supra-testnet] Updated latest block height from 26291994 to 26291999
+[poller] INFO: [supra-testnet] Processing blocks 26291995 to 26291999 (Latest: 26291999)
+[ohlc-aggregator] INFO: [supra-mainnet] Processing pair 9 for timeframe 1m. Starting from: 2025-08-05T12:39:00.000Z
+[ohlc-aggregator] INFO: [supra-mainnet] No new swaps for pair 9 for 1m timeframe.
+[ohlc-aggregator] INFO: [supra-mainnet] Processing pair 10 for timeframe 1m. Starting from: 2025-08-05T12:16:00.000Z
+[ohlc-aggregator] INFO: [supra-mainnet] Found 1 new swaps for pair 10 for 1m timeframe.
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 10 from DexlynSwap at 2025-08-05T12:48:00.000Z (1m)
+[rpcClient] DEBUG: Fetched 0 events in total from https://rpc-testnet.supra.com/rpc/v1 for blocks 26291995-26292000
+[rpcClient] DEBUG: Fetching latest block height from https://rpc-testnet.supra.com/rpc/v1/block
+[rpcClient] DEBUG: Fetching latest block height from https://rpc-mainnet.supra.com/rpc/v1/block
+[ohlc-aggregator] INFO: [supra-mainnet] Processing pair 11 for timeframe 1m. Starting from: 2025-08-05T12:47:00.000Z
+[ohlc-aggregator] INFO: [supra-mainnet] No new swaps for pair 11 for 1m timeframe.
+[rpcClient] DEBUG: Latest block height from https://rpc-testnet.supra.com/rpc/v1: 26292005
+[poller] INFO: [supra-testnet] Updated latest block height from 26291999 to 26292005
+[poller] INFO: [supra-testnet] Processing blocks 26292000 to 26292005 (Latest: 26292005)
+[rpcClient] DEBUG: Latest block height from https://rpc-mainnet.supra.com/rpc/v1: 19100383
+[ohlc-aggregator] INFO: [supra-mainnet] Processing pair 12 for timeframe 1m. Starting from: 2025-08-05T12:47:00.000Z
+[ohlc-aggregator] INFO: [supra-mainnet] Found 1 new swaps for pair 12 for 1m timeframe.
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 12 from DexlynSwap at 2025-08-05T12:49:00.000Z (1m)
+[rpcClient] DEBUG: Fetched 0 events in total from https://rpc-testnet.supra.com/rpc/v1 for blocks 26292000-26292006
+[rpcClient] DEBUG: Fetching latest block height from https://rpc-testnet.supra.com/rpc/v1/block
+[ohlc-aggregator] INFO: [supra-mainnet] Processing pair 13 for timeframe 1m. Starting from: 2025-08-05T12:24:00.000Z
+[ohlc-aggregator] INFO: [supra-mainnet] No new swaps for pair 13 for 1m timeframe.
+[ohlc-aggregator] INFO: [supra-mainnet] Processing pair 14 for timeframe 1m. Starting from: 2025-08-04T13:47:00.000Z
+[ohlc-aggregator] INFO: [supra-mainnet] No new swaps for pair 14 for 1m timeframe.
+[rpcClient] DEBUG: Latest block height from https://rpc-testnet.supra.com/rpc/v1: 26292010
+[poller] INFO: [supra-testnet] Updated latest block height from 26292005 to 26292010
+[poller] INFO: [supra-testnet] Processing blocks 26292006 to 26292010 (Latest: 26292010)
+[rpcClient] DEBUG: Fetching latest block height from https://rpc-mainnet.supra.com/rpc/v1/block
+[ohlc-aggregator] INFO: [supra-mainnet] Processing pair 15 for timeframe 1m. Starting from: 2025-08-05T10:50:00.000Z
+[ohlc-aggregator] INFO: [supra-mainnet] No new swaps for pair 15 for 1m timeframe.
+[rpcClient] DEBUG: Latest block height from https://rpc-mainnet.supra.com/rpc/v1: 19100387
+[poller] INFO: [supra-mainnet] Updated latest block height from 19100383 to 19100387
+[poller] INFO: [supra-mainnet] Processing blocks 19100384 to 19100387 (Latest: 19100387)
+[ohlc-aggregator] INFO: [supra-mainnet] Processing pair 16 for timeframe 1m. Starting from: 2025-08-05T11:37:00.000Z
+[ohlc-aggregator] INFO: [supra-mainnet] No new swaps for pair 16 for 1m timeframe.
+[rpcClient] DEBUG: Fetched 0 events in total from https://rpc-testnet.supra.com/rpc/v1 for blocks 26292006-26292011
+[rpcClient] DEBUG: Fetching latest block height from https://rpc-testnet.supra.com/rpc/v1/block
+[ohlc-aggregator] INFO: [supra-mainnet] Processing pair 17 for timeframe 1m. Starting from: 2025-08-05T07:55:00.000Z
+[ohlc-aggregator] INFO: [supra-mainnet] No new swaps for pair 17 for 1m timeframe.
+[ohlc-aggregator] INFO: [supra-mainnet] Processing pair 18 for timeframe 1m. Starting from: 2025-08-04T17:47:00.000Z
+[ohlc-aggregator] INFO: [supra-mainnet] No new swaps for pair 18 for 1m timeframe.
+[rpcClient] DEBUG: Fetched 1 events in total from https://rpc-mainnet.supra.com/rpc/v1 for blocks 19100384-19100388
+[poller] INFO: [supra-mainnet] Fetched 1 events from blocks 19100384-19100387.
+[rpcClient] DEBUG: Latest block height from https://rpc-testnet.supra.com/rpc/v1: 26292012
+[poller] INFO: [supra-testnet] Updated latest block height from 26292010 to 26292012
+[poller] INFO: [supra-testnet] Processing blocks 26292011 to 26292012 (Latest: 26292012)
+[eventProcessor] DEBUG: Processing 1 RpcEvents in current batch.
+[eventProcessor] DEBUG: Starting transaction for event: Tx:unknown_tx_for_0xdc694898dff98a1b0447e0992d0413e123ea80da1021d464a4fbaf0265870d8::liquidity_pool::SwapEvent_block_19100384 Seq:0 Type:0xdc694898dff98a1b0447e0992d0413e123ea80da1021d464a4fbaf0265870d8::liquidity_pool::SwapEvent Net:supra-mainnet
+[dexlynSwapHandler] DEBUG: Processing DexlynSwapEvent {"curve":"0xdc694898dff98a1b0447e0992d0413e123ea80da1021d464a4fbaf0265870d8::curves::Uncorrelated","pair_x":"0x1::supra_coin::SupraCoin","pair_y":"0x8f7d16ade319b0fce368ca6cdb98589c4527ce7f5b51e544a9e68e719934458b::hyper_coin::DexlynUSDC","reserve_x":"4368891839964822","reserve_y":"181468566242","timestamp":"1754398150","x_in":"10000000000","x_out":"0","y_in":"0","y_out":"414120"}
+[dexlynSwapHandler] INFO: Full event object: {
+  "type": "0xdc694898dff98a1b0447e0992d0413e123ea80da1021d464a4fbaf0265870d8::liquidity_pool::SwapEvent",
+  "guid": {
+    "creation_number": "0",
+    "account_address": "0x0"
+  },
+  "sequence_number": "0",
+  "timestamp": 1754398150,
+  "data": {
+    "curve": "0xdc694898dff98a1b0447e0992d0413e123ea80da1021d464a4fbaf0265870d8::curves::Uncorrelated",
+    "pair_x": "0x1::supra_coin::SupraCoin",
+    "pair_y": "0x8f7d16ade319b0fce368ca6cdb98589c4527ce7f5b51e544a9e68e719934458b::hyper_coin::DexlynUSDC",
+    "reserve_x": "4368891839964822",
+    "reserve_y": "181468566242",
+    "timestamp": "1754398150",
+    "x_in": "10000000000",
+    "x_out": "0",
+    "y_in": "0",
+    "y_out": "414120"
+  },
+  "network": "supra-mainnet",
+  "blockHeight": 19100384,
+  "transactionHash": "unknown_tx_for_0xdc694898dff98a1b0447e0992d0413e123ea80da1021d464a4fbaf0265870d8::liquidity_pool::SwapEvent_block_19100384",
+  "processedTransactionHash": "unknown_tx_for_0xdc694898dff98a1b0447e0992d0413e123ea80da1021d464a4fbaf0265870d8::liquidity_pool::SwapEvent_block_19100384",
+  "processedSequenceNumber": "0"
+}
+[dexlynSwapHandler] INFO: New DexlynSwapEvent found. Creating...
+[dbUtils] DEBUG: [supra-mainnet] Token 0x1::supra_coin::SupraCoin is Coin-Legacy. Treating as primary.
+[dbUtils] INFO: [supra-mainnet] Primary token 0x1::supra_coin::SupraCoin appears to be Coin-Legacy. Attempting to fetch Coin-Legacy specific info using fetchCoinInfoResource.
+[fetchResource] DEBUG: Fetching resource from: https://rpc-mainnet.supra.com/rpc/v1/accounts/0x1/resources/0x1%3A%3Acoin%3A%3ACoinInfo%3C0x1%3A%3Asupra_coin%3A%3ASupraCoin%3E
+[ohlc-aggregator] INFO: [supra-mainnet] Processing pair 19 for timeframe 1m. Starting from: 2025-08-05T08:01:00.000Z
+[ohlc-aggregator] INFO: [supra-mainnet] No new swaps for pair 19 for 1m timeframe.
+[fetchResource] DEBUG: Successfully fetched resource data: {"result":[{"decimals":8,"name":"Supra Coin","supply":{"vec":[{"aggregator":{"vec":[{"handle":"0x9115cf36a1bc37ccc0e3d1ceadcb72adddc65b19021dbd0623c06ce039e74fc1","key":"0x46ee43b58627dff22544be91ddce928242ede01f52a281da8b372813a683abd6","limit":"10000000000000000000"}]},"integer":{"vec":[]}}]},"symbol":"SUPRA"}]}
+[dbUtils] DEBUG: [supra-mainnet] Raw CoinInfo resource for 0x1::supra_coin::SupraCoin: {
+  "result": [
+    {
+      "decimals": 8,
+      "name": "Supra Coin",
+      "supply": {
+        "vec": [
+          {
+            "aggregator": {
+              "vec": [
+                {
+                  "handle": "0x9115cf36a1bc37ccc0e3d1ceadcb72adddc65b19021dbd0623c06ce039e74fc1",
+                  "key": "0x46ee43b58627dff22544be91ddce928242ede01f52a281da8b372813a683abd6",
+                  "limit": "10000000000000000000"
+                }
+              ]
+            },
+            "integer": {
+              "vec": []
+            }
+          }
+        ]
+      },
+      "symbol": "SUPRA"
+    }
+  ]
+}
+[dbUtils] INFO: [supra-mainnet] Successfully fetched Coin-Legacy metadata for primary 0x1::supra_coin::SupraCoin: Name=Supra Coin, Symbol=SUPRA, Decimals=8
+[dbUtils] DEBUG: [supra-mainnet] Token 0x8f7d16ade319b0fce368ca6cdb98589c4527ce7f5b51e544a9e68e719934458b::hyper_coin::DexlynUSDC is Coin-Legacy. Treating as primary.
+[dbUtils] INFO: [supra-mainnet] Primary token 0x8f7d16ade319b0fce368ca6cdb98589c4527ce7f5b51e544a9e68e719934458b::hyper_coin::DexlynUSDC appears to be Coin-Legacy. Attempting to fetch Coin-Legacy specific info using fetchCoinInfoResource.
+[fetchResource] DEBUG: Fetching resource from: https://rpc-mainnet.supra.com/rpc/v1/accounts/0x8f7d16ade319b0fce368ca6cdb98589c4527ce7f5b51e544a9e68e719934458b/resources/0x1%3A%3Acoin%3A%3ACoinInfo%3C0x8f7d16ade319b0fce368ca6cdb98589c4527ce7f5b51e544a9e68e719934458b%3A%3Ahyper_coin%3A%3ADexlynUSDC%3E
+[ohlc-aggregator] INFO: [supra-mainnet] Processing pair 20 for timeframe 1m. Starting from: 2025-08-05T07:59:00.000Z
+[ohlc-aggregator] INFO: [supra-mainnet] No new swaps for pair 20 for 1m timeframe.
+[task-processor] INFO: [supra-mainnet] OHLC Aggregation COMPLETED.
+[task-processor] INFO: [supra-mainnet] Update cycle finished successfully.
+[rpcClient] DEBUG: Fetched 0 events in total from https://rpc-testnet.supra.com/rpc/v1 for blocks 26292011-26292013
+[rpcClient] DEBUG: Fetching latest block height from https://rpc-testnet.supra.com/rpc/v1/block
+[fetchResource] DEBUG: Successfully fetched resource data: {"result":[{"decimals":6,"name":"DexlynUSDC","supply":{"vec":[{"aggregator":{"vec":[]},"integer":{"vec":[{"limit":"340282366920938463463374607431768211455","value":"314777487811"}]}}]},"symbol":"dexUSDC"}]}
+[dbUtils] DEBUG: [supra-mainnet] Raw CoinInfo resource for 0x8f7d16ade319b0fce368ca6cdb98589c4527ce7f5b51e544a9e68e719934458b::hyper_coin::DexlynUSDC: {
+  "result": [
+    {
+      "decimals": 6,
+      "name": "DexlynUSDC",
+      "supply": {
+        "vec": [
+          {
+            "aggregator": {
+              "vec": []
+            },
+            "integer": {
+              "vec": [
+                {
+                  "limit": "340282366920938463463374607431768211455",
+                  "value": "314777487811"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "symbol": "dexUSDC"
+    }
+  ]
+}
+[dbUtils] INFO: [supra-mainnet] Successfully fetched Coin-Legacy metadata for primary 0x8f7d16ade319b0fce368ca6cdb98589c4527ce7f5b51e544a9e68e719934458b::hyper_coin::DexlynUSDC: Name=DexlynUSDC, Symbol=dexUSDC, Decimals=6
+[dexlynSwapHandler] INFO: Successfully created DexlynSwapEvent.
+[eventProcessor] INFO: Successfully processed and committed transaction for event Tx:unknown_tx_for_0xdc694898dff98a1b0447e0992d0413e123ea80da1021d464a4fbaf0265870d8::liquidity_pool::SwapEvent_block_19100384 Seq:0 Type:0xdc694898dff98a1b0447e0992d0413e123ea80da1021d464a4fbaf0265870d8::liquidity_pool::SwapEvent Net:supra-mainnet.
+[eventProcessor] INFO: Finished processing batch of 1 events.
+[rpcClient] DEBUG: Fetching latest block height from https://rpc-mainnet.supra.com/rpc/v1/block
+[rpcClient] DEBUG: Latest block height from https://rpc-testnet.supra.com/rpc/v1: 26292019
+[poller] INFO: [supra-testnet] Updated latest block height from 26292012 to 26292019
+[poller] INFO: [supra-testnet] Processing blocks 26292013 to 26292019 (Latest: 26292019)
+[rpcClient] DEBUG: Latest block height from https://rpc-mainnet.supra.com/rpc/v1: 19100392
+[poller] INFO: [supra-mainnet] Updated latest block height from 19100387 to 19100392
+[poller] INFO: [supra-mainnet] Processing blocks 19100388 to 19100392 (Latest: 19100392)
+[rpcClient] DEBUG: Fetched 0 events in total from https://rpc-mainnet.supra.com/rpc/v1 for blocks 19100388-19100393
+[rpcClient] DEBUG: Fetching latest block height from https://rpc-mainnet.supra.com/rpc/v1/block
+[rpcClient] DEBUG: Fetched 0 events in total from https://rpc-testnet.supra.com/rpc/v1 for blocks 26292013-26292020
+[rpcClient] DEBUG: Fetching latest block height from https://rpc-testnet.supra.com/rpc/v1/block
+[rpcClient] DEBUG: Latest block height from https://rpc-mainnet.supra.com/rpc/v1: 19100392
+[rpcClient] DEBUG: Latest block height from https://rpc-testnet.supra.com/rpc/v1: 26292022
+[poller] INFO: [supra-testnet] Updated latest block height from 26292019 to 26292022
+[poller] INFO: [supra-testnet] Processing blocks 26292020 to 26292022 (Latest: 26292022)
+[rpcClient] DEBUG: Fetched 0 events in total from https://rpc-testnet.supra.com/rpc/v1 for blocks 26292020-26292023
+[rpcClient] DEBUG: Fetching latest block height from https://rpc-testnet.supra.com/rpc/v1/block
+[rpcClient] DEBUG: Fetching latest block height from https://rpc-mainnet.supra.com/rpc/v1/block
+[rpcClient] DEBUG: Latest block height from https://rpc-mainnet.supra.com/rpc/v1: 19100394
+[poller] INFO: [supra-mainnet] Updated latest block height from 19100392 to 19100394
+[poller] INFO: [supra-mainnet] Processing blocks 19100393 to 19100394 (Latest: 19100394)
+[rpcClient] DEBUG: Latest block height from https://rpc-testnet.supra.com/rpc/v1: 26292027
+[poller] INFO: [supra-testnet] Updated latest block height from 26292022 to 26292027
+[poller] INFO: [supra-testnet] Processing blocks 26292023 to 26292027 (Latest: 26292027)
+[rpcClient] DEBUG: Fetched 1 events in total from https://rpc-mainnet.supra.com/rpc/v1 for blocks 19100393-19100395
+[poller] INFO: [supra-mainnet] Fetched 1 events from blocks 19100393-19100394.
+[eventProcessor] DEBUG: Processing 1 RpcEvents in current batch.
+[eventProcessor] DEBUG: Starting transaction for event: Tx:unknown_tx_for_0xdc694898dff98a1b0447e0992d0413e123ea80da1021d464a4fbaf0265870d8::liquidity_pool::SwapEvent_block_19100393 Seq:0 Type:0xdc694898dff98a1b0447e0992d0413e123ea80da1021d464a4fbaf0265870d8::liquidity_pool::SwapEvent Net:supra-mainnet
+[dexlynSwapHandler] DEBUG: Processing DexlynSwapEvent {"curve":"0xdc694898dff98a1b0447e0992d0413e123ea80da1021d464a4fbaf0265870d8::curves::Uncorrelated","pair_x":"0x1::supra_coin::SupraCoin","pair_y":"0x8f7d16ade319b0fce368ca6cdb98589c4527ce7f5b51e544a9e68e719934458b::hyper_coin::DexlynUSDC","reserve_x":"4367891385156415","reserve_y":"181510214552","timestamp":"1754398155","x_in":"0","x_out":"1000454808407","y_in":"41690000","y_out":"0"}
+[dexlynSwapHandler] INFO: Full event object: {
+  "type": "0xdc694898dff98a1b0447e0992d0413e123ea80da1021d464a4fbaf0265870d8::liquidity_pool::SwapEvent",
+  "guid": {
+    "creation_number": "0",
+    "account_address": "0x0"
+  },
+  "sequence_number": "0",
+  "timestamp": 1754398155,
+  "data": {
+    "curve": "0xdc694898dff98a1b0447e0992d0413e123ea80da1021d464a4fbaf0265870d8::curves::Uncorrelated",
+    "pair_x": "0x1::supra_coin::SupraCoin",
+    "pair_y": "0x8f7d16ade319b0fce368ca6cdb98589c4527ce7f5b51e544a9e68e719934458b::hyper_coin::DexlynUSDC",
+    "reserve_x": "4367891385156415",
+    "reserve_y": "181510214552",
+    "timestamp": "1754398155",
+    "x_in": "0",
+    "x_out": "1000454808407",
+    "y_in": "41690000",
+    "y_out": "0"
+  },
+  "network": "supra-mainnet",
+  "blockHeight": 19100393,
+  "transactionHash": "unknown_tx_for_0xdc694898dff98a1b0447e0992d0413e123ea80da1021d464a4fbaf0265870d8::liquidity_pool::SwapEvent_block_19100393",
+  "processedTransactionHash": "unknown_tx_for_0xdc694898dff98a1b0447e0992d0413e123ea80da1021d464a4fbaf0265870d8::liquidity_pool::SwapEvent_block_19100393",
+  "processedSequenceNumber": "0"
+}
+[dexlynSwapHandler] INFO: New DexlynSwapEvent found. Creating...
+[dbUtils] DEBUG: [supra-mainnet] Token 0x1::supra_coin::SupraCoin is Coin-Legacy. Treating as primary.
+[dbUtils] INFO: [supra-mainnet] Primary token 0x1::supra_coin::SupraCoin appears to be Coin-Legacy. Attempting to fetch Coin-Legacy specific info using fetchCoinInfoResource.
+[fetchResource] DEBUG: Fetching resource from: https://rpc-mainnet.supra.com/rpc/v1/accounts/0x1/resources/0x1%3A%3Acoin%3A%3ACoinInfo%3C0x1%3A%3Asupra_coin%3A%3ASupraCoin%3E
+[rpcClient] DEBUG: Fetched 0 events in total from https://rpc-testnet.supra.com/rpc/v1 for blocks 26292023-26292028
+[rpcClient] DEBUG: Fetching latest block height from https://rpc-testnet.supra.com/rpc/v1/block
+[fetchResource] DEBUG: Successfully fetched resource data: {"result":[{"decimals":8,"name":"Supra Coin","supply":{"vec":[{"aggregator":{"vec":[{"handle":"0x9115cf36a1bc37ccc0e3d1ceadcb72adddc65b19021dbd0623c06ce039e74fc1","key":"0x46ee43b58627dff22544be91ddce928242ede01f52a281da8b372813a683abd6","limit":"10000000000000000000"}]},"integer":{"vec":[]}}]},"symbol":"SUPRA"}]}
+[dbUtils] DEBUG: [supra-mainnet] Raw CoinInfo resource for 0x1::supra_coin::SupraCoin: {
+  "result": [
+    {
+      "decimals": 8,
+      "name": "Supra Coin",
+      "supply": {
+        "vec": [
+          {
+            "aggregator": {
+              "vec": [
+                {
+                  "handle": "0x9115cf36a1bc37ccc0e3d1ceadcb72adddc65b19021dbd0623c06ce039e74fc1",
+                  "key": "0x46ee43b58627dff22544be91ddce928242ede01f52a281da8b372813a683abd6",
+                  "limit": "10000000000000000000"
+                }
+              ]
+            },
+            "integer": {
+              "vec": []
+            }
+          }
+        ]
+      },
+      "symbol": "SUPRA"
+    }
+  ]
+}
+[dbUtils] INFO: [supra-mainnet] Successfully fetched Coin-Legacy metadata for primary 0x1::supra_coin::SupraCoin: Name=Supra Coin, Symbol=SUPRA, Decimals=8
+[dbUtils] DEBUG: [supra-mainnet] Token 0x8f7d16ade319b0fce368ca6cdb98589c4527ce7f5b51e544a9e68e719934458b::hyper_coin::DexlynUSDC is Coin-Legacy. Treating as primary.
+[dbUtils] INFO: [supra-mainnet] Primary token 0x8f7d16ade319b0fce368ca6cdb98589c4527ce7f5b51e544a9e68e719934458b::hyper_coin::DexlynUSDC appears to be Coin-Legacy. Attempting to fetch Coin-Legacy specific info using fetchCoinInfoResource.
+[fetchResource] DEBUG: Fetching resource from: https://rpc-mainnet.supra.com/rpc/v1/accounts/0x8f7d16ade319b0fce368ca6cdb98589c4527ce7f5b51e544a9e68e719934458b/resources/0x1%3A%3Acoin%3A%3ACoinInfo%3C0x8f7d16ade319b0fce368ca6cdb98589c4527ce7f5b51e544a9e68e719934458b%3A%3Ahyper_coin%3A%3ADexlynUSDC%3E
+[fetchResource] DEBUG: Successfully fetched resource data: {"result":[{"decimals":6,"name":"DexlynUSDC","supply":{"vec":[{"aggregator":{"vec":[]},"integer":{"vec":[{"limit":"340282366920938463463374607431768211455","value":"314777487811"}]}}]},"symbol":"dexUSDC"}]}
+[dbUtils] DEBUG: [supra-mainnet] Raw CoinInfo resource for 0x8f7d16ade319b0fce368ca6cdb98589c4527ce7f5b51e544a9e68e719934458b::hyper_coin::DexlynUSDC: {
+  "result": [
+    {
+      "decimals": 6,
+      "name": "DexlynUSDC",
+      "supply": {
+        "vec": [
+          {
+            "aggregator": {
+              "vec": []
+            },
+            "integer": {
+              "vec": [
+                {
+                  "limit": "340282366920938463463374607431768211455",
+                  "value": "314777487811"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "symbol": "dexUSDC"
+    }
+  ]
+}
+[dbUtils] INFO: [supra-mainnet] Successfully fetched Coin-Legacy metadata for primary 0x8f7d16ade319b0fce368ca6cdb98589c4527ce7f5b51e544a9e68e719934458b::hyper_coin::DexlynUSDC: Name=DexlynUSDC, Symbol=dexUSDC, Decimals=6
+[dexlynSwapHandler] INFO: Successfully created DexlynSwapEvent.
+[eventProcessor] INFO: Successfully processed and committed transaction for event Tx:unknown_tx_for_0xdc694898dff98a1b0447e0992d0413e123ea80da1021d464a4fbaf0265870d8::liquidity_pool::SwapEvent_block_19100393 Seq:0 Type:0xdc694898dff98a1b0447e0992d0413e123ea80da1021d464a4fbaf0265870d8::liquidity_pool::SwapEvent Net:supra-mainnet.
+[eventProcessor] INFO: Finished processing batch of 1 events.
+[rpcClient] DEBUG: Latest block height from https://rpc-testnet.supra.com/rpc/v1: 26292033
+[poller] INFO: [supra-testnet] Updated latest block height from 26292027 to 26292033
+[poller] INFO: [supra-testnet] Processing blocks 26292028 to 26292033 (Latest: 26292033)
+[rpcClient] DEBUG: Fetching latest block height from https://rpc-mainnet.supra.com/rpc/v1/block
+[rpcClient] DEBUG: Latest block height from https://rpc-mainnet.supra.com/rpc/v1: 19100396
+[poller] INFO: [supra-mainnet] Updated latest block height from 19100394 to 19100396
+[poller] INFO: [supra-mainnet] Processing blocks 19100395 to 19100396 (Latest: 19100396)
+[rpcClient] DEBUG: Fetched 0 events in total from https://rpc-testnet.supra.com/rpc/v1 for blocks 26292028-26292034
+[rpcClient] DEBUG: Fetching latest block height from https://rpc-testnet.supra.com/rpc/v1/block
+[rpcClient] DEBUG: Fetched 0 events in total from https://rpc-mainnet.supra.com/rpc/v1 for blocks 19100395-19100397
+[rpcClient] DEBUG: Fetching latest block height from https://rpc-mainnet.supra.com/rpc/v1/block
+[rpcClient] DEBUG: Latest block height from https://rpc-mainnet.supra.com/rpc/v1: 19100396
+[rpcClient] DEBUG: Latest block height from https://rpc-testnet.supra.com/rpc/v1: 26292036
+[poller] INFO: [supra-testnet] Updated latest block height from 26292033 to 26292036
+[poller] INFO: [supra-testnet] Processing blocks 26292034 to 26292036 (Latest: 26292036)
+[rpcClient] DEBUG: Fetched 0 events in total from https://rpc-testnet.supra.com/rpc/v1 for blocks 26292034-26292037
+[rpcClient] DEBUG: Fetching latest block height from https://rpc-testnet.supra.com/rpc/v1/block
+[rpcClient] DEBUG: Latest block height from https://rpc-testnet.supra.com/rpc/v1: 26292041
+[poller] INFO: [supra-testnet] Updated latest block height from 26292036 to 26292041
+[poller] INFO: [supra-testnet] Processing blocks 26292037 to 26292041 (Latest: 26292041)
+[rpcClient] DEBUG: Fetching latest block height from https://rpc-mainnet.supra.com/rpc/v1/block
+[rpcClient] DEBUG: Latest block height from https://rpc-mainnet.supra.com/rpc/v1: 19100399
+[poller] INFO: [supra-mainnet] Updated latest block height from 19100396 to 19100399
+[poller] INFO: [supra-mainnet] Processing blocks 19100397 to 19100399 (Latest: 19100399)
+[rpcClient] DEBUG: Fetched 0 events in total from https://rpc-testnet.supra.com/rpc/v1 for blocks 26292037-26292042
+[rpcClient] DEBUG: Fetching latest block height from https://rpc-testnet.supra.com/rpc/v1/block
+[rpcClient] DEBUG: Fetched 0 events in total from https://rpc-mainnet.supra.com/rpc/v1 for blocks 19100397-19100400
+[rpcClient] DEBUG: Fetching latest block height from https://rpc-mainnet.supra.com/rpc/v1/block
+[rpcClient] DEBUG: Latest block height from https://rpc-mainnet.supra.com/rpc/v1: 19100400
+[poller] INFO: [supra-mainnet] Updated latest block height from 19100399 to 19100400
+[poller] INFO: [supra-mainnet] Processing blocks 19100400 to 19100400 (Latest: 19100400)
+[rpcClient] DEBUG: Latest block height from https://rpc-testnet.supra.com/rpc/v1: 26292047
+[poller] INFO: [supra-testnet] Updated latest block height from 26292041 to 26292047
+[poller] INFO: [supra-testnet] Processing blocks 26292042 to 26292047 (Latest: 26292047)
+[rpcClient] DEBUG: Fetched 0 events in total from https://rpc-mainnet.supra.com/rpc/v1 for blocks 19100400-19100401
+[rpcClient] DEBUG: Fetching latest block height from https://rpc-mainnet.supra.com/rpc/v1/block
+[rpcClient] DEBUG: Latest block height from https://rpc-mainnet.supra.com/rpc/v1: 19100400
+[rpcClient] DEBUG: Fetched 0 events in total from https://rpc-testnet.supra.com/rpc/v1 for blocks 26292042-26292048
+[rpcClient] DEBUG: Fetching latest block height from https://rpc-testnet.supra.com/rpc/v1/block
+[rpcClient] DEBUG: Latest block height from https://rpc-testnet.supra.com/rpc/v1: 26292050
+[poller] INFO: [supra-testnet] Updated latest block height from 26292047 to 26292050
+[poller] INFO: [supra-testnet] Processing blocks 26292048 to 26292050 (Latest: 26292050)
+^C
+
