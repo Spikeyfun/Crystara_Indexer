@@ -1,8 +1,8 @@
 import { createLogger } from '../app/indexer/utils';
 import cron, { ScheduledTask } from 'node-cron';
 import { executeOhlcAggregation } from './tasks/executeOhlcAggregation';
-import { synchronizeDatabases } from './tasks/executeSyncDb'; // <-- Importar la nueva tarea
-import { sqliteDb as prismadb } from '@/lib/prismadb';
+import { synchronizeDatabases } from './tasks/executeSyncDb';
+import { EventPoller } from '@/app/indexer/poller';
 
 const logger = createLogger('task-processor');
 
@@ -19,18 +19,27 @@ interface SchedulerSetupConfig {
 
 let activeJobs: Map<string, ScheduledTask> = new Map();
 
-async function runUpdateCycleForNetwork(networkConfig: NetworkConfig) {
+async function runUpdateCycleForNetwork(networkConfig: NetworkConfig, poller: EventPoller) {
   logger.info(`[${networkConfig.networkName}] Starting update cycle...`);
   try {
-    // Paso 1: Sincronizar DBs
-    logger.info(`[${networkConfig.networkName}] Executing DB Synchronization...`);
-    await synchronizeDatabases(networkConfig.networkName);
-    logger.info(`[${networkConfig.networkName}] DB Synchronization COMPLETED.`);
+    // Paso 1: Sincronizar DBs (solo si hay nuevos datos en SQLite)
+    if (poller.newSqliteDataCreated) {
+      logger.info(`[${networkConfig.networkName}] Executing DB Synchronization (new data detected)...`);
+      await synchronizeDatabases(networkConfig.networkName, poller);
+      logger.info(`[${networkConfig.networkName}] DB Synchronization COMPLETED.`);
+    } else {
+      logger.info(`[${networkConfig.networkName}] Skipping DB Synchronization (no new data in SQLite).`);
+    }
 
-    // Paso 2: Agregar OHLC
+    // Paso 2: Agregar OHLC (solo si hay nuevos datos en SQLite o si ya hay pares en Supabase)
+    // La agregación OHLC depende de los pares en Supabase, no directamente de los swaps en SQLite.
+    // Si no hay nuevos datos en SQLite, pero ya hay pares en Supabase, la agregación debe seguir ejecutándose.
     logger.info(`[${networkConfig.networkName}] Executing OHLC Aggregation...`);
     await executeOhlcAggregation(networkConfig.networkName);
     logger.info(`[${networkConfig.networkName}] OHLC Aggregation COMPLETED.`);
+
+    // Resetear el flag después de un ciclo completo
+    poller.resetNewSqliteDataCreated();
 
     logger.info(`[${networkConfig.networkName}] Update cycle finished successfully.`);
   } catch (error) {
@@ -38,7 +47,7 @@ async function runUpdateCycleForNetwork(networkConfig: NetworkConfig) {
   }
 }
 
-export function startScheduledTasks(setupConfig: SchedulerSetupConfig): void {
+export function startScheduledTasks(setupConfig: SchedulerSetupConfig, pollers: Map<string, EventPoller>): void {
   if (activeJobs.size > 0) {
     logger.info('Scheduled tasks might already be initialized. Check activeJobs map if issues.');
     return;
@@ -61,6 +70,12 @@ export function startScheduledTasks(setupConfig: SchedulerSetupConfig): void {
 
   networksToProcess.forEach(networkConfig => {
     const masterUpdateTaskKey = `${networkConfig.networkName}-OhlcAggregationCycle`;
+    const pollerInstance = pollers.get(networkConfig.networkName);
+
+    if (!pollerInstance) {
+      logger.error(`CRITICAL: No EventPoller instance found for network ${networkConfig.networkName}. Skipping task setup.`);
+      return;
+    }
 
     if (!activeJobs.has(masterUpdateTaskKey)) {
       logger.info(`Setting up OHLC Aggregation task for ${networkConfig.networkName}`);
@@ -70,7 +85,7 @@ export function startScheduledTasks(setupConfig: SchedulerSetupConfig): void {
 
       const job: ScheduledTask = cron.schedule(schedule, async () => {
         logger.info(`Triggering OHLC Aggregation for ${networkConfig.networkName} (cron: ${schedule})`);
-        await runUpdateCycleForNetwork(networkConfig);
+        await runUpdateCycleForNetwork(networkConfig, pollerInstance);
       }, { timezone: "UTC" });
 
       activeJobs.set(masterUpdateTaskKey, job);

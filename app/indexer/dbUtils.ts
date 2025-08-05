@@ -14,7 +14,7 @@ export async function getOrCreateToken(
   tokenAddress: string,
   network: string,
   tx: TransactionClient
-): Promise<Token> {
+): Promise<{ token: Token; created: boolean }> {
   if (!tokenAddress) {
     logger.error(`[${network}] Attempted to get or create token with null or undefined address.`);
     throw new Error(`Token address cannot be null or undefined for network ${network}`);
@@ -111,6 +111,7 @@ export async function getOrCreateToken(
     wrappedAddress: finalWrappedAddress,
   };
 
+  let created = false;
   if (!token) {
     logger.info(`[${network}] Creating new token entry for canonical ${primaryTokenAddress}.`);
     try {
@@ -121,12 +122,14 @@ export async function getOrCreateToken(
           ...dataForDb,
         },
       });
+      created = true;
     } catch (e: any) {
       if (e.code === 'P2002' && e.meta?.target?.includes('network_address')) {
         logger.warn(`[${network}] Race condition: Token ${primaryTokenAddress} created concurrently. Fetching existing.`);
         token = await tx.token.findUniqueOrThrow({
           where: { network_address: { network: network, address: primaryTokenAddress } },
         });
+        created = false; // It was not created in this call, but fetched
       } else {
         logger.error(`[${network}] Error creating token ${primaryTokenAddress}:`, e);
         throw e;
@@ -147,6 +150,7 @@ export async function getOrCreateToken(
         where: { network_address: { network: network, address: primaryTokenAddress } },
         data: dataForDb,
       });
+      created = false; // It was updated, not created
     }
   }
 
@@ -155,7 +159,7 @@ export async function getOrCreateToken(
     throw new Error(`Failed to get or create token ${primaryTokenAddress} on network ${network}.`);
   }
 
-  return token;
+  return { token, created };
 }
 
 export async function unpackPairAddresses(

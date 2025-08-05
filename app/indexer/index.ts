@@ -56,7 +56,10 @@ export async function startIndexer() {
     if (pollers.mainnet) logger.info(`Poller ${POLLER_IDS.MAINNET} status: running (assumed)`);
     // Importante: Pasar la schedulerConfig aquí también si la lógica lo requiere,
     // aunque startScheduledTasks tiene su propia lógica para no reinicializar si ya hay jobs.
-    startScheduledTasks(schedulerConfig); 
+    const pollersMap = new Map<string, EventPoller>();
+    if (pollers.testnet) pollersMap.set(POLLER_IDS.TESTNET, pollers.testnet);
+    if (pollers.mainnet) pollersMap.set(POLLER_IDS.MAINNET, pollers.mainnet);
+    startScheduledTasks(schedulerConfig, pollersMap); 
     return;
   }
 
@@ -120,7 +123,10 @@ export async function startIndexer() {
   }
 
   // La schedulerConfig ya contiene los networkName correctos
-  startScheduledTasks(schedulerConfig);
+      const pollersMap = new Map<string, EventPoller>();
+    if (pollers.testnet) pollersMap.set(POLLER_IDS.TESTNET, pollers.testnet);
+    if (pollers.mainnet) pollersMap.set(POLLER_IDS.MAINNET, pollers.mainnet);
+    startScheduledTasks(schedulerConfig, pollersMap);
 
   if (startingPollers.length > 0) {
     try {

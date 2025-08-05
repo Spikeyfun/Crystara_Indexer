@@ -66,6 +66,7 @@ model Pair {
 
   spikeyAmmReserve0    BigInt?
   spikeyAmmReserve1    BigInt?
+  lastStatsUpdate      DateTime?
 
   token0          Token    @relation("token0", fields: [token0Id], references: [id])
   token1          Token    @relation("token1", fields: [token1Id], references: [id])
@@ -104,4 +105,11 @@ model OhlcData {
   @@unique([network, ammSource, pairId, timeframe, timestamp])
   @@index([pairId])
   @@index([timestamp])
+}
+
+model UserPreference {
+    id                  Int     @id @default(autoincrement())
+    userId              BigInt  @unique // Telegram user ID
+    defaultTokenAddress String? // The address of the non-SupraCoin token
+    defaultTimeframe    String? // e.g., "1m", "5m", "1h"
 }

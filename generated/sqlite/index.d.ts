@@ -6234,6 +6234,7 @@ export namespace Prisma {
     spikeyAmmPairAddress: string | null
     spikeyAmmReserve0: bigint | null
     spikeyAmmReserve1: bigint | null
+    lastStatsUpdate: Date | null
     createdAt: Date | null
   }
 
@@ -6245,6 +6246,7 @@ export namespace Prisma {
     spikeyAmmPairAddress: string | null
     spikeyAmmReserve0: bigint | null
     spikeyAmmReserve1: bigint | null
+    lastStatsUpdate: Date | null
     createdAt: Date | null
   }
 
@@ -6256,6 +6258,7 @@ export namespace Prisma {
     spikeyAmmPairAddress: number
     spikeyAmmReserve0: number
     spikeyAmmReserve1: number
+    lastStatsUpdate: number
     createdAt: number
     _all: number
   }
@@ -6285,6 +6288,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: true
     spikeyAmmReserve0?: true
     spikeyAmmReserve1?: true
+    lastStatsUpdate?: true
     createdAt?: true
   }
 
@@ -6296,6 +6300,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: true
     spikeyAmmReserve0?: true
     spikeyAmmReserve1?: true
+    lastStatsUpdate?: true
     createdAt?: true
   }
 
@@ -6307,6 +6312,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: true
     spikeyAmmReserve0?: true
     spikeyAmmReserve1?: true
+    lastStatsUpdate?: true
     createdAt?: true
     _all?: true
   }
@@ -6405,6 +6411,7 @@ export namespace Prisma {
     spikeyAmmPairAddress: string | null
     spikeyAmmReserve0: bigint | null
     spikeyAmmReserve1: bigint | null
+    lastStatsUpdate: Date | null
     createdAt: Date
     _count: PairCountAggregateOutputType | null
     _avg: PairAvgAggregateOutputType | null
@@ -6435,6 +6442,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: boolean
     spikeyAmmReserve0?: boolean
     spikeyAmmReserve1?: boolean
+    lastStatsUpdate?: boolean
     createdAt?: boolean
     token0?: boolean | TokenDefaultArgs<ExtArgs>
     token1?: boolean | TokenDefaultArgs<ExtArgs>
@@ -6452,6 +6460,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: boolean
     spikeyAmmReserve0?: boolean
     spikeyAmmReserve1?: boolean
+    lastStatsUpdate?: boolean
     createdAt?: boolean
     token0?: boolean | TokenDefaultArgs<ExtArgs>
     token1?: boolean | TokenDefaultArgs<ExtArgs>
@@ -6465,6 +6474,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: boolean
     spikeyAmmReserve0?: boolean
     spikeyAmmReserve1?: boolean
+    lastStatsUpdate?: boolean
     createdAt?: boolean
     token0?: boolean | TokenDefaultArgs<ExtArgs>
     token1?: boolean | TokenDefaultArgs<ExtArgs>
@@ -6478,10 +6488,11 @@ export namespace Prisma {
     spikeyAmmPairAddress?: boolean
     spikeyAmmReserve0?: boolean
     spikeyAmmReserve1?: boolean
+    lastStatsUpdate?: boolean
     createdAt?: boolean
   }
 
-  export type PairOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "network" | "token0Id" | "token1Id" | "spikeyAmmPairAddress" | "spikeyAmmReserve0" | "spikeyAmmReserve1" | "createdAt", ExtArgs["result"]["pair"]>
+  export type PairOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "network" | "token0Id" | "token1Id" | "spikeyAmmPairAddress" | "spikeyAmmReserve0" | "spikeyAmmReserve1" | "lastStatsUpdate" | "createdAt", ExtArgs["result"]["pair"]>
   export type PairInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     token0?: boolean | TokenDefaultArgs<ExtArgs>
     token1?: boolean | TokenDefaultArgs<ExtArgs>
@@ -6516,6 +6527,7 @@ export namespace Prisma {
       spikeyAmmPairAddress: string | null
       spikeyAmmReserve0: bigint | null
       spikeyAmmReserve1: bigint | null
+      lastStatsUpdate: Date | null
       createdAt: Date
     }, ExtArgs["result"]["pair"]>
     composites: {}
@@ -6952,6 +6964,7 @@ export namespace Prisma {
     readonly spikeyAmmPairAddress: FieldRef<"Pair", 'String'>
     readonly spikeyAmmReserve0: FieldRef<"Pair", 'BigInt'>
     readonly spikeyAmmReserve1: FieldRef<"Pair", 'BigInt'>
+    readonly lastStatsUpdate: FieldRef<"Pair", 'DateTime'>
     readonly createdAt: FieldRef<"Pair", 'DateTime'>
   }
     
@@ -8763,6 +8776,7 @@ export namespace Prisma {
     spikeyAmmPairAddress: 'spikeyAmmPairAddress',
     spikeyAmmReserve0: 'spikeyAmmReserve0',
     spikeyAmmReserve1: 'spikeyAmmReserve1',
+    lastStatsUpdate: 'lastStatsUpdate',
     createdAt: 'createdAt'
   };
 
@@ -9245,6 +9259,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: StringNullableFilter<"Pair"> | string | null
     spikeyAmmReserve0?: BigIntNullableFilter<"Pair"> | bigint | number | null
     spikeyAmmReserve1?: BigIntNullableFilter<"Pair"> | bigint | number | null
+    lastStatsUpdate?: DateTimeNullableFilter<"Pair"> | Date | string | null
     createdAt?: DateTimeFilter<"Pair"> | Date | string
     token0?: XOR<TokenScalarRelationFilter, TokenWhereInput>
     token1?: XOR<TokenScalarRelationFilter, TokenWhereInput>
@@ -9261,6 +9276,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: SortOrderInput | SortOrder
     spikeyAmmReserve0?: SortOrderInput | SortOrder
     spikeyAmmReserve1?: SortOrderInput | SortOrder
+    lastStatsUpdate?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     token0?: TokenOrderByWithRelationInput
     token1?: TokenOrderByWithRelationInput
@@ -9282,6 +9298,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: StringNullableFilter<"Pair"> | string | null
     spikeyAmmReserve0?: BigIntNullableFilter<"Pair"> | bigint | number | null
     spikeyAmmReserve1?: BigIntNullableFilter<"Pair"> | bigint | number | null
+    lastStatsUpdate?: DateTimeNullableFilter<"Pair"> | Date | string | null
     createdAt?: DateTimeFilter<"Pair"> | Date | string
     token0?: XOR<TokenScalarRelationFilter, TokenWhereInput>
     token1?: XOR<TokenScalarRelationFilter, TokenWhereInput>
@@ -9298,6 +9315,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: SortOrderInput | SortOrder
     spikeyAmmReserve0?: SortOrderInput | SortOrder
     spikeyAmmReserve1?: SortOrderInput | SortOrder
+    lastStatsUpdate?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     _count?: PairCountOrderByAggregateInput
     _avg?: PairAvgOrderByAggregateInput
@@ -9317,6 +9335,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: StringNullableWithAggregatesFilter<"Pair"> | string | null
     spikeyAmmReserve0?: BigIntNullableWithAggregatesFilter<"Pair"> | bigint | number | null
     spikeyAmmReserve1?: BigIntNullableWithAggregatesFilter<"Pair"> | bigint | number | null
+    lastStatsUpdate?: DateTimeNullableWithAggregatesFilter<"Pair"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Pair"> | Date | string
   }
 
@@ -9842,6 +9861,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: string | null
     spikeyAmmReserve0?: bigint | number | null
     spikeyAmmReserve1?: bigint | number | null
+    lastStatsUpdate?: Date | string | null
     createdAt?: Date | string
     token0: TokenCreateNestedOneWithoutPairsAsToken0Input
     token1: TokenCreateNestedOneWithoutPairsAsToken1Input
@@ -9858,6 +9878,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: string | null
     spikeyAmmReserve0?: bigint | number | null
     spikeyAmmReserve1?: bigint | number | null
+    lastStatsUpdate?: Date | string | null
     createdAt?: Date | string
     spikeyAmmSwaps?: SpikeyAmmSwapUncheckedCreateNestedManyWithoutPairInput
     dexlynSwaps?: DexlynSwapUncheckedCreateNestedManyWithoutPairInput
@@ -9869,6 +9890,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: NullableStringFieldUpdateOperationsInput | string | null
     spikeyAmmReserve0?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     spikeyAmmReserve1?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    lastStatsUpdate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     token0?: TokenUpdateOneRequiredWithoutPairsAsToken0NestedInput
     token1?: TokenUpdateOneRequiredWithoutPairsAsToken1NestedInput
@@ -9885,6 +9907,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: NullableStringFieldUpdateOperationsInput | string | null
     spikeyAmmReserve0?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     spikeyAmmReserve1?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    lastStatsUpdate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     spikeyAmmSwaps?: SpikeyAmmSwapUncheckedUpdateManyWithoutPairNestedInput
     dexlynSwaps?: DexlynSwapUncheckedUpdateManyWithoutPairNestedInput
@@ -9899,6 +9922,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: string | null
     spikeyAmmReserve0?: bigint | number | null
     spikeyAmmReserve1?: bigint | number | null
+    lastStatsUpdate?: Date | string | null
     createdAt?: Date | string
   }
 
@@ -9907,6 +9931,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: NullableStringFieldUpdateOperationsInput | string | null
     spikeyAmmReserve0?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     spikeyAmmReserve1?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    lastStatsUpdate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -9918,6 +9943,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: NullableStringFieldUpdateOperationsInput | string | null
     spikeyAmmReserve0?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     spikeyAmmReserve1?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    lastStatsUpdate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -10493,6 +10519,17 @@ export namespace Prisma {
     not?: NestedBigIntNullableFilter<$PrismaModel> | bigint | number | null
   }
 
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type TokenScalarRelationFilter = {
     is?: TokenWhereInput
     isNot?: TokenWhereInput
@@ -10547,6 +10584,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: SortOrder
     spikeyAmmReserve0?: SortOrder
     spikeyAmmReserve1?: SortOrder
+    lastStatsUpdate?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -10566,6 +10604,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: SortOrder
     spikeyAmmReserve0?: SortOrder
     spikeyAmmReserve1?: SortOrder
+    lastStatsUpdate?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -10577,6 +10616,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: SortOrder
     spikeyAmmReserve0?: SortOrder
     spikeyAmmReserve1?: SortOrder
+    lastStatsUpdate?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -10602,6 +10642,20 @@ export namespace Prisma {
     _sum?: NestedBigIntNullableFilter<$PrismaModel>
     _min?: NestedBigIntNullableFilter<$PrismaModel>
     _max?: NestedBigIntNullableFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type DecimalFilter<$PrismaModel = never> = {
@@ -10918,6 +10972,10 @@ export namespace Prisma {
     divide?: bigint | number
   }
 
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
   export type TokenUpdateOneRequiredWithoutPairsAsToken0NestedInput = {
     create?: XOR<TokenCreateWithoutPairsAsToken0Input, TokenUncheckedCreateWithoutPairsAsToken0Input>
     connectOrCreate?: TokenCreateOrConnectWithoutPairsAsToken0Input
@@ -11227,6 +11285,17 @@ export namespace Prisma {
     not?: NestedBigIntNullableFilter<$PrismaModel> | bigint | number | null
   }
 
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type NestedBigIntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: bigint | number | BigIntFieldRefInput<$PrismaModel> | null
     in?: bigint[] | number[] | null
@@ -11252,6 +11321,20 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type NestedDecimalFilter<$PrismaModel = never> = {
@@ -11286,6 +11369,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: string | null
     spikeyAmmReserve0?: bigint | number | null
     spikeyAmmReserve1?: bigint | number | null
+    lastStatsUpdate?: Date | string | null
     createdAt?: Date | string
     token0: TokenCreateNestedOneWithoutPairsAsToken0Input
     token1: TokenCreateNestedOneWithoutPairsAsToken1Input
@@ -11301,6 +11385,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: string | null
     spikeyAmmReserve0?: bigint | number | null
     spikeyAmmReserve1?: bigint | number | null
+    lastStatsUpdate?: Date | string | null
     createdAt?: Date | string
     dexlynSwaps?: DexlynSwapUncheckedCreateNestedManyWithoutPairInput
     ohlcData?: OhlcDataUncheckedCreateNestedManyWithoutPairInput
@@ -11327,6 +11412,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: NullableStringFieldUpdateOperationsInput | string | null
     spikeyAmmReserve0?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     spikeyAmmReserve1?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    lastStatsUpdate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     token0?: TokenUpdateOneRequiredWithoutPairsAsToken0NestedInput
     token1?: TokenUpdateOneRequiredWithoutPairsAsToken1NestedInput
@@ -11342,6 +11428,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: NullableStringFieldUpdateOperationsInput | string | null
     spikeyAmmReserve0?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     spikeyAmmReserve1?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    lastStatsUpdate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     dexlynSwaps?: DexlynSwapUncheckedUpdateManyWithoutPairNestedInput
     ohlcData?: OhlcDataUncheckedUpdateManyWithoutPairNestedInput
@@ -11352,6 +11439,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: string | null
     spikeyAmmReserve0?: bigint | number | null
     spikeyAmmReserve1?: bigint | number | null
+    lastStatsUpdate?: Date | string | null
     createdAt?: Date | string
     token0: TokenCreateNestedOneWithoutPairsAsToken0Input
     token1: TokenCreateNestedOneWithoutPairsAsToken1Input
@@ -11367,6 +11455,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: string | null
     spikeyAmmReserve0?: bigint | number | null
     spikeyAmmReserve1?: bigint | number | null
+    lastStatsUpdate?: Date | string | null
     createdAt?: Date | string
     spikeyAmmSwaps?: SpikeyAmmSwapUncheckedCreateNestedManyWithoutPairInput
     ohlcData?: OhlcDataUncheckedCreateNestedManyWithoutPairInput
@@ -11393,6 +11482,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: NullableStringFieldUpdateOperationsInput | string | null
     spikeyAmmReserve0?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     spikeyAmmReserve1?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    lastStatsUpdate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     token0?: TokenUpdateOneRequiredWithoutPairsAsToken0NestedInput
     token1?: TokenUpdateOneRequiredWithoutPairsAsToken1NestedInput
@@ -11408,6 +11498,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: NullableStringFieldUpdateOperationsInput | string | null
     spikeyAmmReserve0?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     spikeyAmmReserve1?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    lastStatsUpdate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     spikeyAmmSwaps?: SpikeyAmmSwapUncheckedUpdateManyWithoutPairNestedInput
     ohlcData?: OhlcDataUncheckedUpdateManyWithoutPairNestedInput
@@ -11418,6 +11509,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: string | null
     spikeyAmmReserve0?: bigint | number | null
     spikeyAmmReserve1?: bigint | number | null
+    lastStatsUpdate?: Date | string | null
     createdAt?: Date | string
     token1: TokenCreateNestedOneWithoutPairsAsToken1Input
     spikeyAmmSwaps?: SpikeyAmmSwapCreateNestedManyWithoutPairInput
@@ -11432,6 +11524,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: string | null
     spikeyAmmReserve0?: bigint | number | null
     spikeyAmmReserve1?: bigint | number | null
+    lastStatsUpdate?: Date | string | null
     createdAt?: Date | string
     spikeyAmmSwaps?: SpikeyAmmSwapUncheckedCreateNestedManyWithoutPairInput
     dexlynSwaps?: DexlynSwapUncheckedCreateNestedManyWithoutPairInput
@@ -11452,6 +11545,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: string | null
     spikeyAmmReserve0?: bigint | number | null
     spikeyAmmReserve1?: bigint | number | null
+    lastStatsUpdate?: Date | string | null
     createdAt?: Date | string
     token0: TokenCreateNestedOneWithoutPairsAsToken0Input
     spikeyAmmSwaps?: SpikeyAmmSwapCreateNestedManyWithoutPairInput
@@ -11466,6 +11560,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: string | null
     spikeyAmmReserve0?: bigint | number | null
     spikeyAmmReserve1?: bigint | number | null
+    lastStatsUpdate?: Date | string | null
     createdAt?: Date | string
     spikeyAmmSwaps?: SpikeyAmmSwapUncheckedCreateNestedManyWithoutPairInput
     dexlynSwaps?: DexlynSwapUncheckedCreateNestedManyWithoutPairInput
@@ -11508,6 +11603,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: StringNullableFilter<"Pair"> | string | null
     spikeyAmmReserve0?: BigIntNullableFilter<"Pair"> | bigint | number | null
     spikeyAmmReserve1?: BigIntNullableFilter<"Pair"> | bigint | number | null
+    lastStatsUpdate?: DateTimeNullableFilter<"Pair"> | Date | string | null
     createdAt?: DateTimeFilter<"Pair"> | Date | string
   }
 
@@ -11890,6 +11986,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: string | null
     spikeyAmmReserve0?: bigint | number | null
     spikeyAmmReserve1?: bigint | number | null
+    lastStatsUpdate?: Date | string | null
     createdAt?: Date | string
     token0: TokenCreateNestedOneWithoutPairsAsToken0Input
     token1: TokenCreateNestedOneWithoutPairsAsToken1Input
@@ -11905,6 +12002,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: string | null
     spikeyAmmReserve0?: bigint | number | null
     spikeyAmmReserve1?: bigint | number | null
+    lastStatsUpdate?: Date | string | null
     createdAt?: Date | string
     spikeyAmmSwaps?: SpikeyAmmSwapUncheckedCreateNestedManyWithoutPairInput
     dexlynSwaps?: DexlynSwapUncheckedCreateNestedManyWithoutPairInput
@@ -11931,6 +12029,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: NullableStringFieldUpdateOperationsInput | string | null
     spikeyAmmReserve0?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     spikeyAmmReserve1?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    lastStatsUpdate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     token0?: TokenUpdateOneRequiredWithoutPairsAsToken0NestedInput
     token1?: TokenUpdateOneRequiredWithoutPairsAsToken1NestedInput
@@ -11946,6 +12045,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: NullableStringFieldUpdateOperationsInput | string | null
     spikeyAmmReserve0?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     spikeyAmmReserve1?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    lastStatsUpdate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     spikeyAmmSwaps?: SpikeyAmmSwapUncheckedUpdateManyWithoutPairNestedInput
     dexlynSwaps?: DexlynSwapUncheckedUpdateManyWithoutPairNestedInput
@@ -11958,6 +12058,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: string | null
     spikeyAmmReserve0?: bigint | number | null
     spikeyAmmReserve1?: bigint | number | null
+    lastStatsUpdate?: Date | string | null
     createdAt?: Date | string
   }
 
@@ -11968,6 +12069,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: string | null
     spikeyAmmReserve0?: bigint | number | null
     spikeyAmmReserve1?: bigint | number | null
+    lastStatsUpdate?: Date | string | null
     createdAt?: Date | string
   }
 
@@ -11976,6 +12078,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: NullableStringFieldUpdateOperationsInput | string | null
     spikeyAmmReserve0?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     spikeyAmmReserve1?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    lastStatsUpdate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     token1?: TokenUpdateOneRequiredWithoutPairsAsToken1NestedInput
     spikeyAmmSwaps?: SpikeyAmmSwapUpdateManyWithoutPairNestedInput
@@ -11990,6 +12093,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: NullableStringFieldUpdateOperationsInput | string | null
     spikeyAmmReserve0?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     spikeyAmmReserve1?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    lastStatsUpdate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     spikeyAmmSwaps?: SpikeyAmmSwapUncheckedUpdateManyWithoutPairNestedInput
     dexlynSwaps?: DexlynSwapUncheckedUpdateManyWithoutPairNestedInput
@@ -12003,6 +12107,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: NullableStringFieldUpdateOperationsInput | string | null
     spikeyAmmReserve0?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     spikeyAmmReserve1?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    lastStatsUpdate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -12011,6 +12116,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: NullableStringFieldUpdateOperationsInput | string | null
     spikeyAmmReserve0?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     spikeyAmmReserve1?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    lastStatsUpdate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     token0?: TokenUpdateOneRequiredWithoutPairsAsToken0NestedInput
     spikeyAmmSwaps?: SpikeyAmmSwapUpdateManyWithoutPairNestedInput
@@ -12025,6 +12131,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: NullableStringFieldUpdateOperationsInput | string | null
     spikeyAmmReserve0?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     spikeyAmmReserve1?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    lastStatsUpdate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     spikeyAmmSwaps?: SpikeyAmmSwapUncheckedUpdateManyWithoutPairNestedInput
     dexlynSwaps?: DexlynSwapUncheckedUpdateManyWithoutPairNestedInput
@@ -12038,6 +12145,7 @@ export namespace Prisma {
     spikeyAmmPairAddress?: NullableStringFieldUpdateOperationsInput | string | null
     spikeyAmmReserve0?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     spikeyAmmReserve1?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    lastStatsUpdate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

@@ -5,7 +5,7 @@ import { getOrCreateToken, unpackPairAddresses } from '../dbUtils'; // Import un
 
 const logger = createLogger('spikeyAmmSwapHandler');
 
-export async function handleSpikeyAmmSwapEvent(event: RpcEvent, tx: TransactionClient) {
+export async function handleSpikeyAmmSwapEvent(event: RpcEvent, tx: TransactionClient): Promise<boolean> {
   const spikeyAmmSwapEventData = event.data as SpikeyAmmSwapEventData;
   logger.debug(`[${event.network}] Processing SpikeyAmmSwapEvent`, spikeyAmmSwapEventData);
 
@@ -43,6 +43,9 @@ export async function handleSpikeyAmmSwapEvent(event: RpcEvent, tx: TransactionC
 
     let token0Id: number;
     let token1Id: number;
+    let token0Created = false;
+    let token1Created = false;
+    let pairCreated = false;
 
     if (!pairEntry) {
       logger.warn(`[${event.network}] Pair with spikeyAmmPairAddress ${spikeyAmmSwapEventData.pair_address} not found. Attempting to fetch token addresses from blockchain.`);
@@ -61,10 +64,12 @@ export async function handleSpikeyAmmSwapEvent(event: RpcEvent, tx: TransactionC
         fetchedToken1Address = `0x${spikeyAmmSwapEventData.pair_address.substring(10, 18)}::token1::Token`; // Placeholder
       }
 
-      const token0 = await getOrCreateToken(fetchedToken0Address, event.network, tx);
-      const token1 = await getOrCreateToken(fetchedToken1Address, event.network, tx);
+      const { token: token0, created: t0Created } = await getOrCreateToken(fetchedToken0Address, event.network, tx);
+      const { token: token1, created: t1Created } = await getOrCreateToken(fetchedToken1Address, event.network, tx);
       token0Id = token0.id;
       token1Id = token1.id;
+      token0Created = t0Created;
+      token1Created = t1Created;
 
       pairEntry = await tx.pair.create({
         data: {
@@ -78,6 +83,7 @@ export async function handleSpikeyAmmSwapEvent(event: RpcEvent, tx: TransactionC
           token1: true,
         },
       });
+      pairCreated = true;
       logger.info(`[${event.network}] Created new Pair for spikeyAmmPairAddress ${spikeyAmmSwapEventData.pair_address}.`);
     } else {
       token0Id = pairEntry.token0Id;
@@ -108,7 +114,9 @@ export async function handleSpikeyAmmSwapEvent(event: RpcEvent, tx: TransactionC
     });
 
     logger.info(`[${event.network}] Successfully created SpikeyAmmSwapEvent.`);
+    return token0Created || token1Created || pairCreated;
   } else {
     logger.debug(`[${event.network}] SpikeyAmmSwapEvent already exists. Skipping creation.`);
+    return false;
   }
 }

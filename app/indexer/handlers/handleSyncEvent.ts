@@ -3,7 +3,7 @@ import { createLogger } from '../utils';
 
 const logger = createLogger('spikeyAmmSyncHandler');
 
-export async function handleSyncEvent(event: RpcEvent, tx: TransactionClient) {
+export async function handleSyncEvent(event: RpcEvent, tx: TransactionClient): Promise<boolean> {
   const syncEventData = event.data as SyncEventData;
   logger.debug(`[${event.network}] Processing SyncEvent`, syncEventData);
 
@@ -35,4 +35,5 @@ export async function handleSyncEvent(event: RpcEvent, tx: TransactionClient) {
     // that a SyncEvent could arrive before a SwapEvent for a new pair.
     // For now, we'll just log a warning.
   }
+  return false;
 }

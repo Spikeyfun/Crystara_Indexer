@@ -1,0 +1,53 @@
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T19:00:00.000Z (15m)
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T19:45:00.000Z (15m)
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T19:45:00.000Z (15m)
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T19:15:00.000Z (15m)
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T19:15:00.000Z (15m)
+[ohlc-aggregator] INFO: [supra-mainnet] Processing pair 7 for timeframe 5m. Starting from: 2025-08-05T00:55:00.000Z
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:15:00.000Z (15m)
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:00:00.000Z (15m)
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T19:15:00.000Z (15m)
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:00:00.000Z (15m)
+[rpcClient] DEBUG: Fetched 0 events in total from https://rpc-testnet.supra.com/rpc/v1 for blocks 86171-86181
+[rpcClient] DEBUG: Fetching latest block height from https://rpc-testnet.supra.com/rpc/v1/block
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T19:15:00.000Z (15m)
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T19:45:00.000Z (15m)
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:00:00.000Z (15m)
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:00:00.000Z (15m)
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T19:45:00.000Z (15m)
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T19:45:00.000Z (15m)
+[ohlc-aggregator] INFO: [supra-mainnet] No new 1m OHLC data for pair 7 for timeframe 5m.
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:15:00.000Z (15m)
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:30:00.000Z (15m)
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T19:45:00.000Z (15m)
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:15:00.000Z (15m)
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T19:45:00.000Z (15m)
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:00:00.000Z (15m)
+[rpcClient] DEBUG: Fetched 0 events in total from https://rpc-mainnet.supra.com/rpc/v1 for blocks 19064239-19064246
+[rpcClient] DEBUG: Fetching latest block height from https://rpc-mainnet.supra.com/rpc/v1/block
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:15:00.000Z (15m)
+[rpcClient] DEBUG: Latest block height from https://rpc-testnet.supra.com/rpc/v1: 26188252
+[poller] INFO: [supra-testnet] Updated latest block height from 26188249 to 26188252
+[poller] INFO: [supra-testnet] Processing blocks 86181 to 86190 (Latest: 26188252)
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:15:00.000Z (15m)
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:00:00.000Z (15m)
+[ohlc-aggregator] INFO: [supra-mainnet] Processing pair 8 for timeframe 5m. Starting from: 2025-08-05T00:50:00.000Z
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:30:00.000Z (15m)
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:00:00.000Z (15m)
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:45:00.000Z (15m)
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:00:00.000Z (15m)
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:15:00.000Z (15m)
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:30:00.000Z (15m)
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:00:00.000Z (15m)
+[rpcClient] DEBUG: Latest block height from https://rpc-mainnet.supra.com/rpc/v1: 19064245
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:30:00.000Z (15m)
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:30:00.000Z (15m)
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:15:00.000Z (15m)
+[ohlc-aggregator] INFO: [supra-mainnet] No new 1m OHLC data for pair 8 for timeframe 5m.
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:45:00.000Z (15m)
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:15:00.000Z (15m)
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T21:00:00.000Z (15m)
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:15:00.000Z (15m)
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:45:00.000Z (15m)
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:30:00.000Z (15m)
+[ohlc-aggregator] INFO: [supra-mainnet] Upserting OHLC for pair 7 from DexlynSwap at 2025-08-04T20:15:00.000Z (15m)

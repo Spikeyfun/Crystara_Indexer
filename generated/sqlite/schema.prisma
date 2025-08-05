@@ -108,6 +108,7 @@ model Pair {
 
   spikeyAmmReserve0 BigInt?
   spikeyAmmReserve1 BigInt?
+  lastStatsUpdate   DateTime?
 
   token0 Token @relation("token0", fields: [token0Id], references: [id])
   token1 Token @relation("token1", fields: [token1Id], references: [id])

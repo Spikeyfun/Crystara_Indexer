@@ -1,7 +1,8 @@
-import { fetchBlockEvents, fetchLatestBlockHeight, RpcEvent } from './rpcClient';
+import { fetchBlockEvents, fetchLatestBlockHeight } from './rpcClient';
+import { RpcEvent } from './types'; // Import RpcEvent from types.ts
 import { processEvents } from './eventProcessor';
 import { sleep, createLogger } from './utils';
-import { supabaseDb } from '@/lib/prismadb'; // <-- Usar supabaseDb
+import { supabaseDb } from '@/lib/prismadb';
 
 const logger = createLogger('poller');
 
@@ -27,6 +28,7 @@ export class EventPoller {
   private lastProgressSaveTime: number = 0;
   private highestProcessedBlockInInterval: number = 0;
   private lastSavedBlockHeight: number = 0;
+  private _newSqliteDataCreated: boolean = false;
 
   constructor(pollerId: string, network: string, rpcUrl: string, config: PollerInstanceConfig) {
     this.pollerId = pollerId;
@@ -156,6 +158,14 @@ export class EventPoller {
     this.isRunning = false;
   }
 
+  public get newSqliteDataCreated(): boolean {
+    return this._newSqliteDataCreated;
+  }
+
+  public resetNewSqliteDataCreated(): void {
+    this._newSqliteDataCreated = false;
+  }
+
   private async processBatch() {
     if (this.latestBlockHeight < this.currentBlockHeight) {
         await this.updateLatestBlockHeightIfNeeded();
@@ -183,9 +193,12 @@ export class EventPoller {
       
       if (events.length > 0) {
         logger.info(`[${this.pollerId}] Fetched ${events.length} events from blocks ${this.currentBlockHeight}-${endBlock}.`);
-        await supabaseDb.$transaction(async (tx) => { // Transaction for processing events
-            await processEvents(events, tx);
+        const createdData = await supabaseDb.$transaction(async (tx) => { // Transaction for processing events
+            return await processEvents(events, tx);
         });
+        if (createdData) {
+          this._newSqliteDataCreated = true;
+        }
       }
       this.highestProcessedBlockInInterval = endBlock;
       this.currentBlockHeight = endBlock + 1;

@@ -1,5 +1,6 @@
 import 'dotenv/config'  // Add this at the top
 import { createLogger } from './utils'
+import { RpcEvent } from './types';
 
 const logger = createLogger('rpcClient')
 
@@ -33,16 +34,7 @@ interface EventResponse {
   }>
 }
 
-export interface RpcEvent {
-  type: string;
-  guid: any; // guid puede ser un objeto { creation_number: string; account_address: string } o string. Ajustar según el uso real.
-  sequence_number: string; // Coincide con EventPayload
-  timestamp: number; // O string si la API lo devuelve como string y se convierte luego
-  data: any;
-  network: string; // <--- CAMBIAR A network
-  blockHeight?: number | string;
-  transactionHash?: string;
-}
+
 
 
 export async function fetchLatestBlockHeight(rpcUrl: string): Promise<number> {
@@ -167,7 +159,9 @@ async function fetchEventsByTypes(
             data: event.data,
             network: network,
             blockHeight: event.block_height ?? startBlock,
-            transactionHash: event.transaction_hash ?? `unknown_tx_for_${eventType}_block_${startBlock}`
+            transactionHash: event.transaction_hash ?? `unknown_tx_for_${eventType}_block_${startBlock}`,
+            processedTransactionHash: '', // Se inicializa vacío, eventProcessor lo poblará.
+            processedSequenceNumber: ''   // Se inicializa vacío, eventProcessor lo poblará.
           }))
         } catch (error) {
           const delay = RETRY_DELAY * Math.pow(2, attempt)

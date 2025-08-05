@@ -13,8 +13,10 @@ const logger = createLogger('eventProcessor');
 const MODULE_PATH_SPIKEY_AMM = `${process.env.NEXT_PUBLIC_SUPRA_AMM_SPIKE_ADDRESS}::${process.env.NEXT_PUBLIC_SUPRA_AMM_SPIKE_PAIR_MODULE}`;
 const MODULE_PATH_DEXLYN_AMM = `${process.env.NEXT_PUBLIC_AMM_DEXLYN_ADDRESS}::${process.env.NEXT_PUBLIC_AMM_DEXLYN_PAIR_MODULE}`;
 
-export async function processEvents(events: RpcEvent[], tx: any) {
+export async function processEvents(events: RpcEvent[], tx: any): Promise<boolean> {
   logger.debug(`Processing ${events.length} RpcEvents in current batch.`);
+
+  let createdNewData = false; // Initialize flag once for the entire batch
 
   for (const event of events) {
     const currentBlockHeight = event.blockHeight !== undefined ? BigInt(event.blockHeight) : BigInt(0);
@@ -56,19 +58,23 @@ export async function processEvents(events: RpcEvent[], tx: any) {
           throw new Error('ALREADY_PROCESSED');
         }
 
+        let handlerCreatedData = false; // Flag for current event handler
         switch (event.type) {
             case `${MODULE_PATH_SPIKEY_AMM}::SwapEvent`:
-              await handleSpikeyAmmSwapEvent(event, tx);
+              handlerCreatedData = await handleSpikeyAmmSwapEvent(event, tx);
               break;
             case `${MODULE_PATH_SPIKEY_AMM}::SyncEvent`:
-              await handleSyncEvent(event, tx);
+              handlerCreatedData = await handleSyncEvent(event, tx);
               break;
             case `${MODULE_PATH_DEXLYN_AMM}::SwapEvent`:
-              await handleDexlynSwapEvent(event, tx);
+              handlerCreatedData = await handleDexlynSwapEvent(event, tx);
               break;
 
             default:
                 logger.warn(`[${event.network}] Unknown event type: ${event.type}`);
+        }
+        if (handlerCreatedData) {
+          createdNewData = true; // Update overall flag if any handler created new data
         }
 
         await tx.eventTracking.update({
@@ -115,4 +121,6 @@ export async function processEvents(events: RpcEvent[], tx: any) {
   }
 
   logger.info(`Finished processing batch of ${events.length} events.`);
+  return createdNewData;
 }
+        
