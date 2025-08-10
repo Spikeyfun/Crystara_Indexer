@@ -149,6 +149,7 @@ exports.Prisma.TokenScalarFieldEnum = {
   name: 'name',
   decimals: 'decimals',
   maxSupply: 'maxSupply',
+  circulatingSupply: 'circulatingSupply',
   createdAt: 'createdAt'
 };
 

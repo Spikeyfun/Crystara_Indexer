@@ -5041,12 +5041,14 @@ export namespace Prisma {
     id: number | null
     decimals: number | null
     maxSupply: number | null
+    circulatingSupply: number | null
   }
 
   export type TokenSumAggregateOutputType = {
     id: number | null
     decimals: number | null
     maxSupply: bigint | null
+    circulatingSupply: bigint | null
   }
 
   export type TokenMinAggregateOutputType = {
@@ -5058,6 +5060,7 @@ export namespace Prisma {
     name: string | null
     decimals: number | null
     maxSupply: bigint | null
+    circulatingSupply: bigint | null
     createdAt: Date | null
   }
 
@@ -5070,6 +5073,7 @@ export namespace Prisma {
     name: string | null
     decimals: number | null
     maxSupply: bigint | null
+    circulatingSupply: bigint | null
     createdAt: Date | null
   }
 
@@ -5082,6 +5086,7 @@ export namespace Prisma {
     name: number
     decimals: number
     maxSupply: number
+    circulatingSupply: number
     createdAt: number
     _all: number
   }
@@ -5091,12 +5096,14 @@ export namespace Prisma {
     id?: true
     decimals?: true
     maxSupply?: true
+    circulatingSupply?: true
   }
 
   export type TokenSumAggregateInputType = {
     id?: true
     decimals?: true
     maxSupply?: true
+    circulatingSupply?: true
   }
 
   export type TokenMinAggregateInputType = {
@@ -5108,6 +5115,7 @@ export namespace Prisma {
     name?: true
     decimals?: true
     maxSupply?: true
+    circulatingSupply?: true
     createdAt?: true
   }
 
@@ -5120,6 +5128,7 @@ export namespace Prisma {
     name?: true
     decimals?: true
     maxSupply?: true
+    circulatingSupply?: true
     createdAt?: true
   }
 
@@ -5132,6 +5141,7 @@ export namespace Prisma {
     name?: true
     decimals?: true
     maxSupply?: true
+    circulatingSupply?: true
     createdAt?: true
     _all?: true
   }
@@ -5231,6 +5241,7 @@ export namespace Prisma {
     name: string
     decimals: number
     maxSupply: bigint | null
+    circulatingSupply: bigint | null
     createdAt: Date
     _count: TokenCountAggregateOutputType | null
     _avg: TokenAvgAggregateOutputType | null
@@ -5262,6 +5273,7 @@ export namespace Prisma {
     name?: boolean
     decimals?: boolean
     maxSupply?: boolean
+    circulatingSupply?: boolean
     createdAt?: boolean
     pairsAsToken0?: boolean | Token$pairsAsToken0Args<ExtArgs>
     pairsAsToken1?: boolean | Token$pairsAsToken1Args<ExtArgs>
@@ -5277,6 +5289,7 @@ export namespace Prisma {
     name?: boolean
     decimals?: boolean
     maxSupply?: boolean
+    circulatingSupply?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["token"]>
 
@@ -5289,6 +5302,7 @@ export namespace Prisma {
     name?: boolean
     decimals?: boolean
     maxSupply?: boolean
+    circulatingSupply?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["token"]>
 
@@ -5301,10 +5315,11 @@ export namespace Prisma {
     name?: boolean
     decimals?: boolean
     maxSupply?: boolean
+    circulatingSupply?: boolean
     createdAt?: boolean
   }
 
-  export type TokenOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "network" | "address" | "wrappedAddress" | "symbol" | "name" | "decimals" | "maxSupply" | "createdAt", ExtArgs["result"]["token"]>
+  export type TokenOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "network" | "address" | "wrappedAddress" | "symbol" | "name" | "decimals" | "maxSupply" | "circulatingSupply" | "createdAt", ExtArgs["result"]["token"]>
   export type TokenInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     pairsAsToken0?: boolean | Token$pairsAsToken0Args<ExtArgs>
     pairsAsToken1?: boolean | Token$pairsAsToken1Args<ExtArgs>
@@ -5328,6 +5343,7 @@ export namespace Prisma {
       name: string
       decimals: number
       maxSupply: bigint | null
+      circulatingSupply: bigint | null
       createdAt: Date
     }, ExtArgs["result"]["token"]>
     composites: {}
@@ -5762,6 +5778,7 @@ export namespace Prisma {
     readonly name: FieldRef<"Token", 'String'>
     readonly decimals: FieldRef<"Token", 'Int'>
     readonly maxSupply: FieldRef<"Token", 'BigInt'>
+    readonly circulatingSupply: FieldRef<"Token", 'BigInt'>
     readonly createdAt: FieldRef<"Token", 'DateTime'>
   }
     
@@ -8780,6 +8797,7 @@ export namespace Prisma {
     name: 'name',
     decimals: 'decimals',
     maxSupply: 'maxSupply',
+    circulatingSupply: 'circulatingSupply',
     createdAt: 'createdAt'
   };
 
@@ -9202,6 +9220,7 @@ export namespace Prisma {
     name?: StringFilter<"Token"> | string
     decimals?: IntFilter<"Token"> | number
     maxSupply?: BigIntNullableFilter<"Token"> | bigint | number | null
+    circulatingSupply?: BigIntNullableFilter<"Token"> | bigint | number | null
     createdAt?: DateTimeFilter<"Token"> | Date | string
     pairsAsToken0?: PairListRelationFilter
     pairsAsToken1?: PairListRelationFilter
@@ -9216,6 +9235,7 @@ export namespace Prisma {
     name?: SortOrder
     decimals?: SortOrder
     maxSupply?: SortOrderInput | SortOrder
+    circulatingSupply?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     pairsAsToken0?: PairOrderByRelationAggregateInput
     pairsAsToken1?: PairOrderByRelationAggregateInput
@@ -9234,6 +9254,7 @@ export namespace Prisma {
     name?: StringFilter<"Token"> | string
     decimals?: IntFilter<"Token"> | number
     maxSupply?: BigIntNullableFilter<"Token"> | bigint | number | null
+    circulatingSupply?: BigIntNullableFilter<"Token"> | bigint | number | null
     createdAt?: DateTimeFilter<"Token"> | Date | string
     pairsAsToken0?: PairListRelationFilter
     pairsAsToken1?: PairListRelationFilter
@@ -9248,6 +9269,7 @@ export namespace Prisma {
     name?: SortOrder
     decimals?: SortOrder
     maxSupply?: SortOrderInput | SortOrder
+    circulatingSupply?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     _count?: TokenCountOrderByAggregateInput
     _avg?: TokenAvgOrderByAggregateInput
@@ -9268,6 +9290,7 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Token"> | string
     decimals?: IntWithAggregatesFilter<"Token"> | number
     maxSupply?: BigIntNullableWithAggregatesFilter<"Token"> | bigint | number | null
+    circulatingSupply?: BigIntNullableWithAggregatesFilter<"Token"> | bigint | number | null
     createdAt?: DateTimeWithAggregatesFilter<"Token"> | Date | string
   }
 
@@ -9805,6 +9828,7 @@ export namespace Prisma {
     name: string
     decimals: number
     maxSupply?: bigint | number | null
+    circulatingSupply?: bigint | number | null
     createdAt?: Date | string
     pairsAsToken0?: PairCreateNestedManyWithoutToken0Input
     pairsAsToken1?: PairCreateNestedManyWithoutToken1Input
@@ -9819,6 +9843,7 @@ export namespace Prisma {
     name: string
     decimals: number
     maxSupply?: bigint | number | null
+    circulatingSupply?: bigint | number | null
     createdAt?: Date | string
     pairsAsToken0?: PairUncheckedCreateNestedManyWithoutToken0Input
     pairsAsToken1?: PairUncheckedCreateNestedManyWithoutToken1Input
@@ -9832,6 +9857,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     decimals?: IntFieldUpdateOperationsInput | number
     maxSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    circulatingSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     pairsAsToken0?: PairUpdateManyWithoutToken0NestedInput
     pairsAsToken1?: PairUpdateManyWithoutToken1NestedInput
@@ -9846,6 +9872,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     decimals?: IntFieldUpdateOperationsInput | number
     maxSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    circulatingSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     pairsAsToken0?: PairUncheckedUpdateManyWithoutToken0NestedInput
     pairsAsToken1?: PairUncheckedUpdateManyWithoutToken1NestedInput
@@ -9860,6 +9887,7 @@ export namespace Prisma {
     name: string
     decimals: number
     maxSupply?: bigint | number | null
+    circulatingSupply?: bigint | number | null
     createdAt?: Date | string
   }
 
@@ -9871,6 +9899,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     decimals?: IntFieldUpdateOperationsInput | number
     maxSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    circulatingSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -9883,6 +9912,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     decimals?: IntFieldUpdateOperationsInput | number
     maxSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    circulatingSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -10515,6 +10545,7 @@ export namespace Prisma {
     name?: SortOrder
     decimals?: SortOrder
     maxSupply?: SortOrder
+    circulatingSupply?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -10522,6 +10553,7 @@ export namespace Prisma {
     id?: SortOrder
     decimals?: SortOrder
     maxSupply?: SortOrder
+    circulatingSupply?: SortOrder
   }
 
   export type TokenMaxOrderByAggregateInput = {
@@ -10533,6 +10565,7 @@ export namespace Prisma {
     name?: SortOrder
     decimals?: SortOrder
     maxSupply?: SortOrder
+    circulatingSupply?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -10545,6 +10578,7 @@ export namespace Prisma {
     name?: SortOrder
     decimals?: SortOrder
     maxSupply?: SortOrder
+    circulatingSupply?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -10552,6 +10586,7 @@ export namespace Prisma {
     id?: SortOrder
     decimals?: SortOrder
     maxSupply?: SortOrder
+    circulatingSupply?: SortOrder
   }
 
   export type BigIntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -11666,6 +11701,7 @@ export namespace Prisma {
     name: string
     decimals: number
     maxSupply?: bigint | number | null
+    circulatingSupply?: bigint | number | null
     createdAt?: Date | string
     pairsAsToken1?: PairCreateNestedManyWithoutToken1Input
   }
@@ -11679,6 +11715,7 @@ export namespace Prisma {
     name: string
     decimals: number
     maxSupply?: bigint | number | null
+    circulatingSupply?: bigint | number | null
     createdAt?: Date | string
     pairsAsToken1?: PairUncheckedCreateNestedManyWithoutToken1Input
   }
@@ -11696,6 +11733,7 @@ export namespace Prisma {
     name: string
     decimals: number
     maxSupply?: bigint | number | null
+    circulatingSupply?: bigint | number | null
     createdAt?: Date | string
     pairsAsToken0?: PairCreateNestedManyWithoutToken0Input
   }
@@ -11709,6 +11747,7 @@ export namespace Prisma {
     name: string
     decimals: number
     maxSupply?: bigint | number | null
+    circulatingSupply?: bigint | number | null
     createdAt?: Date | string
     pairsAsToken0?: PairUncheckedCreateNestedManyWithoutToken0Input
   }
@@ -11861,6 +11900,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     decimals?: IntFieldUpdateOperationsInput | number
     maxSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    circulatingSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     pairsAsToken1?: PairUpdateManyWithoutToken1NestedInput
   }
@@ -11874,6 +11914,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     decimals?: IntFieldUpdateOperationsInput | number
     maxSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    circulatingSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     pairsAsToken1?: PairUncheckedUpdateManyWithoutToken1NestedInput
   }
@@ -11897,6 +11938,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     decimals?: IntFieldUpdateOperationsInput | number
     maxSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    circulatingSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     pairsAsToken0?: PairUpdateManyWithoutToken0NestedInput
   }
@@ -11910,6 +11952,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     decimals?: IntFieldUpdateOperationsInput | number
     maxSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    circulatingSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     pairsAsToken0?: PairUncheckedUpdateManyWithoutToken0NestedInput
   }
