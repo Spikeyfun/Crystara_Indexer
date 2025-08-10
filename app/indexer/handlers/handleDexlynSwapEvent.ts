@@ -30,10 +30,31 @@ export async function handleDexlynSwapEvent(event: RpcEvent, tx: TransactionClie
     logger.info(`New DexlynSwapEvent found. Creating...`);
 
     // Find or create Token0 and Token1 using the centralized helper
-    const { token: token0, created: token0Created } = await getOrCreateToken(dexlynEventData.pair_x, event.network, tx);
-    const { token: token1, created: token1Created } = await getOrCreateToken(dexlynEventData.pair_y, event.network, tx);
+    const { token: tokenA, created: token0Created } = await getOrCreateToken(dexlynEventData.pair_x, event.network, tx);
+    const { token: tokenB, created: token1Created } = await getOrCreateToken(dexlynEventData.pair_y, event.network, tx);
+
+    // Standardize token order by address to prevent duplicate pairs
+    const [token0, token1] = [tokenA, tokenB].sort((a, b) => a.address.localeCompare(b.address));
 
     let pairCreated = false;
+
+    // Check if the pair exists before attempting to create a swap
+    const existingPair = await tx.pair.findUnique({
+      where: {
+        network_token0Id_token1Id: {
+          network: event.network,
+          token0Id: token0.id,
+          token1Id: token1.id,
+        },
+      },
+      select: { id: true },
+    });
+
+    if (!existingPair) {
+      // This is a proxy for knowing if the pair will be created.
+      // connectOrCreate doesn't return whether it created or connected.
+      pairCreated = true;
+    }
 
     // Mapear los datos del evento al formato del modelo Prisma
     const swapData: Prisma.DexlynSwapCreateInput = {
@@ -53,7 +74,7 @@ export async function handleDexlynSwapEvent(event: RpcEvent, tx: TransactionClie
       pair: {
         connectOrCreate: {
           where: {
-            // Use the new unique constraint on token IDs
+            // Use the new unique constraint on token IDs with sorted tokens
             network_token0Id_token1Id: {
               network: event.network,
               token0Id: token0.id,
@@ -70,33 +91,9 @@ export async function handleDexlynSwapEvent(event: RpcEvent, tx: TransactionClie
       },
     };
 
-    const createdSwap = await tx.dexlynSwap.create({
+    await tx.dexlynSwap.create({
       data: swapData,
     });
-
-    // Check if the pair was created during the connectOrCreate operation
-    // This is a bit tricky with Prisma's connectOrCreate. A direct way to know
-    // if 'create' was called is not exposed. We assume if the swap was created,
-    // and either token was new, or the pair didn't exist, then a new pair might have been created.
-    // For simplicity, we'll rely on the fact that if a new token was created,
-    // a new pair might also have been created or connected.
-    // A more robust solution would involve querying the pair before connectOrCreate
-    // or using a custom upsert logic for pairs.
-    const existingPair = await tx.pair.findUnique({
-      where: {
-        network_token0Id_token1Id: {
-          network: event.network,
-          token0Id: token0.id,
-          token1Id: token1.id,
-        },
-      },
-      select: { id: true },
-    });
-
-    if (!existingPair) { // If it didn't exist before, it must have been created by connectOrCreate
-      pairCreated = true;
-    }
-
 
     logger.info(`Successfully created DexlynSwapEvent.`);
     return token0Created || token1Created || pairCreated;
