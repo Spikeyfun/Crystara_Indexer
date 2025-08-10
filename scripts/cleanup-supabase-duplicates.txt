@@ -1,0 +1,96 @@
+const { PrismaClient } = require('../prisma/app/generated/prisma');
+
+const prisma = new PrismaClient();
+
+// Default to 'dry-run'. Pass 'write' as a command-line argument to execute changes.
+const mode = process.argv[2] === 'write' ? 'write' : 'dry-run';
+
+async function cleanupSupabaseDuplicates() {
+  console.log(`🚀 Starting Supabase duplicate pair cleanup in [${mode.toUpperCase()}] mode.`);
+  if (mode === 'dry-run') {
+    console.log("📋 This is a simulation. No changes will be written to the Supabase database.");
+    console.log("📋 To apply changes, run the script with the 'write' argument: ts-node scripts/cleanup-supabase-duplicates.ts write");
+  }
+
+  await prisma.$connect();
+
+  try {
+    console.log('\n🔍 Finding all pairs with their tokens from Supabase...');
+    const pairs = await prisma.pair.findMany({
+      include: {
+        token0: true,
+        token1: true,
+      },
+    });
+    console.log(`Found ${pairs.length} total pairs in Supabase.`);
+
+    const seenPairs = new Map();
+    for (const pair of pairs) {
+      // Ensure tokens are loaded before creating the key
+      if (pair.token0 && pair.token1) {
+        const key = [pair.token0.address, pair.token1.address].sort().join('-');
+        if (!seenPairs.has(key)) {
+          seenPairs.set(key, []);
+        }
+        seenPairs.get(key).push(pair);
+      }
+    }
+
+    const duplicateGroups = Array.from(seenPairs.values()).filter((group) => group.length > 1);
+
+    if (duplicateGroups.length === 0) {
+      console.log('\n✅ No duplicate pair groups found in Supabase. Database is clean!');
+      return;
+    }
+
+    console.log(`\n🔥 Found ${duplicateGroups.length} group(s) of duplicate pairs to process in Supabase.`);
+
+    for (const group of duplicateGroups) {
+      group.sort((a: any, b: any) => a.id - b.id);
+      const canonicalPair = group[0];
+      const duplicatePairs = group.slice(1);
+      const duplicatePairIds = duplicatePairs.map((p: any) => p.id);
+
+      console.log(`\n------------------------------------------------------`);
+      console.log(`🔄 Processing group for tokens ${canonicalPair.token0.symbol}-${canonicalPair.token1.symbol}:
+`);
+      console.log(`  👑 Canonical Pair ID to KEEP: ${canonicalPair.id}`);
+      console.log(`  🗑️ Duplicate Pair IDs to DELETE: ${duplicatePairIds.join(', ')}`);
+
+      try {
+        if (mode === 'write') {
+          await prisma.$transaction(async (tx: any) => {
+            // 1. Delete OhlcData associated with duplicate pairs
+            const ohlcDeleteCount = await tx.ohlcData.deleteMany({
+              where: { pairId: { in: duplicatePairIds } },
+            });
+            console.log(`  ❌ Deleted ${ohlcDeleteCount.count} OhlcData record(s).`);
+
+            // 2. Delete the duplicate Pair records
+            const pairDeleteCount = await tx.pair.deleteMany({
+              where: { id: { in: duplicatePairIds } },
+            });
+            console.log(`  ❌ Deleted ${pairDeleteCount.count} duplicate pair record(s).`);
+          });
+          console.log(`  ✅ Successfully deleted duplicates for group.`);
+        } else {
+          // In dry-run mode, just log what would have happened
+          const ohlcDeleteCount = await prisma.ohlcData.count({ where: { pairId: { in: duplicatePairIds } } });
+          console.log(`  [DRY-RUN] Would delete ${ohlcDeleteCount} OhlcData record(s).`);
+          console.log(`  [DRY-RUN] Would delete ${duplicatePairIds.length} duplicate pair record(s).`);
+        }
+      } catch (transactionError) {
+        console.error(`  ❌ TRANSACTION FAILED for group. No changes were made.`, transactionError);
+      }
+    }
+    console.log(`\n------------------------------------------------------`);
+
+  } catch (error) {
+    console.error('\nAn unexpected error occurred:', error);
+  } finally {
+    await prisma.$disconnect();
+    console.log('\n🏁 Supabase cleanup script finished.');
+  }
+}
+
+cleanupSupabaseDuplicates();

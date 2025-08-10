@@ -117,7 +117,6 @@ model Pair {
 
   spikeyAmmSwaps SpikeyAmmSwap[]
   dexlynSwaps    DexlynSwap[]
-  ohlcData       OhlcData[]
 
   createdAt DateTime @default(now())
 
@@ -128,13 +127,11 @@ model Pair {
 }
 
 model OhlcData {
-  id Int @id @default(autoincrement())
-
-  network   String
-  ammSource String
-  timeframe String
-  timestamp DateTime
-
+  id         Int      @id @default(autoincrement())
+  network    String
+  ammSource  String
+  timeframe  String
+  timestamp  DateTime
   open       Decimal
   high       Decimal
   low        Decimal
@@ -145,10 +142,15 @@ model OhlcData {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  pairId Int
-  pair   Pair @relation(fields: [pairId], references: [id])
+  token0Address String // <-- Clave natural
+  token1Address String // <-- Clave natural
 
-  @@unique([network, ammSource, pairId, timeframe, timestamp])
-  @@index([pairId])
+  // Ya no necesitamos la relación con Pair aquí, desacopla el modelo.
+  // pairId          Int
+  // pair            Pair     @relation(fields: [pairId], references: [id])
+
+  @@unique([network, ammSource, token0Address, token1Address, timeframe, timestamp])
+  @@index([token0Address])
+  @@index([token1Address])
   @@index([timestamp])
 }

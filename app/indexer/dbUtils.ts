@@ -6,7 +6,6 @@ import { fetchCoinInfoResource } from '@/lib/viewFunction/ViewStruct';
 
 const logger = createLogger('dbUtils');
 
-const MODULE_PATH_STAKING = `${process.env.NEXT_PUBLIC_STAKING_ADDRESS}::${process.env.NEXT_PUBLIC_STAKING_MODULE}`;
 const MODULE_PATH_PAIR = `${process.env.NEXT_PUBLIC_SUPRA_AMM_SPIKE_ADDRESS}::${process.env.NEXT_PUBLIC_SUPRA_AMM_SPIKE_PAIR_MODULE}`;
 const MODULE_PATH_WRAPPER = `${process.env.NEXT_PUBLIC_SUPRA_AMM_SPIKE_ADDRESS}::${process.env.NEXT_PUBLIC_SUPRA_AMM_SPIKE_WRAPPER_MODULE}`;
 
@@ -19,6 +18,8 @@ export async function getOrCreateToken(
     logger.error(`[${network}] Attempted to get or create token with null or undefined address.`);
     throw new Error(`Token address cannot be null or undefined for network ${network}`);
   }
+
+  logger.info(`[getOrCreateToken] Starting for address: ${tokenAddress}`);
 
   let primaryTokenAddress = tokenAddress; // Assume input is primary by default
   let finalWrappedAddress: string | null = null;
@@ -50,6 +51,7 @@ export async function getOrCreateToken(
       }
     } catch (rpcError: any) {
       logger.error(`[${network}] RPC call to get_original for ${tokenAddress} (FA) failed. Error: ${rpcError.message}. Treating input as primary.`);
+      logger.info(`[getOrCreateToken] Determined primary address: ${primaryTokenAddress} and wrapped address: ${finalWrappedAddress}`);
       finalWrappedAddress = tokenAddress; // Input FA is primary, RPC failed
     }
   } else { // If it's a Coin-Legacy, it's already the primary
@@ -98,6 +100,8 @@ export async function getOrCreateToken(
   } catch (rpcError: any) {
     logger.error(`[${network}] RPC call to fetch metadata for primary ${primaryTokenAddress} failed. Error: ${rpcError.message}.`);
   }
+
+  logger.info(`[getOrCreateToken] Searching for token in DB with primary address: ${primaryTokenAddress}`);
 
   // Now, try to find the token using the primaryTokenAddress
   let token = await tx.token.findUnique({

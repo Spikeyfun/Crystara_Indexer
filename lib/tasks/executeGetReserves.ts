@@ -1,5 +1,4 @@
 // src/lib/tasks/executeGetReserves.ts
-import { sqliteDb as prisma } from '../../lib/prismadb';
 import { NetworkConfig } from '../TaskProcessor'; // Importa la interfaz
 import { getReservesForPair } from '../functions/getReserves'; // Importa tu hook
 import { createLogger } from '@/app/indexer/utils'; // Para logging

@@ -74,8 +74,10 @@ export async function processEvents(events: RpcEvent[], tx: any): Promise<boolea
                 logger.warn(`[${event.network}] Unknown event type: ${event.type}`);
         }
         if (handlerCreatedData) {
-          createdNewData = true; // Update overall flag if any handler created new data
+          createdNewData = true;
+          logger.debug(`Debug: handlerCreatedData is true for event type ${event.type}. Setting createdNewData to true.`); // ADD THIS LINE
         }
+        // ...
 
         await tx.eventTracking.update({
           where: { id: eventTrackingEntry.id },
@@ -121,6 +123,7 @@ export async function processEvents(events: RpcEvent[], tx: any): Promise<boolea
   }
 
   logger.info(`Finished processing batch of ${events.length} events.`);
+  logger.debug(`Debug: processEvents returning createdNewData: ${createdNewData}`); // ADD THIS LINE
   return createdNewData;
 }
         

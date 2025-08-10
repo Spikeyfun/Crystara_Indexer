@@ -1,7 +1,6 @@
 import { supabaseDb } from '@/lib/prismadb';
 import { createLogger } from '@/app/indexer/utils';
-import { Prisma as SupabasePrisma, OhlcData } from '@/generated/supabase/client';
-
+import { Prisma as SupabasePrisma, OhlcData } from '@/prisma/app/generated/prisma';
 const logger = createLogger('ohlc-aggregator-1d');
 
 function roundTimestampToInterval(timestamp: Date): Date {
@@ -15,17 +14,28 @@ export async function executeOhlcAggregation1d(network: string) {
   const outputTimeframe = '1d';
   logger.info(`[${network}] Starting 1d OHLC aggregation (Supabase -> Supabase)`);
 
-  const pairs = await supabaseDb.pair.findMany({ where: { network } });
+  const distinctPairs = await supabaseDb.ohlcData.findMany({
+    where: { network, timeframe: inputTimeframe },
+    distinct: ['token0Address', 'token1Address'],
+    select: {
+      token0Address: true,
+      token1Address: true,
+    },
+  });
 
-  if (pairs.length === 0) {
-    logger.info(`[${network}] No pairs found in Supabase to process for 1d aggregation.`);
+  if (distinctPairs.length === 0) {
+    logger.info(`[${network}] No pairs with 1h data found in Supabase to process for 1d aggregation.`);
     return;
   }
+  
+  logger.info(`[${network}] Found ${distinctPairs.length} distinct pairs with 1h data to process.`);
 
-  for (const pair of pairs) {
+  for (const ohlcPair of distinctPairs) {
     try {
+      const { token0Address, token1Address } = ohlcPair;
+
       const lastOhlc1d = await supabaseDb.ohlcData.findFirst({
-        where: { network, pairId: pair.id, timeframe: outputTimeframe },
+        where: { network, token0Address, token1Address, timeframe: outputTimeframe },
         orderBy: { timestamp: 'desc' },
       });
 
@@ -35,27 +45,26 @@ export async function executeOhlcAggregation1d(network: string) {
         startTime.setUTCDate(startTime.getUTCDate() + 1);
       } else {
         const earliest1hOhlc = await supabaseDb.ohlcData.findFirst({
-          where: { pairId: pair.id, network, timeframe: inputTimeframe },
+          where: { network, token0Address, token1Address, timeframe: inputTimeframe },
           orderBy: { timestamp: 'asc' },
           select: { timestamp: true },
         });
 
         if (!earliest1hOhlc) {
-          logger.info(`[${network}] No 1h OHLC data in Supabase for pair ${pair.id}. Skipping.`);
+          logger.info(`[${network}] No 1h OHLC data in Supabase for pair ${token0Address}/${token1Address}. Skipping.`);
           continue;
         }
         startTime = roundTimestampToInterval(earliest1hOhlc.timestamp);
       }
 
-      const now = new Date();
-      if (startTime.getTime() > now.getTime()) continue;
+      if (startTime.getTime() > new Date().getTime()) continue;
 
-      logger.info(`[${network}] Pair ${pair.id}: Reading 1h data from Supabase from ${startTime.toISOString()}`);
 
       const ohlc1hData = await supabaseDb.ohlcData.findMany({
         where: {
-          pairId: pair.id,
           network,
+          token0Address,
+          token1Address,
           timeframe: inputTimeframe,
           timestamp: { gte: startTime },
         },
@@ -64,7 +73,7 @@ export async function executeOhlcAggregation1d(network: string) {
 
       if (ohlc1hData.length === 0) continue;
 
-      logger.info(`[${network}] Found ${ohlc1hData.length} 1h records in Supabase for pair ${pair.id}.`);
+      logger.info(`[${network}] Found ${ohlc1hData.length} 1h records in Supabase for pair ${token0Address}/${token1Address}.`);
 
       const ohlcByDay = ohlc1hData.reduce((acc, ohlc) => {
         const key = roundTimestampToInterval(ohlc.timestamp).toISOString();
@@ -97,22 +106,38 @@ export async function executeOhlcAggregation1d(network: string) {
 
           const ohlc = { open, high, low, close, volume, tradeCount };
 
-          logger.info(`[${network}] Preparing 1d OHLC upsert for pair ${pair.id} from ${ammSource} at ${timestamp.toISOString()}`);
+          logger.info(`[${network}] Preparing 1d OHLC upsert for pair ${token0Address}/${token1Address} from ${ammSource} at ${timestamp.toISOString()}`);
 
           upsertPromises.push(supabaseDb.ohlcData.upsert({
-            where: { network_ammSource_pairId_timeframe_timestamp: { network, ammSource, pairId: pair.id, timeframe: outputTimeframe, timestamp } },
+            where: {
+              network_ammSource_token0Address_token1Address_timeframe_timestamp: {
+                network,
+                ammSource,
+                token0Address,
+                token1Address,
+                timeframe: outputTimeframe,
+                timestamp,
+              }
+            },
             update: ohlc,
-            create: { network, ammSource, pairId: pair.id, timeframe: outputTimeframe, timestamp, ...ohlc },
+            create: {
+              network,
+              ammSource,
+              token0Address,
+              token1Address,
+              timeframe: outputTimeframe,
+              timestamp,
+              ...ohlc
+            },
           }));
-        }
       }
-
-      if (upsertPromises.length > 0) {
-        logger.info(`[${network}] Executing batch upsert of ${upsertPromises.length} 1d OHLC records to Supabase for pair ${pair.id}.`);
-        await supabaseDb.$transaction(upsertPromises);
-      }
-    } catch (error) {
-      logger.error(`[${network}] Failed to process pair ${pair.id} for 1d aggregation:`, error);
     }
+
+    if (upsertPromises.length > 0) {
+      await supabaseDb.$transaction(upsertPromises);
+    }
+  } catch (error) {
+    logger.error(`[${network}] Failed to process pair ${ohlcPair.token0Address}/${ohlcPair.token1Address} for 1d aggregation:`, error);
   }
+}
 }

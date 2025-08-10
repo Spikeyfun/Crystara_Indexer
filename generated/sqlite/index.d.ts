@@ -1379,13 +1379,11 @@ export namespace Prisma {
   export type PairCountOutputType = {
     spikeyAmmSwaps: number
     dexlynSwaps: number
-    ohlcData: number
   }
 
   export type PairCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     spikeyAmmSwaps?: boolean | PairCountOutputTypeCountSpikeyAmmSwapsArgs
     dexlynSwaps?: boolean | PairCountOutputTypeCountDexlynSwapsArgs
-    ohlcData?: boolean | PairCountOutputTypeCountOhlcDataArgs
   }
 
   // Custom InputTypes
@@ -1411,13 +1409,6 @@ export namespace Prisma {
    */
   export type PairCountOutputTypeCountDexlynSwapsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: DexlynSwapWhereInput
-  }
-
-  /**
-   * PairCountOutputType without action
-   */
-  export type PairCountOutputTypeCountOhlcDataArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: OhlcDataWhereInput
   }
 
 
@@ -6482,7 +6473,6 @@ export namespace Prisma {
     token1?: boolean | TokenDefaultArgs<ExtArgs>
     spikeyAmmSwaps?: boolean | Pair$spikeyAmmSwapsArgs<ExtArgs>
     dexlynSwaps?: boolean | Pair$dexlynSwapsArgs<ExtArgs>
-    ohlcData?: boolean | Pair$ohlcDataArgs<ExtArgs>
     _count?: boolean | PairCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["pair"]>
 
@@ -6532,7 +6522,6 @@ export namespace Prisma {
     token1?: boolean | TokenDefaultArgs<ExtArgs>
     spikeyAmmSwaps?: boolean | Pair$spikeyAmmSwapsArgs<ExtArgs>
     dexlynSwaps?: boolean | Pair$dexlynSwapsArgs<ExtArgs>
-    ohlcData?: boolean | Pair$ohlcDataArgs<ExtArgs>
     _count?: boolean | PairCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type PairIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6551,7 +6540,6 @@ export namespace Prisma {
       token1: Prisma.$TokenPayload<ExtArgs>
       spikeyAmmSwaps: Prisma.$SpikeyAmmSwapPayload<ExtArgs>[]
       dexlynSwaps: Prisma.$DexlynSwapPayload<ExtArgs>[]
-      ohlcData: Prisma.$OhlcDataPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -6961,7 +6949,6 @@ export namespace Prisma {
     token1<T extends TokenDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TokenDefaultArgs<ExtArgs>>): Prisma__TokenClient<$Result.GetResult<Prisma.$TokenPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     spikeyAmmSwaps<T extends Pair$spikeyAmmSwapsArgs<ExtArgs> = {}>(args?: Subset<T, Pair$spikeyAmmSwapsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SpikeyAmmSwapPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     dexlynSwaps<T extends Pair$dexlynSwapsArgs<ExtArgs> = {}>(args?: Subset<T, Pair$dexlynSwapsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DexlynSwapPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    ohlcData<T extends Pair$ohlcDataArgs<ExtArgs> = {}>(args?: Subset<T, Pair$ohlcDataArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OhlcDataPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7442,30 +7429,6 @@ export namespace Prisma {
   }
 
   /**
-   * Pair.ohlcData
-   */
-  export type Pair$ohlcDataArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the OhlcData
-     */
-    select?: OhlcDataSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the OhlcData
-     */
-    omit?: OhlcDataOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: OhlcDataInclude<ExtArgs> | null
-    where?: OhlcDataWhereInput
-    orderBy?: OhlcDataOrderByWithRelationInput | OhlcDataOrderByWithRelationInput[]
-    cursor?: OhlcDataWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: OhlcDataScalarFieldEnum | OhlcDataScalarFieldEnum[]
-  }
-
-  /**
    * Pair without action
    */
   export type PairDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7504,7 +7467,6 @@ export namespace Prisma {
     close: Decimal | null
     volume: Decimal | null
     tradeCount: number | null
-    pairId: number | null
   }
 
   export type OhlcDataSumAggregateOutputType = {
@@ -7515,7 +7477,6 @@ export namespace Prisma {
     close: Decimal | null
     volume: Decimal | null
     tradeCount: number | null
-    pairId: number | null
   }
 
   export type OhlcDataMinAggregateOutputType = {
@@ -7532,7 +7493,8 @@ export namespace Prisma {
     tradeCount: number | null
     createdAt: Date | null
     updatedAt: Date | null
-    pairId: number | null
+    token0Address: string | null
+    token1Address: string | null
   }
 
   export type OhlcDataMaxAggregateOutputType = {
@@ -7549,7 +7511,8 @@ export namespace Prisma {
     tradeCount: number | null
     createdAt: Date | null
     updatedAt: Date | null
-    pairId: number | null
+    token0Address: string | null
+    token1Address: string | null
   }
 
   export type OhlcDataCountAggregateOutputType = {
@@ -7566,7 +7529,8 @@ export namespace Prisma {
     tradeCount: number
     createdAt: number
     updatedAt: number
-    pairId: number
+    token0Address: number
+    token1Address: number
     _all: number
   }
 
@@ -7579,7 +7543,6 @@ export namespace Prisma {
     close?: true
     volume?: true
     tradeCount?: true
-    pairId?: true
   }
 
   export type OhlcDataSumAggregateInputType = {
@@ -7590,7 +7553,6 @@ export namespace Prisma {
     close?: true
     volume?: true
     tradeCount?: true
-    pairId?: true
   }
 
   export type OhlcDataMinAggregateInputType = {
@@ -7607,7 +7569,8 @@ export namespace Prisma {
     tradeCount?: true
     createdAt?: true
     updatedAt?: true
-    pairId?: true
+    token0Address?: true
+    token1Address?: true
   }
 
   export type OhlcDataMaxAggregateInputType = {
@@ -7624,7 +7587,8 @@ export namespace Prisma {
     tradeCount?: true
     createdAt?: true
     updatedAt?: true
-    pairId?: true
+    token0Address?: true
+    token1Address?: true
   }
 
   export type OhlcDataCountAggregateInputType = {
@@ -7641,7 +7605,8 @@ export namespace Prisma {
     tradeCount?: true
     createdAt?: true
     updatedAt?: true
-    pairId?: true
+    token0Address?: true
+    token1Address?: true
     _all?: true
   }
 
@@ -7745,7 +7710,8 @@ export namespace Prisma {
     tradeCount: number
     createdAt: Date
     updatedAt: Date
-    pairId: number
+    token0Address: string
+    token1Address: string
     _count: OhlcDataCountAggregateOutputType | null
     _avg: OhlcDataAvgAggregateOutputType | null
     _sum: OhlcDataSumAggregateOutputType | null
@@ -7781,8 +7747,8 @@ export namespace Prisma {
     tradeCount?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    pairId?: boolean
-    pair?: boolean | PairDefaultArgs<ExtArgs>
+    token0Address?: boolean
+    token1Address?: boolean
   }, ExtArgs["result"]["ohlcData"]>
 
   export type OhlcDataSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -7799,8 +7765,8 @@ export namespace Prisma {
     tradeCount?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    pairId?: boolean
-    pair?: boolean | PairDefaultArgs<ExtArgs>
+    token0Address?: boolean
+    token1Address?: boolean
   }, ExtArgs["result"]["ohlcData"]>
 
   export type OhlcDataSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -7817,8 +7783,8 @@ export namespace Prisma {
     tradeCount?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    pairId?: boolean
-    pair?: boolean | PairDefaultArgs<ExtArgs>
+    token0Address?: boolean
+    token1Address?: boolean
   }, ExtArgs["result"]["ohlcData"]>
 
   export type OhlcDataSelectScalar = {
@@ -7835,25 +7801,15 @@ export namespace Prisma {
     tradeCount?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    pairId?: boolean
+    token0Address?: boolean
+    token1Address?: boolean
   }
 
-  export type OhlcDataOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "network" | "ammSource" | "timeframe" | "timestamp" | "open" | "high" | "low" | "close" | "volume" | "tradeCount" | "createdAt" | "updatedAt" | "pairId", ExtArgs["result"]["ohlcData"]>
-  export type OhlcDataInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    pair?: boolean | PairDefaultArgs<ExtArgs>
-  }
-  export type OhlcDataIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    pair?: boolean | PairDefaultArgs<ExtArgs>
-  }
-  export type OhlcDataIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    pair?: boolean | PairDefaultArgs<ExtArgs>
-  }
+  export type OhlcDataOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "network" | "ammSource" | "timeframe" | "timestamp" | "open" | "high" | "low" | "close" | "volume" | "tradeCount" | "createdAt" | "updatedAt" | "token0Address" | "token1Address", ExtArgs["result"]["ohlcData"]>
 
   export type $OhlcDataPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "OhlcData"
-    objects: {
-      pair: Prisma.$PairPayload<ExtArgs>
-    }
+    objects: {}
     scalars: $Extensions.GetPayloadResult<{
       id: number
       network: string
@@ -7868,7 +7824,8 @@ export namespace Prisma {
       tradeCount: number
       createdAt: Date
       updatedAt: Date
-      pairId: number
+      token0Address: string
+      token1Address: string
     }, ExtArgs["result"]["ohlcData"]>
     composites: {}
   }
@@ -8263,7 +8220,6 @@ export namespace Prisma {
    */
   export interface Prisma__OhlcDataClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    pair<T extends PairDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PairDefaultArgs<ExtArgs>>): Prisma__PairClient<$Result.GetResult<Prisma.$PairPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8306,7 +8262,8 @@ export namespace Prisma {
     readonly tradeCount: FieldRef<"OhlcData", 'Int'>
     readonly createdAt: FieldRef<"OhlcData", 'DateTime'>
     readonly updatedAt: FieldRef<"OhlcData", 'DateTime'>
-    readonly pairId: FieldRef<"OhlcData", 'Int'>
+    readonly token0Address: FieldRef<"OhlcData", 'String'>
+    readonly token1Address: FieldRef<"OhlcData", 'String'>
   }
     
 
@@ -8323,10 +8280,6 @@ export namespace Prisma {
      * Omit specific fields from the OhlcData
      */
     omit?: OhlcDataOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: OhlcDataInclude<ExtArgs> | null
     /**
      * Filter, which OhlcData to fetch.
      */
@@ -8346,10 +8299,6 @@ export namespace Prisma {
      */
     omit?: OhlcDataOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: OhlcDataInclude<ExtArgs> | null
-    /**
      * Filter, which OhlcData to fetch.
      */
     where: OhlcDataWhereUniqueInput
@@ -8367,10 +8316,6 @@ export namespace Prisma {
      * Omit specific fields from the OhlcData
      */
     omit?: OhlcDataOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: OhlcDataInclude<ExtArgs> | null
     /**
      * Filter, which OhlcData to fetch.
      */
@@ -8420,10 +8365,6 @@ export namespace Prisma {
      */
     omit?: OhlcDataOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: OhlcDataInclude<ExtArgs> | null
-    /**
      * Filter, which OhlcData to fetch.
      */
     where?: OhlcDataWhereInput
@@ -8472,10 +8413,6 @@ export namespace Prisma {
      */
     omit?: OhlcDataOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: OhlcDataInclude<ExtArgs> | null
-    /**
      * Filter, which OhlcData to fetch.
      */
     where?: OhlcDataWhereInput
@@ -8519,10 +8456,6 @@ export namespace Prisma {
      */
     omit?: OhlcDataOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: OhlcDataInclude<ExtArgs> | null
-    /**
      * The data needed to create a OhlcData.
      */
     data: XOR<OhlcDataCreateInput, OhlcDataUncheckedCreateInput>
@@ -8554,10 +8487,6 @@ export namespace Prisma {
      * The data used to create many OhlcData.
      */
     data: OhlcDataCreateManyInput | OhlcDataCreateManyInput[]
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: OhlcDataIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -8572,10 +8501,6 @@ export namespace Prisma {
      * Omit specific fields from the OhlcData
      */
     omit?: OhlcDataOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: OhlcDataInclude<ExtArgs> | null
     /**
      * The data needed to update a OhlcData.
      */
@@ -8628,10 +8553,6 @@ export namespace Prisma {
      * Limit how many OhlcData to update.
      */
     limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: OhlcDataIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -8646,10 +8567,6 @@ export namespace Prisma {
      * Omit specific fields from the OhlcData
      */
     omit?: OhlcDataOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: OhlcDataInclude<ExtArgs> | null
     /**
      * The filter to search for the OhlcData to update in case it exists.
      */
@@ -8676,10 +8593,6 @@ export namespace Prisma {
      * Omit specific fields from the OhlcData
      */
     omit?: OhlcDataOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: OhlcDataInclude<ExtArgs> | null
     /**
      * Filter which OhlcData to delete.
      */
@@ -8712,10 +8625,6 @@ export namespace Prisma {
      * Omit specific fields from the OhlcData
      */
     omit?: OhlcDataOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: OhlcDataInclude<ExtArgs> | null
   }
 
 
@@ -8833,7 +8742,8 @@ export namespace Prisma {
     tradeCount: 'tradeCount',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
-    pairId: 'pairId'
+    token0Address: 'token0Address',
+    token1Address: 'token1Address'
   };
 
   export type OhlcDataScalarFieldEnum = (typeof OhlcDataScalarFieldEnum)[keyof typeof OhlcDataScalarFieldEnum]
@@ -9311,7 +9221,6 @@ export namespace Prisma {
     token1?: XOR<TokenScalarRelationFilter, TokenWhereInput>
     spikeyAmmSwaps?: SpikeyAmmSwapListRelationFilter
     dexlynSwaps?: DexlynSwapListRelationFilter
-    ohlcData?: OhlcDataListRelationFilter
   }
 
   export type PairOrderByWithRelationInput = {
@@ -9328,7 +9237,6 @@ export namespace Prisma {
     token1?: TokenOrderByWithRelationInput
     spikeyAmmSwaps?: SpikeyAmmSwapOrderByRelationAggregateInput
     dexlynSwaps?: DexlynSwapOrderByRelationAggregateInput
-    ohlcData?: OhlcDataOrderByRelationAggregateInput
   }
 
   export type PairWhereUniqueInput = Prisma.AtLeast<{
@@ -9350,7 +9258,6 @@ export namespace Prisma {
     token1?: XOR<TokenScalarRelationFilter, TokenWhereInput>
     spikeyAmmSwaps?: SpikeyAmmSwapListRelationFilter
     dexlynSwaps?: DexlynSwapListRelationFilter
-    ohlcData?: OhlcDataListRelationFilter
   }, "id" | "network_token0Id_token1Id" | "network_spikeyAmmPairAddress">
 
   export type PairOrderByWithAggregationInput = {
@@ -9402,8 +9309,8 @@ export namespace Prisma {
     tradeCount?: IntFilter<"OhlcData"> | number
     createdAt?: DateTimeFilter<"OhlcData"> | Date | string
     updatedAt?: DateTimeFilter<"OhlcData"> | Date | string
-    pairId?: IntFilter<"OhlcData"> | number
-    pair?: XOR<PairScalarRelationFilter, PairWhereInput>
+    token0Address?: StringFilter<"OhlcData"> | string
+    token1Address?: StringFilter<"OhlcData"> | string
   }
 
   export type OhlcDataOrderByWithRelationInput = {
@@ -9420,13 +9327,13 @@ export namespace Prisma {
     tradeCount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    pairId?: SortOrder
-    pair?: PairOrderByWithRelationInput
+    token0Address?: SortOrder
+    token1Address?: SortOrder
   }
 
   export type OhlcDataWhereUniqueInput = Prisma.AtLeast<{
     id?: number
-    network_ammSource_pairId_timeframe_timestamp?: OhlcDataNetworkAmmSourcePairIdTimeframeTimestampCompoundUniqueInput
+    network_ammSource_token0Address_token1Address_timeframe_timestamp?: OhlcDataNetworkAmmSourceToken0AddressToken1AddressTimeframeTimestampCompoundUniqueInput
     AND?: OhlcDataWhereInput | OhlcDataWhereInput[]
     OR?: OhlcDataWhereInput[]
     NOT?: OhlcDataWhereInput | OhlcDataWhereInput[]
@@ -9442,9 +9349,9 @@ export namespace Prisma {
     tradeCount?: IntFilter<"OhlcData"> | number
     createdAt?: DateTimeFilter<"OhlcData"> | Date | string
     updatedAt?: DateTimeFilter<"OhlcData"> | Date | string
-    pairId?: IntFilter<"OhlcData"> | number
-    pair?: XOR<PairScalarRelationFilter, PairWhereInput>
-  }, "id" | "network_ammSource_pairId_timeframe_timestamp">
+    token0Address?: StringFilter<"OhlcData"> | string
+    token1Address?: StringFilter<"OhlcData"> | string
+  }, "id" | "network_ammSource_token0Address_token1Address_timeframe_timestamp">
 
   export type OhlcDataOrderByWithAggregationInput = {
     id?: SortOrder
@@ -9460,7 +9367,8 @@ export namespace Prisma {
     tradeCount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    pairId?: SortOrder
+    token0Address?: SortOrder
+    token1Address?: SortOrder
     _count?: OhlcDataCountOrderByAggregateInput
     _avg?: OhlcDataAvgOrderByAggregateInput
     _max?: OhlcDataMaxOrderByAggregateInput
@@ -9485,7 +9393,8 @@ export namespace Prisma {
     tradeCount?: IntWithAggregatesFilter<"OhlcData"> | number
     createdAt?: DateTimeWithAggregatesFilter<"OhlcData"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"OhlcData"> | Date | string
-    pairId?: IntWithAggregatesFilter<"OhlcData"> | number
+    token0Address?: StringWithAggregatesFilter<"OhlcData"> | string
+    token1Address?: StringWithAggregatesFilter<"OhlcData"> | string
   }
 
   export type EventTrackingCreateInput = {
@@ -9927,7 +9836,6 @@ export namespace Prisma {
     token1: TokenCreateNestedOneWithoutPairsAsToken1Input
     spikeyAmmSwaps?: SpikeyAmmSwapCreateNestedManyWithoutPairInput
     dexlynSwaps?: DexlynSwapCreateNestedManyWithoutPairInput
-    ohlcData?: OhlcDataCreateNestedManyWithoutPairInput
   }
 
   export type PairUncheckedCreateInput = {
@@ -9942,7 +9850,6 @@ export namespace Prisma {
     createdAt?: Date | string
     spikeyAmmSwaps?: SpikeyAmmSwapUncheckedCreateNestedManyWithoutPairInput
     dexlynSwaps?: DexlynSwapUncheckedCreateNestedManyWithoutPairInput
-    ohlcData?: OhlcDataUncheckedCreateNestedManyWithoutPairInput
   }
 
   export type PairUpdateInput = {
@@ -9956,7 +9863,6 @@ export namespace Prisma {
     token1?: TokenUpdateOneRequiredWithoutPairsAsToken1NestedInput
     spikeyAmmSwaps?: SpikeyAmmSwapUpdateManyWithoutPairNestedInput
     dexlynSwaps?: DexlynSwapUpdateManyWithoutPairNestedInput
-    ohlcData?: OhlcDataUpdateManyWithoutPairNestedInput
   }
 
   export type PairUncheckedUpdateInput = {
@@ -9971,7 +9877,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     spikeyAmmSwaps?: SpikeyAmmSwapUncheckedUpdateManyWithoutPairNestedInput
     dexlynSwaps?: DexlynSwapUncheckedUpdateManyWithoutPairNestedInput
-    ohlcData?: OhlcDataUncheckedUpdateManyWithoutPairNestedInput
   }
 
   export type PairCreateManyInput = {
@@ -10020,7 +9925,8 @@ export namespace Prisma {
     tradeCount: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    pair: PairCreateNestedOneWithoutOhlcDataInput
+    token0Address: string
+    token1Address: string
   }
 
   export type OhlcDataUncheckedCreateInput = {
@@ -10037,7 +9943,8 @@ export namespace Prisma {
     tradeCount: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    pairId: number
+    token0Address: string
+    token1Address: string
   }
 
   export type OhlcDataUpdateInput = {
@@ -10053,7 +9960,8 @@ export namespace Prisma {
     tradeCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    pair?: PairUpdateOneRequiredWithoutOhlcDataNestedInput
+    token0Address?: StringFieldUpdateOperationsInput | string
+    token1Address?: StringFieldUpdateOperationsInput | string
   }
 
   export type OhlcDataUncheckedUpdateInput = {
@@ -10070,7 +9978,8 @@ export namespace Prisma {
     tradeCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    pairId?: IntFieldUpdateOperationsInput | number
+    token0Address?: StringFieldUpdateOperationsInput | string
+    token1Address?: StringFieldUpdateOperationsInput | string
   }
 
   export type OhlcDataCreateManyInput = {
@@ -10087,7 +9996,8 @@ export namespace Prisma {
     tradeCount: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    pairId: number
+    token0Address: string
+    token1Address: string
   }
 
   export type OhlcDataUpdateManyMutationInput = {
@@ -10103,6 +10013,8 @@ export namespace Prisma {
     tradeCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    token0Address?: StringFieldUpdateOperationsInput | string
+    token1Address?: StringFieldUpdateOperationsInput | string
   }
 
   export type OhlcDataUncheckedUpdateManyInput = {
@@ -10119,7 +10031,8 @@ export namespace Prisma {
     tradeCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    pairId?: IntFieldUpdateOperationsInput | number
+    token0Address?: StringFieldUpdateOperationsInput | string
+    token1Address?: StringFieldUpdateOperationsInput | string
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -10633,21 +10546,11 @@ export namespace Prisma {
     none?: DexlynSwapWhereInput
   }
 
-  export type OhlcDataListRelationFilter = {
-    every?: OhlcDataWhereInput
-    some?: OhlcDataWhereInput
-    none?: OhlcDataWhereInput
-  }
-
   export type SpikeyAmmSwapOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type DexlynSwapOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type OhlcDataOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -10739,10 +10642,11 @@ export namespace Prisma {
     not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
   }
 
-  export type OhlcDataNetworkAmmSourcePairIdTimeframeTimestampCompoundUniqueInput = {
+  export type OhlcDataNetworkAmmSourceToken0AddressToken1AddressTimeframeTimestampCompoundUniqueInput = {
     network: string
     ammSource: string
-    pairId: number
+    token0Address: string
+    token1Address: string
     timeframe: string
     timestamp: Date | string
   }
@@ -10761,7 +10665,8 @@ export namespace Prisma {
     tradeCount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    pairId?: SortOrder
+    token0Address?: SortOrder
+    token1Address?: SortOrder
   }
 
   export type OhlcDataAvgOrderByAggregateInput = {
@@ -10772,7 +10677,6 @@ export namespace Prisma {
     close?: SortOrder
     volume?: SortOrder
     tradeCount?: SortOrder
-    pairId?: SortOrder
   }
 
   export type OhlcDataMaxOrderByAggregateInput = {
@@ -10789,7 +10693,8 @@ export namespace Prisma {
     tradeCount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    pairId?: SortOrder
+    token0Address?: SortOrder
+    token1Address?: SortOrder
   }
 
   export type OhlcDataMinOrderByAggregateInput = {
@@ -10806,7 +10711,8 @@ export namespace Prisma {
     tradeCount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    pairId?: SortOrder
+    token0Address?: SortOrder
+    token1Address?: SortOrder
   }
 
   export type OhlcDataSumOrderByAggregateInput = {
@@ -10817,7 +10723,6 @@ export namespace Prisma {
     close?: SortOrder
     volume?: SortOrder
     tradeCount?: SortOrder
-    pairId?: SortOrder
   }
 
   export type DecimalWithAggregatesFilter<$PrismaModel = never> = {
@@ -11014,13 +10919,6 @@ export namespace Prisma {
     connect?: DexlynSwapWhereUniqueInput | DexlynSwapWhereUniqueInput[]
   }
 
-  export type OhlcDataCreateNestedManyWithoutPairInput = {
-    create?: XOR<OhlcDataCreateWithoutPairInput, OhlcDataUncheckedCreateWithoutPairInput> | OhlcDataCreateWithoutPairInput[] | OhlcDataUncheckedCreateWithoutPairInput[]
-    connectOrCreate?: OhlcDataCreateOrConnectWithoutPairInput | OhlcDataCreateOrConnectWithoutPairInput[]
-    createMany?: OhlcDataCreateManyPairInputEnvelope
-    connect?: OhlcDataWhereUniqueInput | OhlcDataWhereUniqueInput[]
-  }
-
   export type SpikeyAmmSwapUncheckedCreateNestedManyWithoutPairInput = {
     create?: XOR<SpikeyAmmSwapCreateWithoutPairInput, SpikeyAmmSwapUncheckedCreateWithoutPairInput> | SpikeyAmmSwapCreateWithoutPairInput[] | SpikeyAmmSwapUncheckedCreateWithoutPairInput[]
     connectOrCreate?: SpikeyAmmSwapCreateOrConnectWithoutPairInput | SpikeyAmmSwapCreateOrConnectWithoutPairInput[]
@@ -11033,13 +10931,6 @@ export namespace Prisma {
     connectOrCreate?: DexlynSwapCreateOrConnectWithoutPairInput | DexlynSwapCreateOrConnectWithoutPairInput[]
     createMany?: DexlynSwapCreateManyPairInputEnvelope
     connect?: DexlynSwapWhereUniqueInput | DexlynSwapWhereUniqueInput[]
-  }
-
-  export type OhlcDataUncheckedCreateNestedManyWithoutPairInput = {
-    create?: XOR<OhlcDataCreateWithoutPairInput, OhlcDataUncheckedCreateWithoutPairInput> | OhlcDataCreateWithoutPairInput[] | OhlcDataUncheckedCreateWithoutPairInput[]
-    connectOrCreate?: OhlcDataCreateOrConnectWithoutPairInput | OhlcDataCreateOrConnectWithoutPairInput[]
-    createMany?: OhlcDataCreateManyPairInputEnvelope
-    connect?: OhlcDataWhereUniqueInput | OhlcDataWhereUniqueInput[]
   }
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
@@ -11090,20 +10981,6 @@ export namespace Prisma {
     deleteMany?: DexlynSwapScalarWhereInput | DexlynSwapScalarWhereInput[]
   }
 
-  export type OhlcDataUpdateManyWithoutPairNestedInput = {
-    create?: XOR<OhlcDataCreateWithoutPairInput, OhlcDataUncheckedCreateWithoutPairInput> | OhlcDataCreateWithoutPairInput[] | OhlcDataUncheckedCreateWithoutPairInput[]
-    connectOrCreate?: OhlcDataCreateOrConnectWithoutPairInput | OhlcDataCreateOrConnectWithoutPairInput[]
-    upsert?: OhlcDataUpsertWithWhereUniqueWithoutPairInput | OhlcDataUpsertWithWhereUniqueWithoutPairInput[]
-    createMany?: OhlcDataCreateManyPairInputEnvelope
-    set?: OhlcDataWhereUniqueInput | OhlcDataWhereUniqueInput[]
-    disconnect?: OhlcDataWhereUniqueInput | OhlcDataWhereUniqueInput[]
-    delete?: OhlcDataWhereUniqueInput | OhlcDataWhereUniqueInput[]
-    connect?: OhlcDataWhereUniqueInput | OhlcDataWhereUniqueInput[]
-    update?: OhlcDataUpdateWithWhereUniqueWithoutPairInput | OhlcDataUpdateWithWhereUniqueWithoutPairInput[]
-    updateMany?: OhlcDataUpdateManyWithWhereWithoutPairInput | OhlcDataUpdateManyWithWhereWithoutPairInput[]
-    deleteMany?: OhlcDataScalarWhereInput | OhlcDataScalarWhereInput[]
-  }
-
   export type SpikeyAmmSwapUncheckedUpdateManyWithoutPairNestedInput = {
     create?: XOR<SpikeyAmmSwapCreateWithoutPairInput, SpikeyAmmSwapUncheckedCreateWithoutPairInput> | SpikeyAmmSwapCreateWithoutPairInput[] | SpikeyAmmSwapUncheckedCreateWithoutPairInput[]
     connectOrCreate?: SpikeyAmmSwapCreateOrConnectWithoutPairInput | SpikeyAmmSwapCreateOrConnectWithoutPairInput[]
@@ -11132,40 +11009,12 @@ export namespace Prisma {
     deleteMany?: DexlynSwapScalarWhereInput | DexlynSwapScalarWhereInput[]
   }
 
-  export type OhlcDataUncheckedUpdateManyWithoutPairNestedInput = {
-    create?: XOR<OhlcDataCreateWithoutPairInput, OhlcDataUncheckedCreateWithoutPairInput> | OhlcDataCreateWithoutPairInput[] | OhlcDataUncheckedCreateWithoutPairInput[]
-    connectOrCreate?: OhlcDataCreateOrConnectWithoutPairInput | OhlcDataCreateOrConnectWithoutPairInput[]
-    upsert?: OhlcDataUpsertWithWhereUniqueWithoutPairInput | OhlcDataUpsertWithWhereUniqueWithoutPairInput[]
-    createMany?: OhlcDataCreateManyPairInputEnvelope
-    set?: OhlcDataWhereUniqueInput | OhlcDataWhereUniqueInput[]
-    disconnect?: OhlcDataWhereUniqueInput | OhlcDataWhereUniqueInput[]
-    delete?: OhlcDataWhereUniqueInput | OhlcDataWhereUniqueInput[]
-    connect?: OhlcDataWhereUniqueInput | OhlcDataWhereUniqueInput[]
-    update?: OhlcDataUpdateWithWhereUniqueWithoutPairInput | OhlcDataUpdateWithWhereUniqueWithoutPairInput[]
-    updateMany?: OhlcDataUpdateManyWithWhereWithoutPairInput | OhlcDataUpdateManyWithWhereWithoutPairInput[]
-    deleteMany?: OhlcDataScalarWhereInput | OhlcDataScalarWhereInput[]
-  }
-
-  export type PairCreateNestedOneWithoutOhlcDataInput = {
-    create?: XOR<PairCreateWithoutOhlcDataInput, PairUncheckedCreateWithoutOhlcDataInput>
-    connectOrCreate?: PairCreateOrConnectWithoutOhlcDataInput
-    connect?: PairWhereUniqueInput
-  }
-
   export type DecimalFieldUpdateOperationsInput = {
     set?: Decimal | DecimalJsLike | number | string
     increment?: Decimal | DecimalJsLike | number | string
     decrement?: Decimal | DecimalJsLike | number | string
     multiply?: Decimal | DecimalJsLike | number | string
     divide?: Decimal | DecimalJsLike | number | string
-  }
-
-  export type PairUpdateOneRequiredWithoutOhlcDataNestedInput = {
-    create?: XOR<PairCreateWithoutOhlcDataInput, PairUncheckedCreateWithoutOhlcDataInput>
-    connectOrCreate?: PairCreateOrConnectWithoutOhlcDataInput
-    upsert?: PairUpsertWithoutOhlcDataInput
-    connect?: PairWhereUniqueInput
-    update?: XOR<XOR<PairUpdateToOneWithWhereWithoutOhlcDataInput, PairUpdateWithoutOhlcDataInput>, PairUncheckedUpdateWithoutOhlcDataInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -11444,7 +11293,6 @@ export namespace Prisma {
     token0: TokenCreateNestedOneWithoutPairsAsToken0Input
     token1: TokenCreateNestedOneWithoutPairsAsToken1Input
     dexlynSwaps?: DexlynSwapCreateNestedManyWithoutPairInput
-    ohlcData?: OhlcDataCreateNestedManyWithoutPairInput
   }
 
   export type PairUncheckedCreateWithoutSpikeyAmmSwapsInput = {
@@ -11458,7 +11306,6 @@ export namespace Prisma {
     lastStatsUpdate?: Date | string | null
     createdAt?: Date | string
     dexlynSwaps?: DexlynSwapUncheckedCreateNestedManyWithoutPairInput
-    ohlcData?: OhlcDataUncheckedCreateNestedManyWithoutPairInput
   }
 
   export type PairCreateOrConnectWithoutSpikeyAmmSwapsInput = {
@@ -11487,7 +11334,6 @@ export namespace Prisma {
     token0?: TokenUpdateOneRequiredWithoutPairsAsToken0NestedInput
     token1?: TokenUpdateOneRequiredWithoutPairsAsToken1NestedInput
     dexlynSwaps?: DexlynSwapUpdateManyWithoutPairNestedInput
-    ohlcData?: OhlcDataUpdateManyWithoutPairNestedInput
   }
 
   export type PairUncheckedUpdateWithoutSpikeyAmmSwapsInput = {
@@ -11501,7 +11347,6 @@ export namespace Prisma {
     lastStatsUpdate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     dexlynSwaps?: DexlynSwapUncheckedUpdateManyWithoutPairNestedInput
-    ohlcData?: OhlcDataUncheckedUpdateManyWithoutPairNestedInput
   }
 
   export type PairCreateWithoutDexlynSwapsInput = {
@@ -11514,7 +11359,6 @@ export namespace Prisma {
     token0: TokenCreateNestedOneWithoutPairsAsToken0Input
     token1: TokenCreateNestedOneWithoutPairsAsToken1Input
     spikeyAmmSwaps?: SpikeyAmmSwapCreateNestedManyWithoutPairInput
-    ohlcData?: OhlcDataCreateNestedManyWithoutPairInput
   }
 
   export type PairUncheckedCreateWithoutDexlynSwapsInput = {
@@ -11528,7 +11372,6 @@ export namespace Prisma {
     lastStatsUpdate?: Date | string | null
     createdAt?: Date | string
     spikeyAmmSwaps?: SpikeyAmmSwapUncheckedCreateNestedManyWithoutPairInput
-    ohlcData?: OhlcDataUncheckedCreateNestedManyWithoutPairInput
   }
 
   export type PairCreateOrConnectWithoutDexlynSwapsInput = {
@@ -11557,7 +11400,6 @@ export namespace Prisma {
     token0?: TokenUpdateOneRequiredWithoutPairsAsToken0NestedInput
     token1?: TokenUpdateOneRequiredWithoutPairsAsToken1NestedInput
     spikeyAmmSwaps?: SpikeyAmmSwapUpdateManyWithoutPairNestedInput
-    ohlcData?: OhlcDataUpdateManyWithoutPairNestedInput
   }
 
   export type PairUncheckedUpdateWithoutDexlynSwapsInput = {
@@ -11571,7 +11413,6 @@ export namespace Prisma {
     lastStatsUpdate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     spikeyAmmSwaps?: SpikeyAmmSwapUncheckedUpdateManyWithoutPairNestedInput
-    ohlcData?: OhlcDataUncheckedUpdateManyWithoutPairNestedInput
   }
 
   export type PairCreateWithoutToken0Input = {
@@ -11584,7 +11425,6 @@ export namespace Prisma {
     token1: TokenCreateNestedOneWithoutPairsAsToken1Input
     spikeyAmmSwaps?: SpikeyAmmSwapCreateNestedManyWithoutPairInput
     dexlynSwaps?: DexlynSwapCreateNestedManyWithoutPairInput
-    ohlcData?: OhlcDataCreateNestedManyWithoutPairInput
   }
 
   export type PairUncheckedCreateWithoutToken0Input = {
@@ -11598,7 +11438,6 @@ export namespace Prisma {
     createdAt?: Date | string
     spikeyAmmSwaps?: SpikeyAmmSwapUncheckedCreateNestedManyWithoutPairInput
     dexlynSwaps?: DexlynSwapUncheckedCreateNestedManyWithoutPairInput
-    ohlcData?: OhlcDataUncheckedCreateNestedManyWithoutPairInput
   }
 
   export type PairCreateOrConnectWithoutToken0Input = {
@@ -11620,7 +11459,6 @@ export namespace Prisma {
     token0: TokenCreateNestedOneWithoutPairsAsToken0Input
     spikeyAmmSwaps?: SpikeyAmmSwapCreateNestedManyWithoutPairInput
     dexlynSwaps?: DexlynSwapCreateNestedManyWithoutPairInput
-    ohlcData?: OhlcDataCreateNestedManyWithoutPairInput
   }
 
   export type PairUncheckedCreateWithoutToken1Input = {
@@ -11634,7 +11472,6 @@ export namespace Prisma {
     createdAt?: Date | string
     spikeyAmmSwaps?: SpikeyAmmSwapUncheckedCreateNestedManyWithoutPairInput
     dexlynSwaps?: DexlynSwapUncheckedCreateNestedManyWithoutPairInput
-    ohlcData?: OhlcDataUncheckedCreateNestedManyWithoutPairInput
   }
 
   export type PairCreateOrConnectWithoutToken1Input = {
@@ -11841,46 +11678,6 @@ export namespace Prisma {
     data: DexlynSwapCreateManyPairInput | DexlynSwapCreateManyPairInput[]
   }
 
-  export type OhlcDataCreateWithoutPairInput = {
-    network: string
-    ammSource: string
-    timeframe: string
-    timestamp: Date | string
-    open: Decimal | DecimalJsLike | number | string
-    high: Decimal | DecimalJsLike | number | string
-    low: Decimal | DecimalJsLike | number | string
-    close: Decimal | DecimalJsLike | number | string
-    volume: Decimal | DecimalJsLike | number | string
-    tradeCount: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type OhlcDataUncheckedCreateWithoutPairInput = {
-    id?: number
-    network: string
-    ammSource: string
-    timeframe: string
-    timestamp: Date | string
-    open: Decimal | DecimalJsLike | number | string
-    high: Decimal | DecimalJsLike | number | string
-    low: Decimal | DecimalJsLike | number | string
-    close: Decimal | DecimalJsLike | number | string
-    volume: Decimal | DecimalJsLike | number | string
-    tradeCount: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type OhlcDataCreateOrConnectWithoutPairInput = {
-    where: OhlcDataWhereUniqueInput
-    create: XOR<OhlcDataCreateWithoutPairInput, OhlcDataUncheckedCreateWithoutPairInput>
-  }
-
-  export type OhlcDataCreateManyPairInputEnvelope = {
-    data: OhlcDataCreateManyPairInput | OhlcDataCreateManyPairInput[]
-  }
-
   export type TokenUpsertWithoutPairsAsToken0Input = {
     update: XOR<TokenUpdateWithoutPairsAsToken0Input, TokenUncheckedUpdateWithoutPairsAsToken0Input>
     create: XOR<TokenCreateWithoutPairsAsToken0Input, TokenUncheckedCreateWithoutPairsAsToken0Input>
@@ -12031,112 +11828,6 @@ export namespace Prisma {
     pairId?: IntFilter<"DexlynSwap"> | number
   }
 
-  export type OhlcDataUpsertWithWhereUniqueWithoutPairInput = {
-    where: OhlcDataWhereUniqueInput
-    update: XOR<OhlcDataUpdateWithoutPairInput, OhlcDataUncheckedUpdateWithoutPairInput>
-    create: XOR<OhlcDataCreateWithoutPairInput, OhlcDataUncheckedCreateWithoutPairInput>
-  }
-
-  export type OhlcDataUpdateWithWhereUniqueWithoutPairInput = {
-    where: OhlcDataWhereUniqueInput
-    data: XOR<OhlcDataUpdateWithoutPairInput, OhlcDataUncheckedUpdateWithoutPairInput>
-  }
-
-  export type OhlcDataUpdateManyWithWhereWithoutPairInput = {
-    where: OhlcDataScalarWhereInput
-    data: XOR<OhlcDataUpdateManyMutationInput, OhlcDataUncheckedUpdateManyWithoutPairInput>
-  }
-
-  export type OhlcDataScalarWhereInput = {
-    AND?: OhlcDataScalarWhereInput | OhlcDataScalarWhereInput[]
-    OR?: OhlcDataScalarWhereInput[]
-    NOT?: OhlcDataScalarWhereInput | OhlcDataScalarWhereInput[]
-    id?: IntFilter<"OhlcData"> | number
-    network?: StringFilter<"OhlcData"> | string
-    ammSource?: StringFilter<"OhlcData"> | string
-    timeframe?: StringFilter<"OhlcData"> | string
-    timestamp?: DateTimeFilter<"OhlcData"> | Date | string
-    open?: DecimalFilter<"OhlcData"> | Decimal | DecimalJsLike | number | string
-    high?: DecimalFilter<"OhlcData"> | Decimal | DecimalJsLike | number | string
-    low?: DecimalFilter<"OhlcData"> | Decimal | DecimalJsLike | number | string
-    close?: DecimalFilter<"OhlcData"> | Decimal | DecimalJsLike | number | string
-    volume?: DecimalFilter<"OhlcData"> | Decimal | DecimalJsLike | number | string
-    tradeCount?: IntFilter<"OhlcData"> | number
-    createdAt?: DateTimeFilter<"OhlcData"> | Date | string
-    updatedAt?: DateTimeFilter<"OhlcData"> | Date | string
-    pairId?: IntFilter<"OhlcData"> | number
-  }
-
-  export type PairCreateWithoutOhlcDataInput = {
-    network: string
-    spikeyAmmPairAddress?: string | null
-    spikeyAmmReserve0?: bigint | number | null
-    spikeyAmmReserve1?: bigint | number | null
-    lastStatsUpdate?: Date | string | null
-    createdAt?: Date | string
-    token0: TokenCreateNestedOneWithoutPairsAsToken0Input
-    token1: TokenCreateNestedOneWithoutPairsAsToken1Input
-    spikeyAmmSwaps?: SpikeyAmmSwapCreateNestedManyWithoutPairInput
-    dexlynSwaps?: DexlynSwapCreateNestedManyWithoutPairInput
-  }
-
-  export type PairUncheckedCreateWithoutOhlcDataInput = {
-    id?: number
-    network: string
-    token0Id: number
-    token1Id: number
-    spikeyAmmPairAddress?: string | null
-    spikeyAmmReserve0?: bigint | number | null
-    spikeyAmmReserve1?: bigint | number | null
-    lastStatsUpdate?: Date | string | null
-    createdAt?: Date | string
-    spikeyAmmSwaps?: SpikeyAmmSwapUncheckedCreateNestedManyWithoutPairInput
-    dexlynSwaps?: DexlynSwapUncheckedCreateNestedManyWithoutPairInput
-  }
-
-  export type PairCreateOrConnectWithoutOhlcDataInput = {
-    where: PairWhereUniqueInput
-    create: XOR<PairCreateWithoutOhlcDataInput, PairUncheckedCreateWithoutOhlcDataInput>
-  }
-
-  export type PairUpsertWithoutOhlcDataInput = {
-    update: XOR<PairUpdateWithoutOhlcDataInput, PairUncheckedUpdateWithoutOhlcDataInput>
-    create: XOR<PairCreateWithoutOhlcDataInput, PairUncheckedCreateWithoutOhlcDataInput>
-    where?: PairWhereInput
-  }
-
-  export type PairUpdateToOneWithWhereWithoutOhlcDataInput = {
-    where?: PairWhereInput
-    data: XOR<PairUpdateWithoutOhlcDataInput, PairUncheckedUpdateWithoutOhlcDataInput>
-  }
-
-  export type PairUpdateWithoutOhlcDataInput = {
-    network?: StringFieldUpdateOperationsInput | string
-    spikeyAmmPairAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    spikeyAmmReserve0?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    spikeyAmmReserve1?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    lastStatsUpdate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    token0?: TokenUpdateOneRequiredWithoutPairsAsToken0NestedInput
-    token1?: TokenUpdateOneRequiredWithoutPairsAsToken1NestedInput
-    spikeyAmmSwaps?: SpikeyAmmSwapUpdateManyWithoutPairNestedInput
-    dexlynSwaps?: DexlynSwapUpdateManyWithoutPairNestedInput
-  }
-
-  export type PairUncheckedUpdateWithoutOhlcDataInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    network?: StringFieldUpdateOperationsInput | string
-    token0Id?: IntFieldUpdateOperationsInput | number
-    token1Id?: IntFieldUpdateOperationsInput | number
-    spikeyAmmPairAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    spikeyAmmReserve0?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    spikeyAmmReserve1?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    lastStatsUpdate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    spikeyAmmSwaps?: SpikeyAmmSwapUncheckedUpdateManyWithoutPairNestedInput
-    dexlynSwaps?: DexlynSwapUncheckedUpdateManyWithoutPairNestedInput
-  }
-
   export type PairCreateManyToken0Input = {
     id?: number
     network: string
@@ -12169,7 +11860,6 @@ export namespace Prisma {
     token1?: TokenUpdateOneRequiredWithoutPairsAsToken1NestedInput
     spikeyAmmSwaps?: SpikeyAmmSwapUpdateManyWithoutPairNestedInput
     dexlynSwaps?: DexlynSwapUpdateManyWithoutPairNestedInput
-    ohlcData?: OhlcDataUpdateManyWithoutPairNestedInput
   }
 
   export type PairUncheckedUpdateWithoutToken0Input = {
@@ -12183,7 +11873,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     spikeyAmmSwaps?: SpikeyAmmSwapUncheckedUpdateManyWithoutPairNestedInput
     dexlynSwaps?: DexlynSwapUncheckedUpdateManyWithoutPairNestedInput
-    ohlcData?: OhlcDataUncheckedUpdateManyWithoutPairNestedInput
   }
 
   export type PairUncheckedUpdateManyWithoutToken0Input = {
@@ -12207,7 +11896,6 @@ export namespace Prisma {
     token0?: TokenUpdateOneRequiredWithoutPairsAsToken0NestedInput
     spikeyAmmSwaps?: SpikeyAmmSwapUpdateManyWithoutPairNestedInput
     dexlynSwaps?: DexlynSwapUpdateManyWithoutPairNestedInput
-    ohlcData?: OhlcDataUpdateManyWithoutPairNestedInput
   }
 
   export type PairUncheckedUpdateWithoutToken1Input = {
@@ -12221,7 +11909,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     spikeyAmmSwaps?: SpikeyAmmSwapUncheckedUpdateManyWithoutPairNestedInput
     dexlynSwaps?: DexlynSwapUncheckedUpdateManyWithoutPairNestedInput
-    ohlcData?: OhlcDataUncheckedUpdateManyWithoutPairNestedInput
   }
 
   export type PairUncheckedUpdateManyWithoutToken1Input = {
@@ -12267,22 +11954,6 @@ export namespace Prisma {
     reserveX: bigint | number
     reserveY: bigint | number
     processedAt?: Date | string
-  }
-
-  export type OhlcDataCreateManyPairInput = {
-    id?: number
-    network: string
-    ammSource: string
-    timeframe: string
-    timestamp: Date | string
-    open: Decimal | DecimalJsLike | number | string
-    high: Decimal | DecimalJsLike | number | string
-    low: Decimal | DecimalJsLike | number | string
-    close: Decimal | DecimalJsLike | number | string
-    volume: Decimal | DecimalJsLike | number | string
-    tradeCount: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
   }
 
   export type SpikeyAmmSwapUpdateWithoutPairInput = {
@@ -12383,53 +12054,6 @@ export namespace Prisma {
     reserveX?: BigIntFieldUpdateOperationsInput | bigint | number
     reserveY?: BigIntFieldUpdateOperationsInput | bigint | number
     processedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type OhlcDataUpdateWithoutPairInput = {
-    network?: StringFieldUpdateOperationsInput | string
-    ammSource?: StringFieldUpdateOperationsInput | string
-    timeframe?: StringFieldUpdateOperationsInput | string
-    timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
-    open?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    high?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    low?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    close?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    volume?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    tradeCount?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type OhlcDataUncheckedUpdateWithoutPairInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    network?: StringFieldUpdateOperationsInput | string
-    ammSource?: StringFieldUpdateOperationsInput | string
-    timeframe?: StringFieldUpdateOperationsInput | string
-    timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
-    open?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    high?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    low?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    close?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    volume?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    tradeCount?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type OhlcDataUncheckedUpdateManyWithoutPairInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    network?: StringFieldUpdateOperationsInput | string
-    ammSource?: StringFieldUpdateOperationsInput | string
-    timeframe?: StringFieldUpdateOperationsInput | string
-    timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
-    open?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    high?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    low?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    close?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    volume?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    tradeCount?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

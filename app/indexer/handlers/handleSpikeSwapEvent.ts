@@ -50,19 +50,26 @@ export async function handleSpikeyAmmSwapEvent(event: RpcEvent, tx: TransactionC
         const { token0Address, token1Address } = await unpackPairAddresses(event.network, spikeyAmmSwapEventData.pair_address);
         fetchedToken0Address = token0Address;
         fetchedToken1Address = token1Address;
+        logger.info(`[handleSpikeyAmmSwapEvent] Unpacked addresses: Token0=${fetchedToken0Address}, Token1=${fetchedToken1Address}`);
       } catch (rpcError: any) {
         logger.error(`[${event.network}] Critical: Failed to unpack pair addresses for ${spikeyAmmSwapEventData.pair_address}. Cannot process swap. Error: ${rpcError.message}.`);
         throw rpcError;
       }
 
       const { token: tokenA, created: t0Created } = await getOrCreateToken(fetchedToken0Address, event.network, tx);
+      logger.info(`[handleSpikeyAmmSwapEvent] Result for Token A: ID=${tokenA.id}, Symbol=${tokenA.symbol}`);
+      
+      logger.info(`[handleSpikeyAmmSwapEvent] Calling getOrCreateToken for Token B: ${fetchedToken1Address}`);
       const { token: tokenB, created: t1Created } = await getOrCreateToken(fetchedToken1Address, event.network, tx);
+      logger.info(`[handleSpikeyAmmSwapEvent] Result for Token B: ID=${tokenB.id}, Symbol=${tokenB.symbol}`);
       
       token0Created = t0Created;
       token1Created = t1Created;
 
       const [sortedToken0, sortedToken1] = [tokenA, tokenB].sort((a, b) => a.address.localeCompare(b.address));
+      logger.info(`[handleSpikeyAmmSwapEvent] Sorted tokens: Token0=${sortedToken0.symbol}, Token1=${sortedToken1.symbol}`);
 
+      logger.info(`[handleSpikeyAmmSwapEvent] Upserting pair with token0Id: ${sortedToken0.id}, token1Id: ${sortedToken1.id}`);
       const upsertResult = await tx.pair.upsert({
         where: {
           network_token0Id_token1Id: {
