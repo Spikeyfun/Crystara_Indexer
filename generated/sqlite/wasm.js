@@ -188,6 +188,8 @@ exports.Prisma.PairScalarFieldEnum = {
   spikeyAmmReserve0: 'spikeyAmmReserve0',
   spikeyAmmReserve1: 'spikeyAmmReserve1',
   lastStatsUpdate: 'lastStatsUpdate',
+  spikeyAmmToken0Address: 'spikeyAmmToken0Address',
+  dexlynAmmTokenXAddress: 'dexlynAmmTokenXAddress',
   createdAt: 'createdAt'
 };
 

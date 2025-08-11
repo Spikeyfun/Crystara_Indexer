@@ -106,6 +106,7 @@ model OhlcData {
     @@index([token0Address])
     @@index([token1Address])
     @@index([timestamp])
+    @@index([network, token0Address, token1Address, timeframe, timestamp(sort: Desc)])
 }
 
 model UserPreference {

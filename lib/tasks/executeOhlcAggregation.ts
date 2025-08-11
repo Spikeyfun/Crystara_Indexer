@@ -96,44 +96,52 @@ export async function executeOhlcAggregation1mLocal(network: string) {
 
       const unifiedSwaps = [
         ...dexlynSwaps.map(s => {
-            let price: number;
-            let volume: number;
+          if (!pair.dexlynAmmTokenXAddress) return null;
 
-            if (s.xIn > 0) { // User gives token0 (xIn), gets token1 (yOut)
-                price = normalize(s.yOut, token1.decimals) / normalize(s.xIn, token0.decimals);
-                volume = normalize(s.xIn, token0.decimals);
-            } else { // User gives token1 (yIn), gets token0 (xOut)
-                price = normalize(s.yIn, token1.decimals) / normalize(s.xOut, token0.decimals);
-                volume = normalize(s.xOut, token0.decimals);
-            }
+      
+          // Determina cuál de los tokens del par (ordenados alfabéticamente) es X y cuál es Y
+          const tokenX = pair.token0.address === pair.dexlynAmmTokenXAddress ? pair.token0 : pair.token1;
+          const tokenY = pair.token0.address === pair.dexlynAmmTokenXAddress ? pair.token1 : pair.token0;
+          
+          let price: number;
+          let volumeInTokenX: number; // El volumen se mide en el token de entrada
 
-            return {
-                ammSource: 'DexlynSwap',
-                blockTimestamp: s.blockTimestamp,
-                price: price,
-                volume: volume
-            };
-        }),
-        ...spikeySwaps.map(s => {
+          if (s.xIn > 0) { // El usuario entrega Token X para recibir Token Y
+              // El precio de Token X en términos de Token Y = cantidad de Y / cantidad de X
+              price = normalize(s.yOut, tokenY.decimals) / normalize(s.xIn, tokenX.decimals);
+              volumeInTokenX = normalize(s.xIn, tokenX.decimals);
+          } else { // El usuario entrega Token Y para recibir Token X
+              // El precio de Token X en términos de Token Y = cantidad de Y / cantidad de X
+              price = normalize(s.yIn, tokenY.decimals) / normalize(s.xOut, tokenX.decimals);
+              volumeInTokenX = normalize(s.xOut, tokenX.decimals);
+          }
+
+          return { ammSource: 'DexlynSwap', blockTimestamp: s.blockTimestamp, price, volume: volumeInTokenX };
+      }),
+      ...spikeySwaps.map(s => {
+        // Verifica que tengamos la información del orden de tokens para este AMM
+        if (!pair.spikeyAmmToken0Address) return null;
+
+            // Determina cuál de los tokens del par (ordenados alfabéticamente) es 0 y cuál es 1
+            const token0Amm = pair.token0.address === pair.spikeyAmmToken0Address ? pair.token0 : pair.token1;
+            const token1Amm = pair.token0.address === pair.spikeyAmmToken0Address ? pair.token1 : pair.token0;
+
             let price: number;
-            let volume: number;
+            let volumeInToken0: number; // El volumen se mide en el token de entrada
 
             if (s.amount0In > 0) { // User gives token0 (amount0In), gets token1 (amount1Out)
-                price = normalize(s.amount1Out, token1.decimals) / normalize(s.amount0In, token0.decimals);
-                volume = normalize(s.amount0In, token0.decimals);
+                price = normalize(s.amount1Out, token1Amm.decimals) / normalize(s.amount0In, token0Amm.decimals);
+                volumeInToken0 = normalize(s.amount0In, token0Amm.decimals);
             } else { // User gives token1 (amount1In), gets token0 (amount0Out)
-                price = normalize(s.amount1In, token1.decimals) / normalize(s.amount0Out, token0.decimals);
-                volume = normalize(s.amount0Out, token0.decimals);
+                price = normalize(s.amount1In, token1Amm.decimals) / normalize(s.amount0Out, token0Amm.decimals);
+                volumeInToken0 = normalize(s.amount0Out, token0Amm.decimals);
             }
 
-            return {
-                ammSource: 'SpikeySwap',
-                blockTimestamp: s.blockTimestamp,
-                price: price,
-                volume: volume
-            };
+            return { ammSource: 'SpikeySwap', blockTimestamp: s.blockTimestamp, price, volume: volumeInToken0 };
+
         }),
-      ].filter(s => s.price > 0 && isFinite(s.price));
+      ].filter((s): s is { ammSource: string; blockTimestamp: Date; price: number; volume: number; } => s !== null && s.price > 0 && isFinite(s.price)); // Filtro mejorado
+
 
       const newSwaps = unifiedSwaps.sort((a, b) => a.blockTimestamp.getTime() - b.blockTimestamp.getTime());
 
