@@ -80,10 +80,12 @@ export async function handleSpikeyAmmSwapEvent(event: RpcEvent, tx: TransactionC
         },
         update: {
           spikeyAmmPairAddress: spikeyAmmSwapEventData.pair_address,
+          spikeyAmmToken0Address: sortedToken0.address,
         },
         create: {
           network: event.network,
           spikeyAmmPairAddress: spikeyAmmSwapEventData.pair_address,
+          spikeyAmmToken0Address: sortedToken0.address,
           token0: { connect: { id: sortedToken0.id } },
           token1: { connect: { id: sortedToken1.id } },
         },
