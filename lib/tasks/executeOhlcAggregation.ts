@@ -130,10 +130,12 @@ export async function executeOhlcAggregation1mLocal(network: string) {
             let volumeInToken0: number; // El volumen se mide en el token de entrada
 
             if (s.amount0In > 0) { // User gives token0 (amount0In), gets token1 (amount1Out)
-                price = normalize(s.amount1Out, token1Amm.decimals) / normalize(s.amount0In, token0Amm.decimals);
+                // CORREGIDO: Precio invertido para que coincida con el gráfico.
+                price = normalize(s.amount0In, token0Amm.decimals) / normalize(s.amount1Out, token1Amm.decimals);
                 volumeInToken0 = normalize(s.amount0In, token0Amm.decimals);
             } else { // User gives token1 (amount1In), gets token0 (amount0Out)
-                price = normalize(s.amount1In, token1Amm.decimals) / normalize(s.amount0Out, token0Amm.decimals);
+                // CORREGIDO: Precio invertido para que coincida con el gráfico.
+                price = normalize(s.amount0Out, token0Amm.decimals) / normalize(s.amount1In, token1Amm.decimals);
                 volumeInToken0 = normalize(s.amount0Out, token0Amm.decimals);
             }
 

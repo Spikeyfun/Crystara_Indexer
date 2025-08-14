@@ -214,7 +214,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "D:\\amm_indexer_prices\\generated\\sqlite",
+      "value": "D:\\bot_telegra_index\\amm_indexer_prices\\generated\\sqlite",
       "fromEnvVar": null
     },
     "config": {
@@ -228,7 +228,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "D:\\amm_indexer_prices\\prisma\\sqlite\\schema.prisma",
+    "sourceFilePath": "D:\\bot_telegra_index\\amm_indexer_prices\\prisma\\sqlite\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -242,6 +242,7 @@ const config = {
     "db"
   ],
   "activeProvider": "sqlite",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
