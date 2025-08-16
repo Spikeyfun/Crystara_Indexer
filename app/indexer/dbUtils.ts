@@ -1,7 +1,7 @@
 import { createLogger } from './utils';
 import { callViewFunction } from '@/lib/viewFunction/useView';
 import { TransactionClient } from './types';
-import { Token } from '@/generated/sqlite'; // Import the Token type from your generated Prisma client
+import { Token } from '@/prisma/dist/generated/sqlite'; // Import the Token type from your generated Prisma client
 import { fetchCoinInfoResource } from '@/lib/viewFunction/ViewStruct';
 
 const logger = createLogger('dbUtils');
