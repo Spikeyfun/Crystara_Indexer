@@ -114,18 +114,8 @@ Prisma.NullTypes = {
  */
 
 exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
-  ReadUncommitted: 'ReadUncommitted',
-  ReadCommitted: 'ReadCommitted',
-  RepeatableRead: 'RepeatableRead',
   Serializable: 'Serializable'
 });
-
-exports.Prisma.BlockProgressScalarFieldEnum = {
-  id: 'id',
-  network: 'network',
-  lastBlockHeight: 'lastBlockHeight',
-  updatedAt: 'updatedAt'
-};
 
 exports.Prisma.EventTrackingScalarFieldEnum = {
   id: 'id',
@@ -138,6 +128,42 @@ exports.Prisma.EventTrackingScalarFieldEnum = {
   updatedAt: 'updatedAt',
   network: 'network',
   sequenceNumber: 'sequenceNumber'
+};
+
+exports.Prisma.SpikeyAmmSwapScalarFieldEnum = {
+  id: 'id',
+  network: 'network',
+  transactionHash: 'transactionHash',
+  eventIndex: 'eventIndex',
+  blockNumber: 'blockNumber',
+  blockTimestamp: 'blockTimestamp',
+  sender: 'sender',
+  to: 'to',
+  amount0In: 'amount0In',
+  amount1In: 'amount1In',
+  amount0Out: 'amount0Out',
+  amount1Out: 'amount1Out',
+  processedAt: 'processedAt',
+  pairId: 'pairId'
+};
+
+exports.Prisma.DexlynSwapScalarFieldEnum = {
+  id: 'id',
+  network: 'network',
+  transactionHash: 'transactionHash',
+  sequenceNumber: 'sequenceNumber',
+  blockNumber: 'blockNumber',
+  blockTimestamp: 'blockTimestamp',
+  curve: 'curve',
+  xIn: 'xIn',
+  xOut: 'xOut',
+  yIn: 'yIn',
+  yOut: 'yOut',
+  timestamp: 'timestamp',
+  reserveX: 'reserveX',
+  reserveY: 'reserveY',
+  processedAt: 'processedAt',
+  pairId: 'pairId'
 };
 
 exports.Prisma.TokenScalarFieldEnum = {
@@ -162,6 +188,8 @@ exports.Prisma.PairScalarFieldEnum = {
   spikeyAmmReserve0: 'spikeyAmmReserve0',
   spikeyAmmReserve1: 'spikeyAmmReserve1',
   lastStatsUpdate: 'lastStatsUpdate',
+  spikeyAmmToken0Address: 'spikeyAmmToken0Address',
+  dexlynAmmTokenXAddress: 'dexlynAmmTokenXAddress',
   createdAt: 'createdAt'
 };
 
@@ -183,21 +211,19 @@ exports.Prisma.OhlcDataScalarFieldEnum = {
   token1Address: 'token1Address'
 };
 
-exports.Prisma.UserPreferenceScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  defaultTokenAddress: 'defaultTokenAddress',
-  defaultTimeframe: 'defaultTimeframe'
+exports.Prisma.GroupConfigurationScalarFieldEnum = {
+  chatId: 'chatId',
+  spikeMonitorEnabled: 'spikeMonitorEnabled',
+  spikeMonitorTokenId: 'spikeMonitorTokenId',
+  spikeMonitorThreadId: 'spikeMonitorThreadId',
+  spikeMonitorGifUrl: 'spikeMonitorGifUrl',
+  spikeMonitorTimeframe: 'spikeMonitorTimeframe',
+  spikeMonitorInterval: 'spikeMonitorInterval'
 };
 
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
-};
-
-exports.Prisma.QueryMode = {
-  default: 'default',
-  insensitive: 'insensitive'
 };
 
 exports.Prisma.NullsOrder = {
@@ -207,12 +233,13 @@ exports.Prisma.NullsOrder = {
 
 
 exports.Prisma.ModelName = {
-  BlockProgress: 'BlockProgress',
   EventTracking: 'EventTracking',
+  SpikeyAmmSwap: 'SpikeyAmmSwap',
+  DexlynSwap: 'DexlynSwap',
   Token: 'Token',
   Pair: 'Pair',
   OhlcData: 'OhlcData',
-  UserPreference: 'UserPreference'
+  GroupConfiguration: 'GroupConfiguration'
 };
 
 /**

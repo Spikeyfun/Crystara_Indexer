@@ -1,5 +1,5 @@
-import { PrismaClient as PrismaClientSqlite } from '../generated/sqlite';
-import { PrismaClient as PrismaClientSupabase, OhlcData } from '@/prisma/app/generated/prisma';
+import { PrismaClient as PrismaClientSqlite } from '@/prisma/dist/generated/sqlite';
+import { PrismaClient as PrismaClientSupabase, OhlcData } from '@/prisma/dist/generated/supabase';
 
 // --- Cliente de SQLite ---
 // Usado por el indexador para escritura rápida de datos crudos.

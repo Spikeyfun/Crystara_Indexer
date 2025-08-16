@@ -1,6 +1,6 @@
 import { sqliteDb } from '@/lib/prismadb';
 import { createLogger } from '@/app/indexer/utils';
-import { Prisma } from '@/generated/sqlite';
+import { Prisma } from '@/prisma/dist/generated/sqlite';
 
 const logger = createLogger('ohlc-aggregator-1m-local');
 

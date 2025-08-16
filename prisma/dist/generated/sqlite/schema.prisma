@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../../generated/sqlite"
+  output   = "../dist/generated/sqlite"
 }
 
 datasource db {
@@ -93,6 +93,8 @@ model Token {
   pairsAsToken0 Pair[] @relation("token0")
   pairsAsToken1 Pair[] @relation("token1")
 
+  groupConfigurations GroupConfiguration[]
+
   createdAt DateTime @default(now())
 
   @@unique([network, address])
@@ -156,4 +158,21 @@ model OhlcData {
   @@index([token0Address])
   @@index([token1Address])
   @@index([timestamp])
+}
+
+// Modelo modificado para la configuración de un grupo
+model GroupConfiguration {
+  // El ID del chat de Telegram ahora es la clave primaria.
+  chatId BigInt @id
+
+  // Campos para el monitor de Spikes
+  spikeMonitorEnabled   Boolean @default(false)
+  spikeMonitorTokenId   Int? // El token a monitorear
+  spikeMonitorThreadId  String? // El "topic" o hilo donde se notificará
+  spikeMonitorGifUrl    String? // URL del GIF para las notificaciones
+  spikeMonitorTimeframe Int?    @default(2) // Ventana de tiempo en minutos
+  spikeMonitorInterval  Int?    @default(30) // Intervalo de chequeo en segundos
+
+  // Relación con el token a monitorear
+  spikeMonitorToken Token? @relation(fields: [spikeMonitorTokenId], references: [id])
 }

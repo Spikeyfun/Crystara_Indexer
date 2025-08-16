@@ -43,6 +43,11 @@ export type Pair = $Result.DefaultSelection<Prisma.$PairPayload>
  * 
  */
 export type OhlcData = $Result.DefaultSelection<Prisma.$OhlcDataPayload>
+/**
+ * Model GroupConfiguration
+ * 
+ */
+export type GroupConfiguration = $Result.DefaultSelection<Prisma.$GroupConfigurationPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -228,6 +233,16 @@ export class PrismaClient<
     * ```
     */
   get ohlcData(): Prisma.OhlcDataDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.groupConfiguration`: Exposes CRUD operations for the **GroupConfiguration** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more GroupConfigurations
+    * const groupConfigurations = await prisma.groupConfiguration.findMany()
+    * ```
+    */
+  get groupConfiguration(): Prisma.GroupConfigurationDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -673,7 +688,8 @@ export namespace Prisma {
     DexlynSwap: 'DexlynSwap',
     Token: 'Token',
     Pair: 'Pair',
-    OhlcData: 'OhlcData'
+    OhlcData: 'OhlcData',
+    GroupConfiguration: 'GroupConfiguration'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -692,7 +708,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "eventTracking" | "spikeyAmmSwap" | "dexlynSwap" | "token" | "pair" | "ohlcData"
+      modelProps: "eventTracking" | "spikeyAmmSwap" | "dexlynSwap" | "token" | "pair" | "ohlcData" | "groupConfiguration"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1140,6 +1156,80 @@ export namespace Prisma {
           }
         }
       }
+      GroupConfiguration: {
+        payload: Prisma.$GroupConfigurationPayload<ExtArgs>
+        fields: Prisma.GroupConfigurationFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.GroupConfigurationFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupConfigurationPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.GroupConfigurationFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupConfigurationPayload>
+          }
+          findFirst: {
+            args: Prisma.GroupConfigurationFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupConfigurationPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.GroupConfigurationFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupConfigurationPayload>
+          }
+          findMany: {
+            args: Prisma.GroupConfigurationFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupConfigurationPayload>[]
+          }
+          create: {
+            args: Prisma.GroupConfigurationCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupConfigurationPayload>
+          }
+          createMany: {
+            args: Prisma.GroupConfigurationCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.GroupConfigurationCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupConfigurationPayload>[]
+          }
+          delete: {
+            args: Prisma.GroupConfigurationDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupConfigurationPayload>
+          }
+          update: {
+            args: Prisma.GroupConfigurationUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupConfigurationPayload>
+          }
+          deleteMany: {
+            args: Prisma.GroupConfigurationDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.GroupConfigurationUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.GroupConfigurationUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupConfigurationPayload>[]
+          }
+          upsert: {
+            args: Prisma.GroupConfigurationUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupConfigurationPayload>
+          }
+          aggregate: {
+            args: Prisma.GroupConfigurationAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateGroupConfiguration>
+          }
+          groupBy: {
+            args: Prisma.GroupConfigurationGroupByArgs<ExtArgs>
+            result: $Utils.Optional<GroupConfigurationGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.GroupConfigurationCountArgs<ExtArgs>
+            result: $Utils.Optional<GroupConfigurationCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1238,6 +1328,7 @@ export namespace Prisma {
     token?: TokenOmit
     pair?: PairOmit
     ohlcData?: OhlcDataOmit
+    groupConfiguration?: GroupConfigurationOmit
   }
 
   /* Types for Logging */
@@ -1339,11 +1430,13 @@ export namespace Prisma {
   export type TokenCountOutputType = {
     pairsAsToken0: number
     pairsAsToken1: number
+    groupConfigurations: number
   }
 
   export type TokenCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     pairsAsToken0?: boolean | TokenCountOutputTypeCountPairsAsToken0Args
     pairsAsToken1?: boolean | TokenCountOutputTypeCountPairsAsToken1Args
+    groupConfigurations?: boolean | TokenCountOutputTypeCountGroupConfigurationsArgs
   }
 
   // Custom InputTypes
@@ -1369,6 +1462,13 @@ export namespace Prisma {
    */
   export type TokenCountOutputTypeCountPairsAsToken1Args<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PairWhereInput
+  }
+
+  /**
+   * TokenCountOutputType without action
+   */
+  export type TokenCountOutputTypeCountGroupConfigurationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GroupConfigurationWhereInput
   }
 
 
@@ -5268,6 +5368,7 @@ export namespace Prisma {
     createdAt?: boolean
     pairsAsToken0?: boolean | Token$pairsAsToken0Args<ExtArgs>
     pairsAsToken1?: boolean | Token$pairsAsToken1Args<ExtArgs>
+    groupConfigurations?: boolean | Token$groupConfigurationsArgs<ExtArgs>
     _count?: boolean | TokenCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["token"]>
 
@@ -5314,6 +5415,7 @@ export namespace Prisma {
   export type TokenInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     pairsAsToken0?: boolean | Token$pairsAsToken0Args<ExtArgs>
     pairsAsToken1?: boolean | Token$pairsAsToken1Args<ExtArgs>
+    groupConfigurations?: boolean | Token$groupConfigurationsArgs<ExtArgs>
     _count?: boolean | TokenCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type TokenIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -5324,6 +5426,7 @@ export namespace Prisma {
     objects: {
       pairsAsToken0: Prisma.$PairPayload<ExtArgs>[]
       pairsAsToken1: Prisma.$PairPayload<ExtArgs>[]
+      groupConfigurations: Prisma.$GroupConfigurationPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -5732,6 +5835,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     pairsAsToken0<T extends Token$pairsAsToken0Args<ExtArgs> = {}>(args?: Subset<T, Token$pairsAsToken0Args<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PairPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     pairsAsToken1<T extends Token$pairsAsToken1Args<ExtArgs> = {}>(args?: Subset<T, Token$pairsAsToken1Args<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PairPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    groupConfigurations<T extends Token$groupConfigurationsArgs<ExtArgs> = {}>(args?: Subset<T, Token$groupConfigurationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupConfigurationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6202,6 +6306,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: PairScalarFieldEnum | PairScalarFieldEnum[]
+  }
+
+  /**
+   * Token.groupConfigurations
+   */
+  export type Token$groupConfigurationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupConfiguration
+     */
+    select?: GroupConfigurationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupConfiguration
+     */
+    omit?: GroupConfigurationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupConfigurationInclude<ExtArgs> | null
+    where?: GroupConfigurationWhereInput
+    orderBy?: GroupConfigurationOrderByWithRelationInput | GroupConfigurationOrderByWithRelationInput[]
+    cursor?: GroupConfigurationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: GroupConfigurationScalarFieldEnum | GroupConfigurationScalarFieldEnum[]
   }
 
   /**
@@ -8655,6 +8783,1153 @@ export namespace Prisma {
 
 
   /**
+   * Model GroupConfiguration
+   */
+
+  export type AggregateGroupConfiguration = {
+    _count: GroupConfigurationCountAggregateOutputType | null
+    _avg: GroupConfigurationAvgAggregateOutputType | null
+    _sum: GroupConfigurationSumAggregateOutputType | null
+    _min: GroupConfigurationMinAggregateOutputType | null
+    _max: GroupConfigurationMaxAggregateOutputType | null
+  }
+
+  export type GroupConfigurationAvgAggregateOutputType = {
+    chatId: number | null
+    spikeMonitorTokenId: number | null
+    spikeMonitorTimeframe: number | null
+    spikeMonitorInterval: number | null
+  }
+
+  export type GroupConfigurationSumAggregateOutputType = {
+    chatId: bigint | null
+    spikeMonitorTokenId: number | null
+    spikeMonitorTimeframe: number | null
+    spikeMonitorInterval: number | null
+  }
+
+  export type GroupConfigurationMinAggregateOutputType = {
+    chatId: bigint | null
+    spikeMonitorEnabled: boolean | null
+    spikeMonitorTokenId: number | null
+    spikeMonitorThreadId: string | null
+    spikeMonitorGifUrl: string | null
+    spikeMonitorTimeframe: number | null
+    spikeMonitorInterval: number | null
+  }
+
+  export type GroupConfigurationMaxAggregateOutputType = {
+    chatId: bigint | null
+    spikeMonitorEnabled: boolean | null
+    spikeMonitorTokenId: number | null
+    spikeMonitorThreadId: string | null
+    spikeMonitorGifUrl: string | null
+    spikeMonitorTimeframe: number | null
+    spikeMonitorInterval: number | null
+  }
+
+  export type GroupConfigurationCountAggregateOutputType = {
+    chatId: number
+    spikeMonitorEnabled: number
+    spikeMonitorTokenId: number
+    spikeMonitorThreadId: number
+    spikeMonitorGifUrl: number
+    spikeMonitorTimeframe: number
+    spikeMonitorInterval: number
+    _all: number
+  }
+
+
+  export type GroupConfigurationAvgAggregateInputType = {
+    chatId?: true
+    spikeMonitorTokenId?: true
+    spikeMonitorTimeframe?: true
+    spikeMonitorInterval?: true
+  }
+
+  export type GroupConfigurationSumAggregateInputType = {
+    chatId?: true
+    spikeMonitorTokenId?: true
+    spikeMonitorTimeframe?: true
+    spikeMonitorInterval?: true
+  }
+
+  export type GroupConfigurationMinAggregateInputType = {
+    chatId?: true
+    spikeMonitorEnabled?: true
+    spikeMonitorTokenId?: true
+    spikeMonitorThreadId?: true
+    spikeMonitorGifUrl?: true
+    spikeMonitorTimeframe?: true
+    spikeMonitorInterval?: true
+  }
+
+  export type GroupConfigurationMaxAggregateInputType = {
+    chatId?: true
+    spikeMonitorEnabled?: true
+    spikeMonitorTokenId?: true
+    spikeMonitorThreadId?: true
+    spikeMonitorGifUrl?: true
+    spikeMonitorTimeframe?: true
+    spikeMonitorInterval?: true
+  }
+
+  export type GroupConfigurationCountAggregateInputType = {
+    chatId?: true
+    spikeMonitorEnabled?: true
+    spikeMonitorTokenId?: true
+    spikeMonitorThreadId?: true
+    spikeMonitorGifUrl?: true
+    spikeMonitorTimeframe?: true
+    spikeMonitorInterval?: true
+    _all?: true
+  }
+
+  export type GroupConfigurationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GroupConfiguration to aggregate.
+     */
+    where?: GroupConfigurationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GroupConfigurations to fetch.
+     */
+    orderBy?: GroupConfigurationOrderByWithRelationInput | GroupConfigurationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: GroupConfigurationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GroupConfigurations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GroupConfigurations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned GroupConfigurations
+    **/
+    _count?: true | GroupConfigurationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: GroupConfigurationAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: GroupConfigurationSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: GroupConfigurationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: GroupConfigurationMaxAggregateInputType
+  }
+
+  export type GetGroupConfigurationAggregateType<T extends GroupConfigurationAggregateArgs> = {
+        [P in keyof T & keyof AggregateGroupConfiguration]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateGroupConfiguration[P]>
+      : GetScalarType<T[P], AggregateGroupConfiguration[P]>
+  }
+
+
+
+
+  export type GroupConfigurationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GroupConfigurationWhereInput
+    orderBy?: GroupConfigurationOrderByWithAggregationInput | GroupConfigurationOrderByWithAggregationInput[]
+    by: GroupConfigurationScalarFieldEnum[] | GroupConfigurationScalarFieldEnum
+    having?: GroupConfigurationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: GroupConfigurationCountAggregateInputType | true
+    _avg?: GroupConfigurationAvgAggregateInputType
+    _sum?: GroupConfigurationSumAggregateInputType
+    _min?: GroupConfigurationMinAggregateInputType
+    _max?: GroupConfigurationMaxAggregateInputType
+  }
+
+  export type GroupConfigurationGroupByOutputType = {
+    chatId: bigint
+    spikeMonitorEnabled: boolean
+    spikeMonitorTokenId: number | null
+    spikeMonitorThreadId: string | null
+    spikeMonitorGifUrl: string | null
+    spikeMonitorTimeframe: number | null
+    spikeMonitorInterval: number | null
+    _count: GroupConfigurationCountAggregateOutputType | null
+    _avg: GroupConfigurationAvgAggregateOutputType | null
+    _sum: GroupConfigurationSumAggregateOutputType | null
+    _min: GroupConfigurationMinAggregateOutputType | null
+    _max: GroupConfigurationMaxAggregateOutputType | null
+  }
+
+  type GetGroupConfigurationGroupByPayload<T extends GroupConfigurationGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<GroupConfigurationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof GroupConfigurationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], GroupConfigurationGroupByOutputType[P]>
+            : GetScalarType<T[P], GroupConfigurationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type GroupConfigurationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    chatId?: boolean
+    spikeMonitorEnabled?: boolean
+    spikeMonitorTokenId?: boolean
+    spikeMonitorThreadId?: boolean
+    spikeMonitorGifUrl?: boolean
+    spikeMonitorTimeframe?: boolean
+    spikeMonitorInterval?: boolean
+    spikeMonitorToken?: boolean | GroupConfiguration$spikeMonitorTokenArgs<ExtArgs>
+  }, ExtArgs["result"]["groupConfiguration"]>
+
+  export type GroupConfigurationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    chatId?: boolean
+    spikeMonitorEnabled?: boolean
+    spikeMonitorTokenId?: boolean
+    spikeMonitorThreadId?: boolean
+    spikeMonitorGifUrl?: boolean
+    spikeMonitorTimeframe?: boolean
+    spikeMonitorInterval?: boolean
+    spikeMonitorToken?: boolean | GroupConfiguration$spikeMonitorTokenArgs<ExtArgs>
+  }, ExtArgs["result"]["groupConfiguration"]>
+
+  export type GroupConfigurationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    chatId?: boolean
+    spikeMonitorEnabled?: boolean
+    spikeMonitorTokenId?: boolean
+    spikeMonitorThreadId?: boolean
+    spikeMonitorGifUrl?: boolean
+    spikeMonitorTimeframe?: boolean
+    spikeMonitorInterval?: boolean
+    spikeMonitorToken?: boolean | GroupConfiguration$spikeMonitorTokenArgs<ExtArgs>
+  }, ExtArgs["result"]["groupConfiguration"]>
+
+  export type GroupConfigurationSelectScalar = {
+    chatId?: boolean
+    spikeMonitorEnabled?: boolean
+    spikeMonitorTokenId?: boolean
+    spikeMonitorThreadId?: boolean
+    spikeMonitorGifUrl?: boolean
+    spikeMonitorTimeframe?: boolean
+    spikeMonitorInterval?: boolean
+  }
+
+  export type GroupConfigurationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"chatId" | "spikeMonitorEnabled" | "spikeMonitorTokenId" | "spikeMonitorThreadId" | "spikeMonitorGifUrl" | "spikeMonitorTimeframe" | "spikeMonitorInterval", ExtArgs["result"]["groupConfiguration"]>
+  export type GroupConfigurationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    spikeMonitorToken?: boolean | GroupConfiguration$spikeMonitorTokenArgs<ExtArgs>
+  }
+  export type GroupConfigurationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    spikeMonitorToken?: boolean | GroupConfiguration$spikeMonitorTokenArgs<ExtArgs>
+  }
+  export type GroupConfigurationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    spikeMonitorToken?: boolean | GroupConfiguration$spikeMonitorTokenArgs<ExtArgs>
+  }
+
+  export type $GroupConfigurationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "GroupConfiguration"
+    objects: {
+      spikeMonitorToken: Prisma.$TokenPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      chatId: bigint
+      spikeMonitorEnabled: boolean
+      spikeMonitorTokenId: number | null
+      spikeMonitorThreadId: string | null
+      spikeMonitorGifUrl: string | null
+      spikeMonitorTimeframe: number | null
+      spikeMonitorInterval: number | null
+    }, ExtArgs["result"]["groupConfiguration"]>
+    composites: {}
+  }
+
+  type GroupConfigurationGetPayload<S extends boolean | null | undefined | GroupConfigurationDefaultArgs> = $Result.GetResult<Prisma.$GroupConfigurationPayload, S>
+
+  type GroupConfigurationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<GroupConfigurationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: GroupConfigurationCountAggregateInputType | true
+    }
+
+  export interface GroupConfigurationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['GroupConfiguration'], meta: { name: 'GroupConfiguration' } }
+    /**
+     * Find zero or one GroupConfiguration that matches the filter.
+     * @param {GroupConfigurationFindUniqueArgs} args - Arguments to find a GroupConfiguration
+     * @example
+     * // Get one GroupConfiguration
+     * const groupConfiguration = await prisma.groupConfiguration.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends GroupConfigurationFindUniqueArgs>(args: SelectSubset<T, GroupConfigurationFindUniqueArgs<ExtArgs>>): Prisma__GroupConfigurationClient<$Result.GetResult<Prisma.$GroupConfigurationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one GroupConfiguration that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {GroupConfigurationFindUniqueOrThrowArgs} args - Arguments to find a GroupConfiguration
+     * @example
+     * // Get one GroupConfiguration
+     * const groupConfiguration = await prisma.groupConfiguration.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends GroupConfigurationFindUniqueOrThrowArgs>(args: SelectSubset<T, GroupConfigurationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__GroupConfigurationClient<$Result.GetResult<Prisma.$GroupConfigurationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first GroupConfiguration that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupConfigurationFindFirstArgs} args - Arguments to find a GroupConfiguration
+     * @example
+     * // Get one GroupConfiguration
+     * const groupConfiguration = await prisma.groupConfiguration.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends GroupConfigurationFindFirstArgs>(args?: SelectSubset<T, GroupConfigurationFindFirstArgs<ExtArgs>>): Prisma__GroupConfigurationClient<$Result.GetResult<Prisma.$GroupConfigurationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first GroupConfiguration that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupConfigurationFindFirstOrThrowArgs} args - Arguments to find a GroupConfiguration
+     * @example
+     * // Get one GroupConfiguration
+     * const groupConfiguration = await prisma.groupConfiguration.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends GroupConfigurationFindFirstOrThrowArgs>(args?: SelectSubset<T, GroupConfigurationFindFirstOrThrowArgs<ExtArgs>>): Prisma__GroupConfigurationClient<$Result.GetResult<Prisma.$GroupConfigurationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more GroupConfigurations that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupConfigurationFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all GroupConfigurations
+     * const groupConfigurations = await prisma.groupConfiguration.findMany()
+     * 
+     * // Get first 10 GroupConfigurations
+     * const groupConfigurations = await prisma.groupConfiguration.findMany({ take: 10 })
+     * 
+     * // Only select the `chatId`
+     * const groupConfigurationWithChatIdOnly = await prisma.groupConfiguration.findMany({ select: { chatId: true } })
+     * 
+     */
+    findMany<T extends GroupConfigurationFindManyArgs>(args?: SelectSubset<T, GroupConfigurationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupConfigurationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a GroupConfiguration.
+     * @param {GroupConfigurationCreateArgs} args - Arguments to create a GroupConfiguration.
+     * @example
+     * // Create one GroupConfiguration
+     * const GroupConfiguration = await prisma.groupConfiguration.create({
+     *   data: {
+     *     // ... data to create a GroupConfiguration
+     *   }
+     * })
+     * 
+     */
+    create<T extends GroupConfigurationCreateArgs>(args: SelectSubset<T, GroupConfigurationCreateArgs<ExtArgs>>): Prisma__GroupConfigurationClient<$Result.GetResult<Prisma.$GroupConfigurationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many GroupConfigurations.
+     * @param {GroupConfigurationCreateManyArgs} args - Arguments to create many GroupConfigurations.
+     * @example
+     * // Create many GroupConfigurations
+     * const groupConfiguration = await prisma.groupConfiguration.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends GroupConfigurationCreateManyArgs>(args?: SelectSubset<T, GroupConfigurationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many GroupConfigurations and returns the data saved in the database.
+     * @param {GroupConfigurationCreateManyAndReturnArgs} args - Arguments to create many GroupConfigurations.
+     * @example
+     * // Create many GroupConfigurations
+     * const groupConfiguration = await prisma.groupConfiguration.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many GroupConfigurations and only return the `chatId`
+     * const groupConfigurationWithChatIdOnly = await prisma.groupConfiguration.createManyAndReturn({
+     *   select: { chatId: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends GroupConfigurationCreateManyAndReturnArgs>(args?: SelectSubset<T, GroupConfigurationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupConfigurationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a GroupConfiguration.
+     * @param {GroupConfigurationDeleteArgs} args - Arguments to delete one GroupConfiguration.
+     * @example
+     * // Delete one GroupConfiguration
+     * const GroupConfiguration = await prisma.groupConfiguration.delete({
+     *   where: {
+     *     // ... filter to delete one GroupConfiguration
+     *   }
+     * })
+     * 
+     */
+    delete<T extends GroupConfigurationDeleteArgs>(args: SelectSubset<T, GroupConfigurationDeleteArgs<ExtArgs>>): Prisma__GroupConfigurationClient<$Result.GetResult<Prisma.$GroupConfigurationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one GroupConfiguration.
+     * @param {GroupConfigurationUpdateArgs} args - Arguments to update one GroupConfiguration.
+     * @example
+     * // Update one GroupConfiguration
+     * const groupConfiguration = await prisma.groupConfiguration.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends GroupConfigurationUpdateArgs>(args: SelectSubset<T, GroupConfigurationUpdateArgs<ExtArgs>>): Prisma__GroupConfigurationClient<$Result.GetResult<Prisma.$GroupConfigurationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more GroupConfigurations.
+     * @param {GroupConfigurationDeleteManyArgs} args - Arguments to filter GroupConfigurations to delete.
+     * @example
+     * // Delete a few GroupConfigurations
+     * const { count } = await prisma.groupConfiguration.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends GroupConfigurationDeleteManyArgs>(args?: SelectSubset<T, GroupConfigurationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GroupConfigurations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupConfigurationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many GroupConfigurations
+     * const groupConfiguration = await prisma.groupConfiguration.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends GroupConfigurationUpdateManyArgs>(args: SelectSubset<T, GroupConfigurationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GroupConfigurations and returns the data updated in the database.
+     * @param {GroupConfigurationUpdateManyAndReturnArgs} args - Arguments to update many GroupConfigurations.
+     * @example
+     * // Update many GroupConfigurations
+     * const groupConfiguration = await prisma.groupConfiguration.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more GroupConfigurations and only return the `chatId`
+     * const groupConfigurationWithChatIdOnly = await prisma.groupConfiguration.updateManyAndReturn({
+     *   select: { chatId: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends GroupConfigurationUpdateManyAndReturnArgs>(args: SelectSubset<T, GroupConfigurationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupConfigurationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one GroupConfiguration.
+     * @param {GroupConfigurationUpsertArgs} args - Arguments to update or create a GroupConfiguration.
+     * @example
+     * // Update or create a GroupConfiguration
+     * const groupConfiguration = await prisma.groupConfiguration.upsert({
+     *   create: {
+     *     // ... data to create a GroupConfiguration
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the GroupConfiguration we want to update
+     *   }
+     * })
+     */
+    upsert<T extends GroupConfigurationUpsertArgs>(args: SelectSubset<T, GroupConfigurationUpsertArgs<ExtArgs>>): Prisma__GroupConfigurationClient<$Result.GetResult<Prisma.$GroupConfigurationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of GroupConfigurations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupConfigurationCountArgs} args - Arguments to filter GroupConfigurations to count.
+     * @example
+     * // Count the number of GroupConfigurations
+     * const count = await prisma.groupConfiguration.count({
+     *   where: {
+     *     // ... the filter for the GroupConfigurations we want to count
+     *   }
+     * })
+    **/
+    count<T extends GroupConfigurationCountArgs>(
+      args?: Subset<T, GroupConfigurationCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], GroupConfigurationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a GroupConfiguration.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupConfigurationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends GroupConfigurationAggregateArgs>(args: Subset<T, GroupConfigurationAggregateArgs>): Prisma.PrismaPromise<GetGroupConfigurationAggregateType<T>>
+
+    /**
+     * Group by GroupConfiguration.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupConfigurationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends GroupConfigurationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: GroupConfigurationGroupByArgs['orderBy'] }
+        : { orderBy?: GroupConfigurationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, GroupConfigurationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetGroupConfigurationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the GroupConfiguration model
+   */
+  readonly fields: GroupConfigurationFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for GroupConfiguration.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__GroupConfigurationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    spikeMonitorToken<T extends GroupConfiguration$spikeMonitorTokenArgs<ExtArgs> = {}>(args?: Subset<T, GroupConfiguration$spikeMonitorTokenArgs<ExtArgs>>): Prisma__TokenClient<$Result.GetResult<Prisma.$TokenPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the GroupConfiguration model
+   */
+  interface GroupConfigurationFieldRefs {
+    readonly chatId: FieldRef<"GroupConfiguration", 'BigInt'>
+    readonly spikeMonitorEnabled: FieldRef<"GroupConfiguration", 'Boolean'>
+    readonly spikeMonitorTokenId: FieldRef<"GroupConfiguration", 'Int'>
+    readonly spikeMonitorThreadId: FieldRef<"GroupConfiguration", 'String'>
+    readonly spikeMonitorGifUrl: FieldRef<"GroupConfiguration", 'String'>
+    readonly spikeMonitorTimeframe: FieldRef<"GroupConfiguration", 'Int'>
+    readonly spikeMonitorInterval: FieldRef<"GroupConfiguration", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * GroupConfiguration findUnique
+   */
+  export type GroupConfigurationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupConfiguration
+     */
+    select?: GroupConfigurationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupConfiguration
+     */
+    omit?: GroupConfigurationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupConfigurationInclude<ExtArgs> | null
+    /**
+     * Filter, which GroupConfiguration to fetch.
+     */
+    where: GroupConfigurationWhereUniqueInput
+  }
+
+  /**
+   * GroupConfiguration findUniqueOrThrow
+   */
+  export type GroupConfigurationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupConfiguration
+     */
+    select?: GroupConfigurationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupConfiguration
+     */
+    omit?: GroupConfigurationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupConfigurationInclude<ExtArgs> | null
+    /**
+     * Filter, which GroupConfiguration to fetch.
+     */
+    where: GroupConfigurationWhereUniqueInput
+  }
+
+  /**
+   * GroupConfiguration findFirst
+   */
+  export type GroupConfigurationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupConfiguration
+     */
+    select?: GroupConfigurationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupConfiguration
+     */
+    omit?: GroupConfigurationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupConfigurationInclude<ExtArgs> | null
+    /**
+     * Filter, which GroupConfiguration to fetch.
+     */
+    where?: GroupConfigurationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GroupConfigurations to fetch.
+     */
+    orderBy?: GroupConfigurationOrderByWithRelationInput | GroupConfigurationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GroupConfigurations.
+     */
+    cursor?: GroupConfigurationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GroupConfigurations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GroupConfigurations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GroupConfigurations.
+     */
+    distinct?: GroupConfigurationScalarFieldEnum | GroupConfigurationScalarFieldEnum[]
+  }
+
+  /**
+   * GroupConfiguration findFirstOrThrow
+   */
+  export type GroupConfigurationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupConfiguration
+     */
+    select?: GroupConfigurationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupConfiguration
+     */
+    omit?: GroupConfigurationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupConfigurationInclude<ExtArgs> | null
+    /**
+     * Filter, which GroupConfiguration to fetch.
+     */
+    where?: GroupConfigurationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GroupConfigurations to fetch.
+     */
+    orderBy?: GroupConfigurationOrderByWithRelationInput | GroupConfigurationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GroupConfigurations.
+     */
+    cursor?: GroupConfigurationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GroupConfigurations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GroupConfigurations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GroupConfigurations.
+     */
+    distinct?: GroupConfigurationScalarFieldEnum | GroupConfigurationScalarFieldEnum[]
+  }
+
+  /**
+   * GroupConfiguration findMany
+   */
+  export type GroupConfigurationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupConfiguration
+     */
+    select?: GroupConfigurationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupConfiguration
+     */
+    omit?: GroupConfigurationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupConfigurationInclude<ExtArgs> | null
+    /**
+     * Filter, which GroupConfigurations to fetch.
+     */
+    where?: GroupConfigurationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GroupConfigurations to fetch.
+     */
+    orderBy?: GroupConfigurationOrderByWithRelationInput | GroupConfigurationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing GroupConfigurations.
+     */
+    cursor?: GroupConfigurationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GroupConfigurations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GroupConfigurations.
+     */
+    skip?: number
+    distinct?: GroupConfigurationScalarFieldEnum | GroupConfigurationScalarFieldEnum[]
+  }
+
+  /**
+   * GroupConfiguration create
+   */
+  export type GroupConfigurationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupConfiguration
+     */
+    select?: GroupConfigurationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupConfiguration
+     */
+    omit?: GroupConfigurationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupConfigurationInclude<ExtArgs> | null
+    /**
+     * The data needed to create a GroupConfiguration.
+     */
+    data: XOR<GroupConfigurationCreateInput, GroupConfigurationUncheckedCreateInput>
+  }
+
+  /**
+   * GroupConfiguration createMany
+   */
+  export type GroupConfigurationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many GroupConfigurations.
+     */
+    data: GroupConfigurationCreateManyInput | GroupConfigurationCreateManyInput[]
+  }
+
+  /**
+   * GroupConfiguration createManyAndReturn
+   */
+  export type GroupConfigurationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupConfiguration
+     */
+    select?: GroupConfigurationSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupConfiguration
+     */
+    omit?: GroupConfigurationOmit<ExtArgs> | null
+    /**
+     * The data used to create many GroupConfigurations.
+     */
+    data: GroupConfigurationCreateManyInput | GroupConfigurationCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupConfigurationIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * GroupConfiguration update
+   */
+  export type GroupConfigurationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupConfiguration
+     */
+    select?: GroupConfigurationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupConfiguration
+     */
+    omit?: GroupConfigurationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupConfigurationInclude<ExtArgs> | null
+    /**
+     * The data needed to update a GroupConfiguration.
+     */
+    data: XOR<GroupConfigurationUpdateInput, GroupConfigurationUncheckedUpdateInput>
+    /**
+     * Choose, which GroupConfiguration to update.
+     */
+    where: GroupConfigurationWhereUniqueInput
+  }
+
+  /**
+   * GroupConfiguration updateMany
+   */
+  export type GroupConfigurationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update GroupConfigurations.
+     */
+    data: XOR<GroupConfigurationUpdateManyMutationInput, GroupConfigurationUncheckedUpdateManyInput>
+    /**
+     * Filter which GroupConfigurations to update
+     */
+    where?: GroupConfigurationWhereInput
+    /**
+     * Limit how many GroupConfigurations to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * GroupConfiguration updateManyAndReturn
+   */
+  export type GroupConfigurationUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupConfiguration
+     */
+    select?: GroupConfigurationSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupConfiguration
+     */
+    omit?: GroupConfigurationOmit<ExtArgs> | null
+    /**
+     * The data used to update GroupConfigurations.
+     */
+    data: XOR<GroupConfigurationUpdateManyMutationInput, GroupConfigurationUncheckedUpdateManyInput>
+    /**
+     * Filter which GroupConfigurations to update
+     */
+    where?: GroupConfigurationWhereInput
+    /**
+     * Limit how many GroupConfigurations to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupConfigurationIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * GroupConfiguration upsert
+   */
+  export type GroupConfigurationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupConfiguration
+     */
+    select?: GroupConfigurationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupConfiguration
+     */
+    omit?: GroupConfigurationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupConfigurationInclude<ExtArgs> | null
+    /**
+     * The filter to search for the GroupConfiguration to update in case it exists.
+     */
+    where: GroupConfigurationWhereUniqueInput
+    /**
+     * In case the GroupConfiguration found by the `where` argument doesn't exist, create a new GroupConfiguration with this data.
+     */
+    create: XOR<GroupConfigurationCreateInput, GroupConfigurationUncheckedCreateInput>
+    /**
+     * In case the GroupConfiguration was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<GroupConfigurationUpdateInput, GroupConfigurationUncheckedUpdateInput>
+  }
+
+  /**
+   * GroupConfiguration delete
+   */
+  export type GroupConfigurationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupConfiguration
+     */
+    select?: GroupConfigurationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupConfiguration
+     */
+    omit?: GroupConfigurationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupConfigurationInclude<ExtArgs> | null
+    /**
+     * Filter which GroupConfiguration to delete.
+     */
+    where: GroupConfigurationWhereUniqueInput
+  }
+
+  /**
+   * GroupConfiguration deleteMany
+   */
+  export type GroupConfigurationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GroupConfigurations to delete
+     */
+    where?: GroupConfigurationWhereInput
+    /**
+     * Limit how many GroupConfigurations to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * GroupConfiguration.spikeMonitorToken
+   */
+  export type GroupConfiguration$spikeMonitorTokenArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Token
+     */
+    select?: TokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Token
+     */
+    omit?: TokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TokenInclude<ExtArgs> | null
+    where?: TokenWhereInput
+  }
+
+  /**
+   * GroupConfiguration without action
+   */
+  export type GroupConfigurationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupConfiguration
+     */
+    select?: GroupConfigurationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupConfiguration
+     */
+    omit?: GroupConfigurationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GroupConfigurationInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -8775,6 +10050,19 @@ export namespace Prisma {
   };
 
   export type OhlcDataScalarFieldEnum = (typeof OhlcDataScalarFieldEnum)[keyof typeof OhlcDataScalarFieldEnum]
+
+
+  export const GroupConfigurationScalarFieldEnum: {
+    chatId: 'chatId',
+    spikeMonitorEnabled: 'spikeMonitorEnabled',
+    spikeMonitorTokenId: 'spikeMonitorTokenId',
+    spikeMonitorThreadId: 'spikeMonitorThreadId',
+    spikeMonitorGifUrl: 'spikeMonitorGifUrl',
+    spikeMonitorTimeframe: 'spikeMonitorTimeframe',
+    spikeMonitorInterval: 'spikeMonitorInterval'
+  };
+
+  export type GroupConfigurationScalarFieldEnum = (typeof GroupConfigurationScalarFieldEnum)[keyof typeof GroupConfigurationScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -9162,6 +10450,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Token"> | Date | string
     pairsAsToken0?: PairListRelationFilter
     pairsAsToken1?: PairListRelationFilter
+    groupConfigurations?: GroupConfigurationListRelationFilter
   }
 
   export type TokenOrderByWithRelationInput = {
@@ -9177,6 +10466,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     pairsAsToken0?: PairOrderByRelationAggregateInput
     pairsAsToken1?: PairOrderByRelationAggregateInput
+    groupConfigurations?: GroupConfigurationOrderByRelationAggregateInput
   }
 
   export type TokenWhereUniqueInput = Prisma.AtLeast<{
@@ -9196,6 +10486,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Token"> | Date | string
     pairsAsToken0?: PairListRelationFilter
     pairsAsToken1?: PairListRelationFilter
+    groupConfigurations?: GroupConfigurationListRelationFilter
   }, "id" | "wrappedAddress" | "network_address">
 
   export type TokenOrderByWithAggregationInput = {
@@ -9433,6 +10724,73 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"OhlcData"> | Date | string
     token0Address?: StringWithAggregatesFilter<"OhlcData"> | string
     token1Address?: StringWithAggregatesFilter<"OhlcData"> | string
+  }
+
+  export type GroupConfigurationWhereInput = {
+    AND?: GroupConfigurationWhereInput | GroupConfigurationWhereInput[]
+    OR?: GroupConfigurationWhereInput[]
+    NOT?: GroupConfigurationWhereInput | GroupConfigurationWhereInput[]
+    chatId?: BigIntFilter<"GroupConfiguration"> | bigint | number
+    spikeMonitorEnabled?: BoolFilter<"GroupConfiguration"> | boolean
+    spikeMonitorTokenId?: IntNullableFilter<"GroupConfiguration"> | number | null
+    spikeMonitorThreadId?: StringNullableFilter<"GroupConfiguration"> | string | null
+    spikeMonitorGifUrl?: StringNullableFilter<"GroupConfiguration"> | string | null
+    spikeMonitorTimeframe?: IntNullableFilter<"GroupConfiguration"> | number | null
+    spikeMonitorInterval?: IntNullableFilter<"GroupConfiguration"> | number | null
+    spikeMonitorToken?: XOR<TokenNullableScalarRelationFilter, TokenWhereInput> | null
+  }
+
+  export type GroupConfigurationOrderByWithRelationInput = {
+    chatId?: SortOrder
+    spikeMonitorEnabled?: SortOrder
+    spikeMonitorTokenId?: SortOrderInput | SortOrder
+    spikeMonitorThreadId?: SortOrderInput | SortOrder
+    spikeMonitorGifUrl?: SortOrderInput | SortOrder
+    spikeMonitorTimeframe?: SortOrderInput | SortOrder
+    spikeMonitorInterval?: SortOrderInput | SortOrder
+    spikeMonitorToken?: TokenOrderByWithRelationInput
+  }
+
+  export type GroupConfigurationWhereUniqueInput = Prisma.AtLeast<{
+    chatId?: bigint | number
+    AND?: GroupConfigurationWhereInput | GroupConfigurationWhereInput[]
+    OR?: GroupConfigurationWhereInput[]
+    NOT?: GroupConfigurationWhereInput | GroupConfigurationWhereInput[]
+    spikeMonitorEnabled?: BoolFilter<"GroupConfiguration"> | boolean
+    spikeMonitorTokenId?: IntNullableFilter<"GroupConfiguration"> | number | null
+    spikeMonitorThreadId?: StringNullableFilter<"GroupConfiguration"> | string | null
+    spikeMonitorGifUrl?: StringNullableFilter<"GroupConfiguration"> | string | null
+    spikeMonitorTimeframe?: IntNullableFilter<"GroupConfiguration"> | number | null
+    spikeMonitorInterval?: IntNullableFilter<"GroupConfiguration"> | number | null
+    spikeMonitorToken?: XOR<TokenNullableScalarRelationFilter, TokenWhereInput> | null
+  }, "chatId">
+
+  export type GroupConfigurationOrderByWithAggregationInput = {
+    chatId?: SortOrder
+    spikeMonitorEnabled?: SortOrder
+    spikeMonitorTokenId?: SortOrderInput | SortOrder
+    spikeMonitorThreadId?: SortOrderInput | SortOrder
+    spikeMonitorGifUrl?: SortOrderInput | SortOrder
+    spikeMonitorTimeframe?: SortOrderInput | SortOrder
+    spikeMonitorInterval?: SortOrderInput | SortOrder
+    _count?: GroupConfigurationCountOrderByAggregateInput
+    _avg?: GroupConfigurationAvgOrderByAggregateInput
+    _max?: GroupConfigurationMaxOrderByAggregateInput
+    _min?: GroupConfigurationMinOrderByAggregateInput
+    _sum?: GroupConfigurationSumOrderByAggregateInput
+  }
+
+  export type GroupConfigurationScalarWhereWithAggregatesInput = {
+    AND?: GroupConfigurationScalarWhereWithAggregatesInput | GroupConfigurationScalarWhereWithAggregatesInput[]
+    OR?: GroupConfigurationScalarWhereWithAggregatesInput[]
+    NOT?: GroupConfigurationScalarWhereWithAggregatesInput | GroupConfigurationScalarWhereWithAggregatesInput[]
+    chatId?: BigIntWithAggregatesFilter<"GroupConfiguration"> | bigint | number
+    spikeMonitorEnabled?: BoolWithAggregatesFilter<"GroupConfiguration"> | boolean
+    spikeMonitorTokenId?: IntNullableWithAggregatesFilter<"GroupConfiguration"> | number | null
+    spikeMonitorThreadId?: StringNullableWithAggregatesFilter<"GroupConfiguration"> | string | null
+    spikeMonitorGifUrl?: StringNullableWithAggregatesFilter<"GroupConfiguration"> | string | null
+    spikeMonitorTimeframe?: IntNullableWithAggregatesFilter<"GroupConfiguration"> | number | null
+    spikeMonitorInterval?: IntNullableWithAggregatesFilter<"GroupConfiguration"> | number | null
   }
 
   export type EventTrackingCreateInput = {
@@ -9779,6 +11137,7 @@ export namespace Prisma {
     createdAt?: Date | string
     pairsAsToken0?: PairCreateNestedManyWithoutToken0Input
     pairsAsToken1?: PairCreateNestedManyWithoutToken1Input
+    groupConfigurations?: GroupConfigurationCreateNestedManyWithoutSpikeMonitorTokenInput
   }
 
   export type TokenUncheckedCreateInput = {
@@ -9794,6 +11153,7 @@ export namespace Prisma {
     createdAt?: Date | string
     pairsAsToken0?: PairUncheckedCreateNestedManyWithoutToken0Input
     pairsAsToken1?: PairUncheckedCreateNestedManyWithoutToken1Input
+    groupConfigurations?: GroupConfigurationUncheckedCreateNestedManyWithoutSpikeMonitorTokenInput
   }
 
   export type TokenUpdateInput = {
@@ -9808,6 +11168,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     pairsAsToken0?: PairUpdateManyWithoutToken0NestedInput
     pairsAsToken1?: PairUpdateManyWithoutToken1NestedInput
+    groupConfigurations?: GroupConfigurationUpdateManyWithoutSpikeMonitorTokenNestedInput
   }
 
   export type TokenUncheckedUpdateInput = {
@@ -9823,6 +11184,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     pairsAsToken0?: PairUncheckedUpdateManyWithoutToken0NestedInput
     pairsAsToken1?: PairUncheckedUpdateManyWithoutToken1NestedInput
+    groupConfigurations?: GroupConfigurationUncheckedUpdateManyWithoutSpikeMonitorTokenNestedInput
   }
 
   export type TokenCreateManyInput = {
@@ -10085,6 +11447,75 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     token0Address?: StringFieldUpdateOperationsInput | string
     token1Address?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type GroupConfigurationCreateInput = {
+    chatId: bigint | number
+    spikeMonitorEnabled?: boolean
+    spikeMonitorThreadId?: string | null
+    spikeMonitorGifUrl?: string | null
+    spikeMonitorTimeframe?: number | null
+    spikeMonitorInterval?: number | null
+    spikeMonitorToken?: TokenCreateNestedOneWithoutGroupConfigurationsInput
+  }
+
+  export type GroupConfigurationUncheckedCreateInput = {
+    chatId: bigint | number
+    spikeMonitorEnabled?: boolean
+    spikeMonitorTokenId?: number | null
+    spikeMonitorThreadId?: string | null
+    spikeMonitorGifUrl?: string | null
+    spikeMonitorTimeframe?: number | null
+    spikeMonitorInterval?: number | null
+  }
+
+  export type GroupConfigurationUpdateInput = {
+    chatId?: BigIntFieldUpdateOperationsInput | bigint | number
+    spikeMonitorEnabled?: BoolFieldUpdateOperationsInput | boolean
+    spikeMonitorThreadId?: NullableStringFieldUpdateOperationsInput | string | null
+    spikeMonitorGifUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spikeMonitorTimeframe?: NullableIntFieldUpdateOperationsInput | number | null
+    spikeMonitorInterval?: NullableIntFieldUpdateOperationsInput | number | null
+    spikeMonitorToken?: TokenUpdateOneWithoutGroupConfigurationsNestedInput
+  }
+
+  export type GroupConfigurationUncheckedUpdateInput = {
+    chatId?: BigIntFieldUpdateOperationsInput | bigint | number
+    spikeMonitorEnabled?: BoolFieldUpdateOperationsInput | boolean
+    spikeMonitorTokenId?: NullableIntFieldUpdateOperationsInput | number | null
+    spikeMonitorThreadId?: NullableStringFieldUpdateOperationsInput | string | null
+    spikeMonitorGifUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spikeMonitorTimeframe?: NullableIntFieldUpdateOperationsInput | number | null
+    spikeMonitorInterval?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type GroupConfigurationCreateManyInput = {
+    chatId: bigint | number
+    spikeMonitorEnabled?: boolean
+    spikeMonitorTokenId?: number | null
+    spikeMonitorThreadId?: string | null
+    spikeMonitorGifUrl?: string | null
+    spikeMonitorTimeframe?: number | null
+    spikeMonitorInterval?: number | null
+  }
+
+  export type GroupConfigurationUpdateManyMutationInput = {
+    chatId?: BigIntFieldUpdateOperationsInput | bigint | number
+    spikeMonitorEnabled?: BoolFieldUpdateOperationsInput | boolean
+    spikeMonitorThreadId?: NullableStringFieldUpdateOperationsInput | string | null
+    spikeMonitorGifUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spikeMonitorTimeframe?: NullableIntFieldUpdateOperationsInput | number | null
+    spikeMonitorInterval?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type GroupConfigurationUncheckedUpdateManyInput = {
+    chatId?: BigIntFieldUpdateOperationsInput | bigint | number
+    spikeMonitorEnabled?: BoolFieldUpdateOperationsInput | boolean
+    spikeMonitorTokenId?: NullableIntFieldUpdateOperationsInput | number | null
+    spikeMonitorThreadId?: NullableStringFieldUpdateOperationsInput | string | null
+    spikeMonitorGifUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spikeMonitorTimeframe?: NullableIntFieldUpdateOperationsInput | number | null
+    spikeMonitorInterval?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -10492,7 +11923,17 @@ export namespace Prisma {
     none?: PairWhereInput
   }
 
+  export type GroupConfigurationListRelationFilter = {
+    every?: GroupConfigurationWhereInput
+    some?: GroupConfigurationWhereInput
+    none?: GroupConfigurationWhereInput
+  }
+
   export type PairOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type GroupConfigurationOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -10799,6 +12240,82 @@ export namespace Prisma {
     _max?: NestedDecimalFilter<$PrismaModel>
   }
 
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type TokenNullableScalarRelationFilter = {
+    is?: TokenWhereInput | null
+    isNot?: TokenWhereInput | null
+  }
+
+  export type GroupConfigurationCountOrderByAggregateInput = {
+    chatId?: SortOrder
+    spikeMonitorEnabled?: SortOrder
+    spikeMonitorTokenId?: SortOrder
+    spikeMonitorThreadId?: SortOrder
+    spikeMonitorGifUrl?: SortOrder
+    spikeMonitorTimeframe?: SortOrder
+    spikeMonitorInterval?: SortOrder
+  }
+
+  export type GroupConfigurationAvgOrderByAggregateInput = {
+    chatId?: SortOrder
+    spikeMonitorTokenId?: SortOrder
+    spikeMonitorTimeframe?: SortOrder
+    spikeMonitorInterval?: SortOrder
+  }
+
+  export type GroupConfigurationMaxOrderByAggregateInput = {
+    chatId?: SortOrder
+    spikeMonitorEnabled?: SortOrder
+    spikeMonitorTokenId?: SortOrder
+    spikeMonitorThreadId?: SortOrder
+    spikeMonitorGifUrl?: SortOrder
+    spikeMonitorTimeframe?: SortOrder
+    spikeMonitorInterval?: SortOrder
+  }
+
+  export type GroupConfigurationMinOrderByAggregateInput = {
+    chatId?: SortOrder
+    spikeMonitorEnabled?: SortOrder
+    spikeMonitorTokenId?: SortOrder
+    spikeMonitorThreadId?: SortOrder
+    spikeMonitorGifUrl?: SortOrder
+    spikeMonitorTimeframe?: SortOrder
+    spikeMonitorInterval?: SortOrder
+  }
+
+  export type GroupConfigurationSumOrderByAggregateInput = {
+    chatId?: SortOrder
+    spikeMonitorTokenId?: SortOrder
+    spikeMonitorTimeframe?: SortOrder
+    spikeMonitorInterval?: SortOrder
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
@@ -10873,6 +12390,13 @@ export namespace Prisma {
     connect?: PairWhereUniqueInput | PairWhereUniqueInput[]
   }
 
+  export type GroupConfigurationCreateNestedManyWithoutSpikeMonitorTokenInput = {
+    create?: XOR<GroupConfigurationCreateWithoutSpikeMonitorTokenInput, GroupConfigurationUncheckedCreateWithoutSpikeMonitorTokenInput> | GroupConfigurationCreateWithoutSpikeMonitorTokenInput[] | GroupConfigurationUncheckedCreateWithoutSpikeMonitorTokenInput[]
+    connectOrCreate?: GroupConfigurationCreateOrConnectWithoutSpikeMonitorTokenInput | GroupConfigurationCreateOrConnectWithoutSpikeMonitorTokenInput[]
+    createMany?: GroupConfigurationCreateManySpikeMonitorTokenInputEnvelope
+    connect?: GroupConfigurationWhereUniqueInput | GroupConfigurationWhereUniqueInput[]
+  }
+
   export type PairUncheckedCreateNestedManyWithoutToken0Input = {
     create?: XOR<PairCreateWithoutToken0Input, PairUncheckedCreateWithoutToken0Input> | PairCreateWithoutToken0Input[] | PairUncheckedCreateWithoutToken0Input[]
     connectOrCreate?: PairCreateOrConnectWithoutToken0Input | PairCreateOrConnectWithoutToken0Input[]
@@ -10885,6 +12409,13 @@ export namespace Prisma {
     connectOrCreate?: PairCreateOrConnectWithoutToken1Input | PairCreateOrConnectWithoutToken1Input[]
     createMany?: PairCreateManyToken1InputEnvelope
     connect?: PairWhereUniqueInput | PairWhereUniqueInput[]
+  }
+
+  export type GroupConfigurationUncheckedCreateNestedManyWithoutSpikeMonitorTokenInput = {
+    create?: XOR<GroupConfigurationCreateWithoutSpikeMonitorTokenInput, GroupConfigurationUncheckedCreateWithoutSpikeMonitorTokenInput> | GroupConfigurationCreateWithoutSpikeMonitorTokenInput[] | GroupConfigurationUncheckedCreateWithoutSpikeMonitorTokenInput[]
+    connectOrCreate?: GroupConfigurationCreateOrConnectWithoutSpikeMonitorTokenInput | GroupConfigurationCreateOrConnectWithoutSpikeMonitorTokenInput[]
+    createMany?: GroupConfigurationCreateManySpikeMonitorTokenInputEnvelope
+    connect?: GroupConfigurationWhereUniqueInput | GroupConfigurationWhereUniqueInput[]
   }
 
   export type NullableBigIntFieldUpdateOperationsInput = {
@@ -10923,6 +12454,20 @@ export namespace Prisma {
     deleteMany?: PairScalarWhereInput | PairScalarWhereInput[]
   }
 
+  export type GroupConfigurationUpdateManyWithoutSpikeMonitorTokenNestedInput = {
+    create?: XOR<GroupConfigurationCreateWithoutSpikeMonitorTokenInput, GroupConfigurationUncheckedCreateWithoutSpikeMonitorTokenInput> | GroupConfigurationCreateWithoutSpikeMonitorTokenInput[] | GroupConfigurationUncheckedCreateWithoutSpikeMonitorTokenInput[]
+    connectOrCreate?: GroupConfigurationCreateOrConnectWithoutSpikeMonitorTokenInput | GroupConfigurationCreateOrConnectWithoutSpikeMonitorTokenInput[]
+    upsert?: GroupConfigurationUpsertWithWhereUniqueWithoutSpikeMonitorTokenInput | GroupConfigurationUpsertWithWhereUniqueWithoutSpikeMonitorTokenInput[]
+    createMany?: GroupConfigurationCreateManySpikeMonitorTokenInputEnvelope
+    set?: GroupConfigurationWhereUniqueInput | GroupConfigurationWhereUniqueInput[]
+    disconnect?: GroupConfigurationWhereUniqueInput | GroupConfigurationWhereUniqueInput[]
+    delete?: GroupConfigurationWhereUniqueInput | GroupConfigurationWhereUniqueInput[]
+    connect?: GroupConfigurationWhereUniqueInput | GroupConfigurationWhereUniqueInput[]
+    update?: GroupConfigurationUpdateWithWhereUniqueWithoutSpikeMonitorTokenInput | GroupConfigurationUpdateWithWhereUniqueWithoutSpikeMonitorTokenInput[]
+    updateMany?: GroupConfigurationUpdateManyWithWhereWithoutSpikeMonitorTokenInput | GroupConfigurationUpdateManyWithWhereWithoutSpikeMonitorTokenInput[]
+    deleteMany?: GroupConfigurationScalarWhereInput | GroupConfigurationScalarWhereInput[]
+  }
+
   export type PairUncheckedUpdateManyWithoutToken0NestedInput = {
     create?: XOR<PairCreateWithoutToken0Input, PairUncheckedCreateWithoutToken0Input> | PairCreateWithoutToken0Input[] | PairUncheckedCreateWithoutToken0Input[]
     connectOrCreate?: PairCreateOrConnectWithoutToken0Input | PairCreateOrConnectWithoutToken0Input[]
@@ -10949,6 +12494,20 @@ export namespace Prisma {
     update?: PairUpdateWithWhereUniqueWithoutToken1Input | PairUpdateWithWhereUniqueWithoutToken1Input[]
     updateMany?: PairUpdateManyWithWhereWithoutToken1Input | PairUpdateManyWithWhereWithoutToken1Input[]
     deleteMany?: PairScalarWhereInput | PairScalarWhereInput[]
+  }
+
+  export type GroupConfigurationUncheckedUpdateManyWithoutSpikeMonitorTokenNestedInput = {
+    create?: XOR<GroupConfigurationCreateWithoutSpikeMonitorTokenInput, GroupConfigurationUncheckedCreateWithoutSpikeMonitorTokenInput> | GroupConfigurationCreateWithoutSpikeMonitorTokenInput[] | GroupConfigurationUncheckedCreateWithoutSpikeMonitorTokenInput[]
+    connectOrCreate?: GroupConfigurationCreateOrConnectWithoutSpikeMonitorTokenInput | GroupConfigurationCreateOrConnectWithoutSpikeMonitorTokenInput[]
+    upsert?: GroupConfigurationUpsertWithWhereUniqueWithoutSpikeMonitorTokenInput | GroupConfigurationUpsertWithWhereUniqueWithoutSpikeMonitorTokenInput[]
+    createMany?: GroupConfigurationCreateManySpikeMonitorTokenInputEnvelope
+    set?: GroupConfigurationWhereUniqueInput | GroupConfigurationWhereUniqueInput[]
+    disconnect?: GroupConfigurationWhereUniqueInput | GroupConfigurationWhereUniqueInput[]
+    delete?: GroupConfigurationWhereUniqueInput | GroupConfigurationWhereUniqueInput[]
+    connect?: GroupConfigurationWhereUniqueInput | GroupConfigurationWhereUniqueInput[]
+    update?: GroupConfigurationUpdateWithWhereUniqueWithoutSpikeMonitorTokenInput | GroupConfigurationUpdateWithWhereUniqueWithoutSpikeMonitorTokenInput[]
+    updateMany?: GroupConfigurationUpdateManyWithWhereWithoutSpikeMonitorTokenInput | GroupConfigurationUpdateManyWithWhereWithoutSpikeMonitorTokenInput[]
+    deleteMany?: GroupConfigurationScalarWhereInput | GroupConfigurationScalarWhereInput[]
   }
 
   export type TokenCreateNestedOneWithoutPairsAsToken0Input = {
@@ -11073,6 +12632,30 @@ export namespace Prisma {
     decrement?: Decimal | DecimalJsLike | number | string
     multiply?: Decimal | DecimalJsLike | number | string
     divide?: Decimal | DecimalJsLike | number | string
+  }
+
+  export type TokenCreateNestedOneWithoutGroupConfigurationsInput = {
+    create?: XOR<TokenCreateWithoutGroupConfigurationsInput, TokenUncheckedCreateWithoutGroupConfigurationsInput>
+    connectOrCreate?: TokenCreateOrConnectWithoutGroupConfigurationsInput
+    connect?: TokenWhereUniqueInput
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type TokenUpdateOneWithoutGroupConfigurationsNestedInput = {
+    create?: XOR<TokenCreateWithoutGroupConfigurationsInput, TokenUncheckedCreateWithoutGroupConfigurationsInput>
+    connectOrCreate?: TokenCreateOrConnectWithoutGroupConfigurationsInput
+    upsert?: TokenUpsertWithoutGroupConfigurationsInput
+    disconnect?: TokenWhereInput | boolean
+    delete?: TokenWhereInput | boolean
+    connect?: TokenWhereUniqueInput
+    update?: XOR<XOR<TokenUpdateToOneWithWhereWithoutGroupConfigurationsInput, TokenUpdateWithoutGroupConfigurationsInput>, TokenUncheckedUpdateWithoutGroupConfigurationsInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -11341,6 +12924,22 @@ export namespace Prisma {
     _max?: NestedDecimalFilter<$PrismaModel>
   }
 
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
   export type PairCreateWithoutSpikeyAmmSwapsInput = {
     network: string
     spikeyAmmPairAddress?: string | null
@@ -11565,6 +13164,33 @@ export namespace Prisma {
     data: PairCreateManyToken1Input | PairCreateManyToken1Input[]
   }
 
+  export type GroupConfigurationCreateWithoutSpikeMonitorTokenInput = {
+    chatId: bigint | number
+    spikeMonitorEnabled?: boolean
+    spikeMonitorThreadId?: string | null
+    spikeMonitorGifUrl?: string | null
+    spikeMonitorTimeframe?: number | null
+    spikeMonitorInterval?: number | null
+  }
+
+  export type GroupConfigurationUncheckedCreateWithoutSpikeMonitorTokenInput = {
+    chatId: bigint | number
+    spikeMonitorEnabled?: boolean
+    spikeMonitorThreadId?: string | null
+    spikeMonitorGifUrl?: string | null
+    spikeMonitorTimeframe?: number | null
+    spikeMonitorInterval?: number | null
+  }
+
+  export type GroupConfigurationCreateOrConnectWithoutSpikeMonitorTokenInput = {
+    where: GroupConfigurationWhereUniqueInput
+    create: XOR<GroupConfigurationCreateWithoutSpikeMonitorTokenInput, GroupConfigurationUncheckedCreateWithoutSpikeMonitorTokenInput>
+  }
+
+  export type GroupConfigurationCreateManySpikeMonitorTokenInputEnvelope = {
+    data: GroupConfigurationCreateManySpikeMonitorTokenInput | GroupConfigurationCreateManySpikeMonitorTokenInput[]
+  }
+
   export type PairUpsertWithWhereUniqueWithoutToken0Input = {
     where: PairWhereUniqueInput
     update: XOR<PairUpdateWithoutToken0Input, PairUncheckedUpdateWithoutToken0Input>
@@ -11614,6 +13240,35 @@ export namespace Prisma {
     data: XOR<PairUpdateManyMutationInput, PairUncheckedUpdateManyWithoutToken1Input>
   }
 
+  export type GroupConfigurationUpsertWithWhereUniqueWithoutSpikeMonitorTokenInput = {
+    where: GroupConfigurationWhereUniqueInput
+    update: XOR<GroupConfigurationUpdateWithoutSpikeMonitorTokenInput, GroupConfigurationUncheckedUpdateWithoutSpikeMonitorTokenInput>
+    create: XOR<GroupConfigurationCreateWithoutSpikeMonitorTokenInput, GroupConfigurationUncheckedCreateWithoutSpikeMonitorTokenInput>
+  }
+
+  export type GroupConfigurationUpdateWithWhereUniqueWithoutSpikeMonitorTokenInput = {
+    where: GroupConfigurationWhereUniqueInput
+    data: XOR<GroupConfigurationUpdateWithoutSpikeMonitorTokenInput, GroupConfigurationUncheckedUpdateWithoutSpikeMonitorTokenInput>
+  }
+
+  export type GroupConfigurationUpdateManyWithWhereWithoutSpikeMonitorTokenInput = {
+    where: GroupConfigurationScalarWhereInput
+    data: XOR<GroupConfigurationUpdateManyMutationInput, GroupConfigurationUncheckedUpdateManyWithoutSpikeMonitorTokenInput>
+  }
+
+  export type GroupConfigurationScalarWhereInput = {
+    AND?: GroupConfigurationScalarWhereInput | GroupConfigurationScalarWhereInput[]
+    OR?: GroupConfigurationScalarWhereInput[]
+    NOT?: GroupConfigurationScalarWhereInput | GroupConfigurationScalarWhereInput[]
+    chatId?: BigIntFilter<"GroupConfiguration"> | bigint | number
+    spikeMonitorEnabled?: BoolFilter<"GroupConfiguration"> | boolean
+    spikeMonitorTokenId?: IntNullableFilter<"GroupConfiguration"> | number | null
+    spikeMonitorThreadId?: StringNullableFilter<"GroupConfiguration"> | string | null
+    spikeMonitorGifUrl?: StringNullableFilter<"GroupConfiguration"> | string | null
+    spikeMonitorTimeframe?: IntNullableFilter<"GroupConfiguration"> | number | null
+    spikeMonitorInterval?: IntNullableFilter<"GroupConfiguration"> | number | null
+  }
+
   export type TokenCreateWithoutPairsAsToken0Input = {
     network: string
     address: string
@@ -11625,6 +13280,7 @@ export namespace Prisma {
     circulatingSupply?: bigint | number | null
     createdAt?: Date | string
     pairsAsToken1?: PairCreateNestedManyWithoutToken1Input
+    groupConfigurations?: GroupConfigurationCreateNestedManyWithoutSpikeMonitorTokenInput
   }
 
   export type TokenUncheckedCreateWithoutPairsAsToken0Input = {
@@ -11639,6 +13295,7 @@ export namespace Prisma {
     circulatingSupply?: bigint | number | null
     createdAt?: Date | string
     pairsAsToken1?: PairUncheckedCreateNestedManyWithoutToken1Input
+    groupConfigurations?: GroupConfigurationUncheckedCreateNestedManyWithoutSpikeMonitorTokenInput
   }
 
   export type TokenCreateOrConnectWithoutPairsAsToken0Input = {
@@ -11657,6 +13314,7 @@ export namespace Prisma {
     circulatingSupply?: bigint | number | null
     createdAt?: Date | string
     pairsAsToken0?: PairCreateNestedManyWithoutToken0Input
+    groupConfigurations?: GroupConfigurationCreateNestedManyWithoutSpikeMonitorTokenInput
   }
 
   export type TokenUncheckedCreateWithoutPairsAsToken1Input = {
@@ -11671,6 +13329,7 @@ export namespace Prisma {
     circulatingSupply?: bigint | number | null
     createdAt?: Date | string
     pairsAsToken0?: PairUncheckedCreateNestedManyWithoutToken0Input
+    groupConfigurations?: GroupConfigurationUncheckedCreateNestedManyWithoutSpikeMonitorTokenInput
   }
 
   export type TokenCreateOrConnectWithoutPairsAsToken1Input = {
@@ -11784,6 +13443,7 @@ export namespace Prisma {
     circulatingSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     pairsAsToken1?: PairUpdateManyWithoutToken1NestedInput
+    groupConfigurations?: GroupConfigurationUpdateManyWithoutSpikeMonitorTokenNestedInput
   }
 
   export type TokenUncheckedUpdateWithoutPairsAsToken0Input = {
@@ -11798,6 +13458,7 @@ export namespace Prisma {
     circulatingSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     pairsAsToken1?: PairUncheckedUpdateManyWithoutToken1NestedInput
+    groupConfigurations?: GroupConfigurationUncheckedUpdateManyWithoutSpikeMonitorTokenNestedInput
   }
 
   export type TokenUpsertWithoutPairsAsToken1Input = {
@@ -11822,6 +13483,7 @@ export namespace Prisma {
     circulatingSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     pairsAsToken0?: PairUpdateManyWithoutToken0NestedInput
+    groupConfigurations?: GroupConfigurationUpdateManyWithoutSpikeMonitorTokenNestedInput
   }
 
   export type TokenUncheckedUpdateWithoutPairsAsToken1Input = {
@@ -11836,6 +13498,7 @@ export namespace Prisma {
     circulatingSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     pairsAsToken0?: PairUncheckedUpdateManyWithoutToken0NestedInput
+    groupConfigurations?: GroupConfigurationUncheckedUpdateManyWithoutSpikeMonitorTokenNestedInput
   }
 
   export type SpikeyAmmSwapUpsertWithWhereUniqueWithoutPairInput = {
@@ -11912,6 +13575,80 @@ export namespace Prisma {
     pairId?: IntFilter<"DexlynSwap"> | number
   }
 
+  export type TokenCreateWithoutGroupConfigurationsInput = {
+    network: string
+    address: string
+    wrappedAddress?: string | null
+    symbol: string
+    name: string
+    decimals: number
+    maxSupply?: bigint | number | null
+    circulatingSupply?: bigint | number | null
+    createdAt?: Date | string
+    pairsAsToken0?: PairCreateNestedManyWithoutToken0Input
+    pairsAsToken1?: PairCreateNestedManyWithoutToken1Input
+  }
+
+  export type TokenUncheckedCreateWithoutGroupConfigurationsInput = {
+    id?: number
+    network: string
+    address: string
+    wrappedAddress?: string | null
+    symbol: string
+    name: string
+    decimals: number
+    maxSupply?: bigint | number | null
+    circulatingSupply?: bigint | number | null
+    createdAt?: Date | string
+    pairsAsToken0?: PairUncheckedCreateNestedManyWithoutToken0Input
+    pairsAsToken1?: PairUncheckedCreateNestedManyWithoutToken1Input
+  }
+
+  export type TokenCreateOrConnectWithoutGroupConfigurationsInput = {
+    where: TokenWhereUniqueInput
+    create: XOR<TokenCreateWithoutGroupConfigurationsInput, TokenUncheckedCreateWithoutGroupConfigurationsInput>
+  }
+
+  export type TokenUpsertWithoutGroupConfigurationsInput = {
+    update: XOR<TokenUpdateWithoutGroupConfigurationsInput, TokenUncheckedUpdateWithoutGroupConfigurationsInput>
+    create: XOR<TokenCreateWithoutGroupConfigurationsInput, TokenUncheckedCreateWithoutGroupConfigurationsInput>
+    where?: TokenWhereInput
+  }
+
+  export type TokenUpdateToOneWithWhereWithoutGroupConfigurationsInput = {
+    where?: TokenWhereInput
+    data: XOR<TokenUpdateWithoutGroupConfigurationsInput, TokenUncheckedUpdateWithoutGroupConfigurationsInput>
+  }
+
+  export type TokenUpdateWithoutGroupConfigurationsInput = {
+    network?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    wrappedAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    symbol?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    decimals?: IntFieldUpdateOperationsInput | number
+    maxSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    circulatingSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    pairsAsToken0?: PairUpdateManyWithoutToken0NestedInput
+    pairsAsToken1?: PairUpdateManyWithoutToken1NestedInput
+  }
+
+  export type TokenUncheckedUpdateWithoutGroupConfigurationsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    network?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    wrappedAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    symbol?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    decimals?: IntFieldUpdateOperationsInput | number
+    maxSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    circulatingSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    pairsAsToken0?: PairUncheckedUpdateManyWithoutToken0NestedInput
+    pairsAsToken1?: PairUncheckedUpdateManyWithoutToken1NestedInput
+  }
+
   export type PairCreateManyToken0Input = {
     id?: number
     network: string
@@ -11936,6 +13673,15 @@ export namespace Prisma {
     spikeyAmmToken0Address?: string | null
     dexlynAmmTokenXAddress?: string | null
     createdAt?: Date | string
+  }
+
+  export type GroupConfigurationCreateManySpikeMonitorTokenInput = {
+    chatId: bigint | number
+    spikeMonitorEnabled?: boolean
+    spikeMonitorThreadId?: string | null
+    spikeMonitorGifUrl?: string | null
+    spikeMonitorTimeframe?: number | null
+    spikeMonitorInterval?: number | null
   }
 
   export type PairUpdateWithoutToken0Input = {
@@ -12020,6 +13766,33 @@ export namespace Prisma {
     spikeyAmmToken0Address?: NullableStringFieldUpdateOperationsInput | string | null
     dexlynAmmTokenXAddress?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GroupConfigurationUpdateWithoutSpikeMonitorTokenInput = {
+    chatId?: BigIntFieldUpdateOperationsInput | bigint | number
+    spikeMonitorEnabled?: BoolFieldUpdateOperationsInput | boolean
+    spikeMonitorThreadId?: NullableStringFieldUpdateOperationsInput | string | null
+    spikeMonitorGifUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spikeMonitorTimeframe?: NullableIntFieldUpdateOperationsInput | number | null
+    spikeMonitorInterval?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type GroupConfigurationUncheckedUpdateWithoutSpikeMonitorTokenInput = {
+    chatId?: BigIntFieldUpdateOperationsInput | bigint | number
+    spikeMonitorEnabled?: BoolFieldUpdateOperationsInput | boolean
+    spikeMonitorThreadId?: NullableStringFieldUpdateOperationsInput | string | null
+    spikeMonitorGifUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spikeMonitorTimeframe?: NullableIntFieldUpdateOperationsInput | number | null
+    spikeMonitorInterval?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type GroupConfigurationUncheckedUpdateManyWithoutSpikeMonitorTokenInput = {
+    chatId?: BigIntFieldUpdateOperationsInput | bigint | number
+    spikeMonitorEnabled?: BoolFieldUpdateOperationsInput | boolean
+    spikeMonitorThreadId?: NullableStringFieldUpdateOperationsInput | string | null
+    spikeMonitorGifUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spikeMonitorTimeframe?: NullableIntFieldUpdateOperationsInput | number | null
+    spikeMonitorInterval?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type SpikeyAmmSwapCreateManyPairInput = {

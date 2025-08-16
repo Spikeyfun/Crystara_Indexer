@@ -2,7 +2,7 @@
 import { NetworkConfig } from '../TaskProcessor'; // Importa la interfaz
 import { getReservesForPair } from '../functions/getReserves'; // Importa tu hook
 import { createLogger } from '@/app/indexer/utils'; // Para logging
-import { PrismaClient as PrismaClientSqlite } from '../../generated/sqlite';
+import { PrismaClient as PrismaClientSqlite } from '@/prisma/dist/generated/sqlite';
 
 const logger = createLogger('executeGetReserves-task');
 
