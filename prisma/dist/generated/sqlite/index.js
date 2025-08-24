@@ -225,7 +225,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "D:\\bot_telegram_index\\amm_indexer\\prisma\\dist\\generated\\sqlite",
+      "value": "D:\\indexer_and_bot_telegram\\amm_indexer\\prisma\\dist\\generated\\sqlite",
       "fromEnvVar": null
     },
     "config": {
@@ -239,7 +239,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "D:\\bot_telegram_index\\amm_indexer\\prisma\\sqlite\\schema.prisma",
+    "sourceFilePath": "D:\\indexer_and_bot_telegram\\amm_indexer\\prisma\\sqlite\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
