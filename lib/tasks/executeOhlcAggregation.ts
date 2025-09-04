@@ -4,8 +4,6 @@ import { Prisma } from '@/prisma/dist/generated/sqlite';
 
 const logger = createLogger('ohlc-aggregator-1m-local');
 
-
-
 // Helper function to round a timestamp down to the nearest minute
 function roundTimestampToInterval(timestamp: Date): Date {
   const date = new Date(timestamp);
@@ -92,57 +90,78 @@ export async function executeOhlcAggregation1mLocal(network: string) {
           return Number(amount) / (10 ** decimals);
       };
 
-      
-
       const unifiedSwaps = [
         ...dexlynSwaps.map(s => {
           if (!pair.dexlynAmmTokenXAddress) return null;
 
-      
-          // Determina cuál de los tokens del par (ordenados alfabéticamente) es X y cuál es Y
           const tokenX = pair.token0.address === pair.dexlynAmmTokenXAddress ? pair.token0 : pair.token1;
           const tokenY = pair.token0.address === pair.dexlynAmmTokenXAddress ? pair.token1 : pair.token0;
           
           let price: number;
-          let volumeInTokenX: number; // El volumen se mide en el token de entrada
+          let volume: number;
+          let inputTokenSymbol: string;
+          let inputVolume: number;
+          let minTradeVolume: Prisma.Decimal | null;
 
-          if (s.xIn > 0) { // El usuario entrega Token X para recibir Token Y
-              // El precio de Token X en términos de Token Y = cantidad de Y / cantidad de X
+          if (s.xIn > 0) { // User gives Token X
               price = normalize(s.yOut, tokenY.decimals) / normalize(s.xIn, tokenX.decimals);
-              volumeInTokenX = normalize(s.xIn, tokenX.decimals);
-          } else { // El usuario entrega Token Y para recibir Token X
-              // El precio de Token X en términos de Token Y = cantidad de Y / cantidad de X
+              volume = normalize(s.xIn, tokenX.decimals);
+              inputTokenSymbol = tokenX.symbol;
+              inputVolume = volume;
+              minTradeVolume = tokenX.minTradeVolume;
+          } else { // User gives Token Y
               price = normalize(s.yIn, tokenY.decimals) / normalize(s.xOut, tokenX.decimals);
-              volumeInTokenX = normalize(s.xOut, tokenX.decimals);
+              volume = normalize(s.yIn, tokenY.decimals);
+              inputTokenSymbol = tokenY.symbol;
+              inputVolume = volume;
+              minTradeVolume = tokenY.minTradeVolume;
           }
 
-          return { ammSource: 'DexlynSwap', blockTimestamp: s.blockTimestamp, price, volume: volumeInTokenX };
+          return { ammSource: 'DexlynSwap', blockTimestamp: s.blockTimestamp, price, volume, inputTokenSymbol, inputVolume, minTradeVolume };
       }),
       ...spikeySwaps.map(s => {
-        // Verifica que tengamos la información del orden de tokens para este AMM
         if (!pair.spikeyAmmToken0Address) return null;
 
-            // Determina cuál de los tokens del par (ordenados alfabéticamente) es 0 y cuál es 1
             const token0Amm = pair.token0.address === pair.spikeyAmmToken0Address ? pair.token0 : pair.token1;
             const token1Amm = pair.token0.address === pair.spikeyAmmToken0Address ? pair.token1 : pair.token0;
 
             let price: number;
-            let volumeInToken0: number; // El volumen se mide en el token de entrada
+            let volume: number;
+            let inputTokenSymbol: string;
+            let inputVolume: number;
+            let minTradeVolume: Prisma.Decimal | null;
 
-            if (s.amount0In > 0) { // User gives token0 (amount0In), gets token1 (amount1Out)
-                // CORREGIDO: Precio invertido para que coincida con el gráfico.
+            if (s.amount0In > 0) { // User gives token0
                 price = normalize(s.amount0In, token0Amm.decimals) / normalize(s.amount1Out, token1Amm.decimals);
-                volumeInToken0 = normalize(s.amount0In, token0Amm.decimals);
-            } else { // User gives token1 (amount1In), gets token0 (amount0Out)
-                // CORREGIDO: Precio invertido para que coincida con el gráfico.
+                volume = normalize(s.amount0In, token0Amm.decimals);
+                inputTokenSymbol = token0Amm.symbol;
+                inputVolume = volume;
+                minTradeVolume = token0Amm.minTradeVolume;
+            } else { // User gives token1
                 price = normalize(s.amount0Out, token0Amm.decimals) / normalize(s.amount1In, token1Amm.decimals);
-                volumeInToken0 = normalize(s.amount0Out, token0Amm.decimals);
+                volume = normalize(s.amount1In, token1Amm.decimals);
+                inputTokenSymbol = token1Amm.symbol;
+                inputVolume = volume;
+                minTradeVolume = token1Amm.minTradeVolume;
             }
 
-            return { ammSource: 'SpikeySwap', blockTimestamp: s.blockTimestamp, price, volume: volumeInToken0 };
+            return { ammSource: 'SpikeySwap', blockTimestamp: s.blockTimestamp, price, volume, inputTokenSymbol, inputVolume, minTradeVolume };
 
         }),
-      ].filter((s): s is { ammSource: string; blockTimestamp: Date; price: number; volume: number; } => s !== null && s.price > 0 && isFinite(s.price)); // Filtro mejorado
+      ].filter((s): s is { ammSource: string; blockTimestamp: Date; price: number; volume: number, inputTokenSymbol: string, inputVolume: number, minTradeVolume: Prisma.Decimal | null } => {
+          if (s === null || s.price <= 0 || !isFinite(s.price)) {
+            return false;
+          }
+          
+          if (s.minTradeVolume !== null && s.minTradeVolume !== undefined) {
+            if (s.inputVolume < s.minTradeVolume.toNumber()) {
+                logger.debug(`[${network}] Filtering out trade with volume ${s.inputVolume} ${s.inputTokenSymbol} which is below minimum of ${s.minTradeVolume}`);
+                return false;
+            }
+          }
+
+          return true;
+        });
 
 
       const newSwaps = unifiedSwaps.sort((a, b) => a.blockTimestamp.getTime() - b.blockTimestamp.getTime());
@@ -187,12 +206,11 @@ export async function executeOhlcAggregation1mLocal(network: string) {
 
           upsertPromises.push(sqliteDb.ohlcData.upsert({
             where: {
-              // Usamos el nuevo índice único definido en el schema de SQLite
               network_ammSource_token0Address_token1Address_timeframe_timestamp: {
                 network,
                 ammSource,
-                token0Address: pair.token0.address, // <-- Clave natural
-                token1Address: pair.token1.address, // <-- Clave natural
+                token0Address: pair.token0.address,
+                token1Address: pair.token1.address,
                 timeframe,
                 timestamp,
               },
@@ -203,8 +221,8 @@ export async function executeOhlcAggregation1mLocal(network: string) {
               ammSource,
               timeframe,
               timestamp,
-              token0Address: pair.token0.address, // <-- Clave natural
-              token1Address: pair.token1.address, // <-- Clave natural
+              token0Address: pair.token0.address,
+              token1Address: pair.token1.address,
               ...ohlc,
             },
           }));
@@ -213,7 +231,7 @@ export async function executeOhlcAggregation1mLocal(network: string) {
 
 
       if (upsertPromises.length > 0) {
-        await sqliteDb.$transaction(upsertPromises); // Use sqliteDb transaction
+        await sqliteDb.$transaction(upsertPromises);
       }
     } catch (error) {
       logger.error(`[${network}] Failed to process pair ${pair.id} for local 1m aggregation:`, error);

@@ -43,3 +43,6 @@ next-env.d.ts
 #db
 #prisma/sqlite/*.db
 prisma/sqlite/*.dv
+
+#all db
+*.db

@@ -1,5 +1,6 @@
-import { supabaseDb } from '../lib/prismadb'; // Using relative path for certainty
+import { PrismaClient } from '../prisma/dist/generated/supabase';
 
+const prismadb = new PrismaClient();
 const logger = {
   info: (message: string) => console.log(`[INFO] ${message}`),
   error: (message: string, error?: any) => console.error(`[ERROR] ${message}`, error),
@@ -9,12 +10,12 @@ const logger = {
 async function inspectOhlcData() {
   logger.info('Starting script to inspect OHLC data for a specific pair...');
 
-  const pairId = 10; // Hardcoded Pair ID for SUPRA/SPIKE
+  const pairId = 1277;
 
   try {
     logger.info(`Fetching last 10 OHLC records for Pair ID: ${pairId}...`);
 
-    const ohlcData = await supabaseDb.ohlcData.findMany({
+    const ohlcData = await prismadb.ohlcData.findMany({
       where: {
         pairId: pairId,
       },
@@ -44,11 +45,11 @@ async function inspectOhlcData() {
   } catch (error) {
     logger.error('An error occurred during script execution:', error);
   } finally {
-    await supabaseDb.$disconnect();
+    await prismadb.$disconnect();
   }
 }
 
-inspectOhlcData().catch(e => {
+insp ectOhlcData().catch(e => {
   logger.error('Script failed unexpectedly.', e);
   process.exit(1);
 });

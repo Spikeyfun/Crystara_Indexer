@@ -3520,6 +3520,7 @@ export namespace Prisma {
     decimals: number | null
     maxSupply: number | null
     circulatingSupply: number | null
+    minTradeVolume: Decimal | null
   }
 
   export type TokenSumAggregateOutputType = {
@@ -3527,6 +3528,7 @@ export namespace Prisma {
     decimals: number | null
     maxSupply: bigint | null
     circulatingSupply: bigint | null
+    minTradeVolume: Decimal | null
   }
 
   export type TokenMinAggregateOutputType = {
@@ -3539,6 +3541,7 @@ export namespace Prisma {
     decimals: number | null
     maxSupply: bigint | null
     circulatingSupply: bigint | null
+    minTradeVolume: Decimal | null
     createdAt: Date | null
   }
 
@@ -3552,6 +3555,7 @@ export namespace Prisma {
     decimals: number | null
     maxSupply: bigint | null
     circulatingSupply: bigint | null
+    minTradeVolume: Decimal | null
     createdAt: Date | null
   }
 
@@ -3565,6 +3569,7 @@ export namespace Prisma {
     decimals: number
     maxSupply: number
     circulatingSupply: number
+    minTradeVolume: number
     createdAt: number
     _all: number
   }
@@ -3575,6 +3580,7 @@ export namespace Prisma {
     decimals?: true
     maxSupply?: true
     circulatingSupply?: true
+    minTradeVolume?: true
   }
 
   export type TokenSumAggregateInputType = {
@@ -3582,6 +3588,7 @@ export namespace Prisma {
     decimals?: true
     maxSupply?: true
     circulatingSupply?: true
+    minTradeVolume?: true
   }
 
   export type TokenMinAggregateInputType = {
@@ -3594,6 +3601,7 @@ export namespace Prisma {
     decimals?: true
     maxSupply?: true
     circulatingSupply?: true
+    minTradeVolume?: true
     createdAt?: true
   }
 
@@ -3607,6 +3615,7 @@ export namespace Prisma {
     decimals?: true
     maxSupply?: true
     circulatingSupply?: true
+    minTradeVolume?: true
     createdAt?: true
   }
 
@@ -3620,6 +3629,7 @@ export namespace Prisma {
     decimals?: true
     maxSupply?: true
     circulatingSupply?: true
+    minTradeVolume?: true
     createdAt?: true
     _all?: true
   }
@@ -3720,6 +3730,7 @@ export namespace Prisma {
     decimals: number
     maxSupply: bigint | null
     circulatingSupply: bigint | null
+    minTradeVolume: Decimal | null
     createdAt: Date
     _count: TokenCountAggregateOutputType | null
     _avg: TokenAvgAggregateOutputType | null
@@ -3752,6 +3763,7 @@ export namespace Prisma {
     decimals?: boolean
     maxSupply?: boolean
     circulatingSupply?: boolean
+    minTradeVolume?: boolean
     createdAt?: boolean
     pairsAsToken0?: boolean | Token$pairsAsToken0Args<ExtArgs>
     pairsAsToken1?: boolean | Token$pairsAsToken1Args<ExtArgs>
@@ -3769,6 +3781,7 @@ export namespace Prisma {
     decimals?: boolean
     maxSupply?: boolean
     circulatingSupply?: boolean
+    minTradeVolume?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["token"]>
 
@@ -3782,6 +3795,7 @@ export namespace Prisma {
     decimals?: boolean
     maxSupply?: boolean
     circulatingSupply?: boolean
+    minTradeVolume?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["token"]>
 
@@ -3795,10 +3809,11 @@ export namespace Prisma {
     decimals?: boolean
     maxSupply?: boolean
     circulatingSupply?: boolean
+    minTradeVolume?: boolean
     createdAt?: boolean
   }
 
-  export type TokenOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "network" | "address" | "wrappedAddress" | "symbol" | "name" | "decimals" | "maxSupply" | "circulatingSupply" | "createdAt", ExtArgs["result"]["token"]>
+  export type TokenOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "network" | "address" | "wrappedAddress" | "symbol" | "name" | "decimals" | "maxSupply" | "circulatingSupply" | "minTradeVolume" | "createdAt", ExtArgs["result"]["token"]>
   export type TokenInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     pairsAsToken0?: boolean | Token$pairsAsToken0Args<ExtArgs>
     pairsAsToken1?: boolean | Token$pairsAsToken1Args<ExtArgs>
@@ -3825,6 +3840,7 @@ export namespace Prisma {
       decimals: number
       maxSupply: bigint | null
       circulatingSupply: bigint | null
+      minTradeVolume: Prisma.Decimal | null
       createdAt: Date
     }, ExtArgs["result"]["token"]>
     composites: {}
@@ -4261,6 +4277,7 @@ export namespace Prisma {
     readonly decimals: FieldRef<"Token", 'Int'>
     readonly maxSupply: FieldRef<"Token", 'BigInt'>
     readonly circulatingSupply: FieldRef<"Token", 'BigInt'>
+    readonly minTradeVolume: FieldRef<"Token", 'Decimal'>
     readonly createdAt: FieldRef<"Token", 'DateTime'>
   }
     
@@ -8290,6 +8307,7 @@ export namespace Prisma {
     decimals: 'decimals',
     maxSupply: 'maxSupply',
     circulatingSupply: 'circulatingSupply',
+    minTradeVolume: 'minTradeVolume',
     createdAt: 'createdAt'
   };
 
@@ -8610,6 +8628,7 @@ export namespace Prisma {
     decimals?: IntFilter<"Token"> | number
     maxSupply?: BigIntNullableFilter<"Token"> | bigint | number | null
     circulatingSupply?: BigIntNullableFilter<"Token"> | bigint | number | null
+    minTradeVolume?: DecimalNullableFilter<"Token"> | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFilter<"Token"> | Date | string
     pairsAsToken0?: PairListRelationFilter
     pairsAsToken1?: PairListRelationFilter
@@ -8626,6 +8645,7 @@ export namespace Prisma {
     decimals?: SortOrder
     maxSupply?: SortOrderInput | SortOrder
     circulatingSupply?: SortOrderInput | SortOrder
+    minTradeVolume?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     pairsAsToken0?: PairOrderByRelationAggregateInput
     pairsAsToken1?: PairOrderByRelationAggregateInput
@@ -8646,6 +8666,7 @@ export namespace Prisma {
     decimals?: IntFilter<"Token"> | number
     maxSupply?: BigIntNullableFilter<"Token"> | bigint | number | null
     circulatingSupply?: BigIntNullableFilter<"Token"> | bigint | number | null
+    minTradeVolume?: DecimalNullableFilter<"Token"> | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFilter<"Token"> | Date | string
     pairsAsToken0?: PairListRelationFilter
     pairsAsToken1?: PairListRelationFilter
@@ -8662,6 +8683,7 @@ export namespace Prisma {
     decimals?: SortOrder
     maxSupply?: SortOrderInput | SortOrder
     circulatingSupply?: SortOrderInput | SortOrder
+    minTradeVolume?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     _count?: TokenCountOrderByAggregateInput
     _avg?: TokenAvgOrderByAggregateInput
@@ -8683,6 +8705,7 @@ export namespace Prisma {
     decimals?: IntWithAggregatesFilter<"Token"> | number
     maxSupply?: BigIntNullableWithAggregatesFilter<"Token"> | bigint | number | null
     circulatingSupply?: BigIntNullableWithAggregatesFilter<"Token"> | bigint | number | null
+    minTradeVolume?: DecimalNullableWithAggregatesFilter<"Token"> | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Token"> | Date | string
   }
 
@@ -9083,6 +9106,7 @@ export namespace Prisma {
     decimals: number
     maxSupply?: bigint | number | null
     circulatingSupply?: bigint | number | null
+    minTradeVolume?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     pairsAsToken0?: PairCreateNestedManyWithoutToken0Input
     pairsAsToken1?: PairCreateNestedManyWithoutToken1Input
@@ -9099,6 +9123,7 @@ export namespace Prisma {
     decimals: number
     maxSupply?: bigint | number | null
     circulatingSupply?: bigint | number | null
+    minTradeVolume?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     pairsAsToken0?: PairUncheckedCreateNestedManyWithoutToken0Input
     pairsAsToken1?: PairUncheckedCreateNestedManyWithoutToken1Input
@@ -9114,6 +9139,7 @@ export namespace Prisma {
     decimals?: IntFieldUpdateOperationsInput | number
     maxSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     circulatingSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    minTradeVolume?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     pairsAsToken0?: PairUpdateManyWithoutToken0NestedInput
     pairsAsToken1?: PairUpdateManyWithoutToken1NestedInput
@@ -9130,6 +9156,7 @@ export namespace Prisma {
     decimals?: IntFieldUpdateOperationsInput | number
     maxSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     circulatingSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    minTradeVolume?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     pairsAsToken0?: PairUncheckedUpdateManyWithoutToken0NestedInput
     pairsAsToken1?: PairUncheckedUpdateManyWithoutToken1NestedInput
@@ -9146,6 +9173,7 @@ export namespace Prisma {
     decimals: number
     maxSupply?: bigint | number | null
     circulatingSupply?: bigint | number | null
+    minTradeVolume?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
   }
 
@@ -9158,6 +9186,7 @@ export namespace Prisma {
     decimals?: IntFieldUpdateOperationsInput | number
     maxSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     circulatingSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    minTradeVolume?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -9171,6 +9200,7 @@ export namespace Prisma {
     decimals?: IntFieldUpdateOperationsInput | number
     maxSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     circulatingSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    minTradeVolume?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -9706,6 +9736,17 @@ export namespace Prisma {
     not?: NestedBigIntNullableFilter<$PrismaModel> | bigint | number | null
   }
 
+  export type DecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+  }
+
   export type PairListRelationFilter = {
     every?: PairWhereInput
     some?: PairWhereInput
@@ -9741,6 +9782,7 @@ export namespace Prisma {
     decimals?: SortOrder
     maxSupply?: SortOrder
     circulatingSupply?: SortOrder
+    minTradeVolume?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -9749,6 +9791,7 @@ export namespace Prisma {
     decimals?: SortOrder
     maxSupply?: SortOrder
     circulatingSupply?: SortOrder
+    minTradeVolume?: SortOrder
   }
 
   export type TokenMaxOrderByAggregateInput = {
@@ -9761,6 +9804,7 @@ export namespace Prisma {
     decimals?: SortOrder
     maxSupply?: SortOrder
     circulatingSupply?: SortOrder
+    minTradeVolume?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -9774,6 +9818,7 @@ export namespace Prisma {
     decimals?: SortOrder
     maxSupply?: SortOrder
     circulatingSupply?: SortOrder
+    minTradeVolume?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -9782,6 +9827,7 @@ export namespace Prisma {
     decimals?: SortOrder
     maxSupply?: SortOrder
     circulatingSupply?: SortOrder
+    minTradeVolume?: SortOrder
   }
 
   export type BigIntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -9798,6 +9844,22 @@ export namespace Prisma {
     _sum?: NestedBigIntNullableFilter<$PrismaModel>
     _min?: NestedBigIntNullableFilter<$PrismaModel>
     _max?: NestedBigIntNullableFilter<$PrismaModel>
+  }
+
+  export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
   export type DateTimeNullableFilter<$PrismaModel = never> = {
@@ -10161,6 +10223,14 @@ export namespace Prisma {
     divide?: bigint | number
   }
 
+  export type NullableDecimalFieldUpdateOperationsInput = {
+    set?: Decimal | DecimalJsLike | number | string | null
+    increment?: Decimal | DecimalJsLike | number | string
+    decrement?: Decimal | DecimalJsLike | number | string
+    multiply?: Decimal | DecimalJsLike | number | string
+    divide?: Decimal | DecimalJsLike | number | string
+  }
+
   export type PairUpdateManyWithoutToken0NestedInput = {
     create?: XOR<PairCreateWithoutToken0Input, PairUncheckedCreateWithoutToken0Input> | PairCreateWithoutToken0Input[] | PairUncheckedCreateWithoutToken0Input[]
     connectOrCreate?: PairCreateOrConnectWithoutToken0Input | PairCreateOrConnectWithoutToken0Input[]
@@ -10496,6 +10566,17 @@ export namespace Prisma {
     not?: NestedBigIntNullableFilter<$PrismaModel> | bigint | number | null
   }
 
+  export type NestedDecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+  }
+
   export type NestedBigIntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: bigint | number | BigIntFieldRefInput<$PrismaModel> | null
     in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
@@ -10521,6 +10602,22 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
   export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
@@ -10766,6 +10863,7 @@ export namespace Prisma {
     decimals: number
     maxSupply?: bigint | number | null
     circulatingSupply?: bigint | number | null
+    minTradeVolume?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     pairsAsToken1?: PairCreateNestedManyWithoutToken1Input
     groupConfigurations?: GroupConfigurationCreateNestedManyWithoutSpikeMonitorTokenInput
@@ -10781,6 +10879,7 @@ export namespace Prisma {
     decimals: number
     maxSupply?: bigint | number | null
     circulatingSupply?: bigint | number | null
+    minTradeVolume?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     pairsAsToken1?: PairUncheckedCreateNestedManyWithoutToken1Input
     groupConfigurations?: GroupConfigurationUncheckedCreateNestedManyWithoutSpikeMonitorTokenInput
@@ -10800,6 +10899,7 @@ export namespace Prisma {
     decimals: number
     maxSupply?: bigint | number | null
     circulatingSupply?: bigint | number | null
+    minTradeVolume?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     pairsAsToken0?: PairCreateNestedManyWithoutToken0Input
     groupConfigurations?: GroupConfigurationCreateNestedManyWithoutSpikeMonitorTokenInput
@@ -10815,6 +10915,7 @@ export namespace Prisma {
     decimals: number
     maxSupply?: bigint | number | null
     circulatingSupply?: bigint | number | null
+    minTradeVolume?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     pairsAsToken0?: PairUncheckedCreateNestedManyWithoutToken0Input
     groupConfigurations?: GroupConfigurationUncheckedCreateNestedManyWithoutSpikeMonitorTokenInput
@@ -10845,6 +10946,7 @@ export namespace Prisma {
     decimals?: IntFieldUpdateOperationsInput | number
     maxSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     circulatingSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    minTradeVolume?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     pairsAsToken1?: PairUpdateManyWithoutToken1NestedInput
     groupConfigurations?: GroupConfigurationUpdateManyWithoutSpikeMonitorTokenNestedInput
@@ -10860,6 +10962,7 @@ export namespace Prisma {
     decimals?: IntFieldUpdateOperationsInput | number
     maxSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     circulatingSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    minTradeVolume?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     pairsAsToken1?: PairUncheckedUpdateManyWithoutToken1NestedInput
     groupConfigurations?: GroupConfigurationUncheckedUpdateManyWithoutSpikeMonitorTokenNestedInput
@@ -10885,6 +10988,7 @@ export namespace Prisma {
     decimals?: IntFieldUpdateOperationsInput | number
     maxSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     circulatingSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    minTradeVolume?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     pairsAsToken0?: PairUpdateManyWithoutToken0NestedInput
     groupConfigurations?: GroupConfigurationUpdateManyWithoutSpikeMonitorTokenNestedInput
@@ -10900,6 +11004,7 @@ export namespace Prisma {
     decimals?: IntFieldUpdateOperationsInput | number
     maxSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     circulatingSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    minTradeVolume?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     pairsAsToken0?: PairUncheckedUpdateManyWithoutToken0NestedInput
     groupConfigurations?: GroupConfigurationUncheckedUpdateManyWithoutSpikeMonitorTokenNestedInput
@@ -10914,6 +11019,7 @@ export namespace Prisma {
     decimals: number
     maxSupply?: bigint | number | null
     circulatingSupply?: bigint | number | null
+    minTradeVolume?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     pairsAsToken0?: PairCreateNestedManyWithoutToken0Input
     pairsAsToken1?: PairCreateNestedManyWithoutToken1Input
@@ -10929,6 +11035,7 @@ export namespace Prisma {
     decimals: number
     maxSupply?: bigint | number | null
     circulatingSupply?: bigint | number | null
+    minTradeVolume?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     pairsAsToken0?: PairUncheckedCreateNestedManyWithoutToken0Input
     pairsAsToken1?: PairUncheckedCreateNestedManyWithoutToken1Input
@@ -10959,6 +11066,7 @@ export namespace Prisma {
     decimals?: IntFieldUpdateOperationsInput | number
     maxSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     circulatingSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    minTradeVolume?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     pairsAsToken0?: PairUpdateManyWithoutToken0NestedInput
     pairsAsToken1?: PairUpdateManyWithoutToken1NestedInput
@@ -10974,6 +11082,7 @@ export namespace Prisma {
     decimals?: IntFieldUpdateOperationsInput | number
     maxSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     circulatingSupply?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    minTradeVolume?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     pairsAsToken0?: PairUncheckedUpdateManyWithoutToken0NestedInput
     pairsAsToken1?: PairUncheckedUpdateManyWithoutToken1NestedInput

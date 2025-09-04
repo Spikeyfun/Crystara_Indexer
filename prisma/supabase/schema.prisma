@@ -47,6 +47,7 @@ model Token {
     decimals          Int
     maxSupply         BigInt?
     circulatingSupply BigInt?
+    minTradeVolume    Decimal?
 
     pairsAsToken0 Pair[] @relation("token0")
     pairsAsToken1 Pair[] @relation("token1")
