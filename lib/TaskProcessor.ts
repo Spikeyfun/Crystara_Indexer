@@ -1,6 +1,7 @@
 import { createLogger } from '../app/indexer/utils';
 import cron, { ScheduledTask } from 'node-cron';
 import { synchronizeDatabases } from './tasks/executeSyncDb';
+import { syncAnchorTokensFromSupabaseToSqlite } from './tasks/sync-rules-from-supabase'; // Asegúrate de que la ruta sea correcta
 import { EventPoller } from '@/app/indexer/poller';
 import { executeOhlcAggregation1mLocal } from './tasks/executeOhlcAggregation';
 import { executeOhlcAggregation5m } from './tasks/executeOhlcAggregation5m';
@@ -47,7 +48,7 @@ async function runMinuteCycleForNetwork(networkConfig: NetworkConfig, poller: Ev
   }
 }
 
-export function startScheduledTasks(setupConfig: SchedulerSetupConfig, pollers: Map<string, EventPoller>): void {
+export async function startScheduledTasks(setupConfig: SchedulerSetupConfig, pollers: Map<string, EventPoller>): Promise<void> {
   if (activeJobs.size > 0) {
     logger.info('Scheduled tasks are already running.');
     return;
@@ -59,6 +60,19 @@ export function startScheduledTasks(setupConfig: SchedulerSetupConfig, pollers: 
   const networksToProcess: NetworkConfig[] = [];
   if (setupConfig.testnet) networksToProcess.push(setupConfig.testnet);
   if (setupConfig.mainnet) networksToProcess.push(setupConfig.mainnet);
+
+  try {
+    // Creamos una promesa para cada red y las ejecutamos en paralelo
+    const syncPromises = networksToProcess.map(networkConfig => 
+      syncAnchorTokensFromSupabaseToSqlite(networkConfig.networkName)
+    );
+    await Promise.all(syncPromises);
+    logger.info('Initial anchor token rules synchronization COMPLETED for all networks.');
+  } catch (error) {
+    logger.error('CRITICAL: Failed to perform initial sync of anchor token rules. Tasks will not start.', error);
+    // Es crucial detener el proceso si las reglas no se pueden cargar, para evitar que el agregador trabaje con datos incorrectos.
+    return; 
+  }
 
   if (networksToProcess.length === 0) {
     logger.warn('No network configurations provided. No network-specific tasks will be started.');
