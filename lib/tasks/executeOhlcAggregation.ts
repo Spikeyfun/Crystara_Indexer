@@ -135,12 +135,12 @@ export async function executeOhlcAggregation1mLocal(network: string) {
               if (amountXOut === 0) return null;
               const priceInYPerX = amountYIn / amountXOut;
               
-              if (tokenY.address === token0.address) { // Y es token0
-                priceInT1PerT0 = priceInYPerX;
-                volumeInToken1 = amountYIn * priceInT1PerT0; // Convertir volumen a token1
-              } else { // Y es token1
-                priceInT1PerT0 = 1 / priceInYPerX;
-                volumeInToken1 = amountYIn; // Ya está en token1
+              if (tokenY.address === token0.address) { // Y es T0, X es T1. priceInYPerX (Y/X) es T0/T1.
+                priceInT1PerT0 = 1 / priceInYPerX; // Invertimos para obtener T1/T0
+                volumeInToken1 = amountYIn * priceInT1PerT0; // Volumen en T0 * (T1/T0) = Volumen en T1
+              } else { // Y es T1, X es T0. priceInYPerX (Y/X) es T1/T0.
+                priceInT1PerT0 = priceInYPerX; // El precio ya está en T1/T0
+                volumeInToken1 = amountYIn; // El volumen de entrada ya está en T1
               }
           }
           return { ammSource: 'DexlynSwap', blockTimestamp: s.blockTimestamp, price: priceInT1PerT0, volume: volumeInToken1 };
