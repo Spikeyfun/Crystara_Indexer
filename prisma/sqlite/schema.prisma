@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../dist/generated/sqlite"
+  output   = "../generated/sqlite"
 }
 
 datasource db {
@@ -78,6 +78,20 @@ model DexlynSwap {
   @@index([pairId])
 }
 
+model AnchorToken {
+  id        Int      @id @default(autoincrement())
+  network   String
+  priority  Int
+  category  String
+
+  tokenAddress String
+
+  token     Token    @relation(fields: [network, tokenAddress], references: [network, address])
+
+  @@unique([network, tokenAddress])
+  @@index([network, priority])
+}
+
 model Token {
   id              Int      @id @default(autoincrement())
   network         String
@@ -98,6 +112,7 @@ model Token {
   groupConfigurations GroupConfiguration[]
 
   createdAt       DateTime @default(now())
+  anchorInfo      AnchorToken?
 
   @@unique([network, address])
 }

@@ -1,6 +1,6 @@
 generator client {
     provider = "prisma-client-js"
-    output   = "../dist/generated/supabase"
+    output   = "../generated/supabase"
 }
 
 datasource db {
@@ -35,6 +35,20 @@ model EventTracking {
     @@index([network, processed])
 }
 
+model AnchorToken {
+  id        Int      @id @default(autoincrement())
+  network   String
+  priority  Int
+  category  String
+
+  tokenAddress String
+
+  token     Token    @relation(fields: [network, tokenAddress], references: [network, address])
+
+  @@unique([network, tokenAddress])
+  @@index([network, priority])
+}
+
 model Token {
     id      Int    @id @default(autoincrement())
     network String
@@ -56,7 +70,7 @@ model Token {
     groupConfigurations GroupConfiguration[]
 
     createdAt DateTime @default(now())
-
+    anchorInfo      AnchorToken?
     @@unique([network, address])
 }
 

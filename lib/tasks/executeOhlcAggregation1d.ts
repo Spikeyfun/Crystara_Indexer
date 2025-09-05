@@ -1,6 +1,6 @@
 import { supabaseDb } from '@/lib/prismadb';
 import { createLogger } from '@/app/indexer/utils';
-import { Prisma as SupabasePrisma, OhlcData } from '@/prisma/dist/generated/supabase';
+import { Prisma as SupabasePrisma, OhlcData } from '@/prisma/generated/supabase';
 const logger = createLogger('ohlc-aggregator-1d');
 
 function roundTimestampToInterval(timestamp: Date): Date {

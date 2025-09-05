@@ -1,4 +1,4 @@
-import { PrismaClient } from '../prisma/dist/generated/supabase';
+import { PrismaClient } from '../prisma/generated/supabase';
 import { createLogger } from '../app/indexer/utils';
 
 const prismadb = new PrismaClient();

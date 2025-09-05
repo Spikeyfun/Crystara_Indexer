@@ -1,6 +1,6 @@
 import { RpcEvent, TransactionClient, DexlynSwapEventData } from '../types';
 import { createLogger } from '../utils'
-import { Prisma } from '@/prisma//dist/generated/sqlite';
+import { Prisma } from '@/prisma/generated/sqlite';
 import { getOrCreateToken } from '../dbUtils';
 
 const logger = createLogger('dexlynSwapHandler');

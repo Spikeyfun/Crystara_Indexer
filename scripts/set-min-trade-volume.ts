@@ -1,5 +1,5 @@
 import { sqliteDb } from '../lib/prismadb';
-import { Prisma } from '@/prisma/dist/generated/sqlite';
+import { Prisma } from '@/prisma/generated/sqlite';
 
 async function setMinTradeVolume() {
   console.log('Setting minimum trade volume for SUPRA and ETH...');

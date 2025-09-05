@@ -1,6 +1,6 @@
 import { RpcEvent, TransactionClient, SpikeyAmmSwapEventData } from '../types';
 import { createLogger } from '../utils';
-import { Prisma } from '@/prisma//dist/generated/sqlite';
+import { Prisma } from '@/prisma/generated/sqlite';
 import { getOrCreateToken, unpackPairAddresses } from '../dbUtils'; // Import unpackPairAddresses
 
 const logger = createLogger('spikeyAmmSwapHandler');

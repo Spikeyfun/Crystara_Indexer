@@ -1,7 +1,7 @@
 import { sqliteDb, supabaseDb } from '@/lib/prismadb';
 import { createLogger } from '@/app/indexer/utils';
-import { Prisma as SupabasePrisma } from '@/prisma/dist/generated/supabase';
-import { OhlcData as SqliteOhlcData } from '@/prisma/dist/generated/sqlite/client';
+import { Prisma as SupabasePrisma } from '@/prisma/generated/supabase';
+import { OhlcData as SqliteOhlcData } from '@/prisma/generated/sqlite/client';
 
 const logger = createLogger('ohlc-aggregator-1h');
 
