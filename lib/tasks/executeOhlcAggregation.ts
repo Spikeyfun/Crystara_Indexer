@@ -105,72 +105,74 @@ export async function executeOhlcAggregation1mLocal(network: string) {
       ]);
       // ... fin de la lógica sin cambios.
 
-      // --- PASO 3: Unificar Swaps y Estandarizar el Volumen ---
+      // --- PASO 3: Unificar Swaps y Estandarizar Precio y Volumen ---
+      // ESTÁNDAR FINAL: El precio se calcula como T0/T1 (ej: Supra por TokenX).
+      //                 El volumen se calcula en T1 (ej: TokenX).
       const unifiedSwaps = [
         ...dexlynSwaps.map(s => {
           if (!pair.dexlynAmmTokenXAddress) return null;
           const tokenX = pair.token0.address === pair.dexlynAmmTokenXAddress ? pair.token0 : pair.token1;
           const tokenY = pair.token0.address === pair.dexlynAmmTokenXAddress ? pair.token1 : pair.token0;
           
-          let priceInT1PerT0: number;
+          let priceInT0PerT1: number;
           let volumeInToken1: number;
 
           if (s.xIn > 0) { // User gives Token X, receives Token Y
               const amountXIn = normalize(s.xIn, tokenX.decimals);
               const amountYOut = normalize(s.yOut, tokenY.decimals);
-              if (amountXIn === 0) return null;
-              const priceInYPerX = amountYOut / amountXIn;
+              if (amountXIn === 0 || amountYOut === 0) return null;
+              const priceInYPerX = amountYOut / amountXIn; // Y por X
               
-              // Estandarizamos precio y volumen
-              if (tokenX.address === token0.address) { // X es token0
-                priceInT1PerT0 = priceInYPerX;
-                volumeInToken1 = amountXIn * priceInT1PerT0; // Convertir volumen a token1
-              } else { // X es token1
-                priceInT1PerT0 = 1 / priceInYPerX;
-                volumeInToken1 = amountXIn; // Ya está en token1
+              if (tokenX.address === token0.address) { // X es T0, Y es T1. priceInYPerX es T1/T0.
+                priceInT0PerT1 = 1 / priceInYPerX; // Invertimos para tener T0/T1
+                volumeInToken1 = amountYOut; // El volumen es la cantidad de T1 que se recibe
+              } else { // X es T1, Y es T0. priceInYPerX es T0/T1.
+                priceInT0PerT1 = priceInYPerX; // El precio ya está en T0/T1
+                volumeInToken1 = amountXIn; // El volumen es la cantidad de T1 que se entrega
               }
           } else { // User gives Token Y, receives Token X
               const amountYIn = normalize(s.yIn, tokenY.decimals);
               const amountXOut = normalize(s.xOut, tokenX.decimals);
-              if (amountXOut === 0) return null;
-              const priceInYPerX = amountYIn / amountXOut;
+              if (amountYIn === 0 || amountXOut === 0) return null;
+              const priceInYPerX = amountYIn / amountXOut; // Y por X
               
-              if (tokenY.address === token0.address) { // Y es T0, X es T1. priceInYPerX (Y/X) es T0/T1.
-                priceInT1PerT0 = 1 / priceInYPerX; // Invertimos para obtener T1/T0
-                volumeInToken1 = amountYIn * priceInT1PerT0; // Volumen en T0 * (T1/T0) = Volumen en T1
-              } else { // Y es T1, X es T0. priceInYPerX (Y/X) es T1/T0.
-                priceInT1PerT0 = priceInYPerX; // El precio ya está en T1/T0
-                volumeInToken1 = amountYIn; // El volumen de entrada ya está en T1
+              if (tokenY.address === token0.address) { // Y es T0, X es T1. priceInYPerX es T0/T1.
+                priceInT0PerT1 = priceInYPerX; // El precio ya está en T0/T1
+                volumeInToken1 = amountXOut; // El volumen es la cantidad de T1 que se recibe
+              } else { // Y es T1, X es T0. priceInYPerX es T1/T0.
+                priceInT0PerT1 = 1 / priceInYPerX; // Invertimos para tener T0/T1
+                volumeInToken1 = amountYIn; // El volumen es la cantidad de T1 que se entrega
               }
           }
-          return { ammSource: 'DexlynSwap', blockTimestamp: s.blockTimestamp, price: priceInT1PerT0, volume: volumeInToken1 };
+          return { ammSource: 'DexlynSwap', blockTimestamp: s.blockTimestamp, price: priceInT0PerT1, volume: volumeInToken1 };
         }),
         ...spikeySwaps.map(s => {
             if (!pair.spikeyAmmToken0Address) return null;
             const token0Amm = pair.token0.address === pair.spikeyAmmToken0Address ? pair.token0 : pair.token1;
             const token1Amm = pair.token0.address === pair.spikeyAmmToken0Address ? pair.token1 : pair.token0;
 
-            let priceInT1PerT0: number;
+            const isFlipped = token0Amm.address !== token0.address;
+
+            let priceAmm: number; // Precio T1Amm/T0Amm
             let volumeInToken1: number;
 
             if (s.amount0In > 0) { // User gives token0Amm, receives token1Amm
                 const amount0In = normalize(s.amount0In, token0Amm.decimals);
                 const amount1Out = normalize(s.amount1Out, token1Amm.decimals);
-                if (amount0In === 0) return null;
-                priceInT1PerT0 = amount1Out / amount0In;
-                volumeInToken1 = amount0In * priceInT1PerT0; // Convertir volumen a token1
+                if (amount0In === 0 || amount1Out === 0) return null;
+                priceAmm = amount1Out / amount0In;
+                volumeInToken1 = isFlipped ? amount0In : amount1Out;
             } else { // User gives token1Amm, receives token0Amm
                 const amount1In = normalize(s.amount1In, token1Amm.decimals);
                 const amount0Out = normalize(s.amount0Out, token0Amm.decimals);
-                if (amount0Out === 0) return null;
-                priceInT1PerT0 = amount1In / amount0Out;
-                volumeInToken1 = amount1In; // Ya está en token1
+                if (amount1In === 0 || amount0Out === 0) return null;
+                priceAmm = amount1In / amount0Out;
+                volumeInToken1 = isFlipped ? amount0Out : amount1In;
             }
             
-            // Aseguramos que el precio siempre esté en T1/T0
-            const finalPrice = token0Amm.address === token0.address ? priceInT1PerT0 : 1 / priceInT1PerT0;
+            const priceInT0PerT1 = isFlipped ? priceAmm : (1 / priceAmm);
 
-            return { ammSource: 'SpikeySwap', blockTimestamp: s.blockTimestamp, price: finalPrice, volume: volumeInToken1 };
+            return { ammSource: 'SpikeySwap', blockTimestamp: s.blockTimestamp, price: priceInT0PerT1, volume: volumeInToken1 };
         }),
       ].filter((s): s is { ammSource: string; blockTimestamp: Date; price: number; volume: number } => {
           return s !== null && s.price > 0 && isFinite(s.price);
