@@ -13,7 +13,6 @@ const logger = createLogger('task-processor');
 
 export interface NetworkConfig {
   rpcUrl: string;
-  chainId: string;
   networkName: string;
 }
 
@@ -89,8 +88,8 @@ export async function startScheduledTasks(setupConfig: SchedulerSetupConfig, pol
       const schedules = {
         '1m_cycle': { schedule: '* * * * *', task: () => runMinuteCycleForNetwork(networkConfig, pollerInstance), description: '1-minute local aggregation and DB sync' },
         '5m_agg':   { schedule: '*/5 * * * *', task: () => executeOhlcAggregation5m(networkName), description: '5-minute remote aggregation' },
-        '1h_agg':   { schedule: '0 * * * *', task: () => executeOhlcAggregation1h(networkName), description: '1-hour remote aggregation' },
-        '1d_agg':   { schedule: '0 0 * * *', task: () => executeOhlcAggregation1d(networkName), description: '1-day remote aggregation' },
+        '1h_agg':   { schedule: '2 * * * *', task: () => executeOhlcAggregation1h(networkName), description: '1-hour remote aggregation' },
+        '1d_agg':   { schedule: '3 0 * * *', task: () => executeOhlcAggregation1d(networkName), description: '1-day remote aggregation' },
       };
 
       for (const [key, { schedule, task, description }] of Object.entries(schedules)) {
