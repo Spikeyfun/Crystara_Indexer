@@ -75,10 +75,12 @@ export async function fetchBlockEvents(
 
   // Define event types (could be dynamic or configurable if needed)
   const eventTypesToFetch = [
-    
+
     `${SPIKE_AMM_ADDRESS}::${SPIKE_AMM_MODULE}::SwapEvent`,
     `${SPIKE_AMM_ADDRESS}::${SPIKE_AMM_MODULE}::SyncEvent`,
     `${DEXLYN_AMM_ADDRESS}::${DEXLYN_AMM_MODULE}::SwapEvent`,
+    `${STAKING_ADDRESS}::${STAKING_MODULE}::DepositRewardEvent`,
+
   ];
 
   while (retries < MAX_RETRIES) {
@@ -117,7 +119,7 @@ async function fetchEventsByTypes(
   // Process event types in smaller batches to avoid overly long URLs or hitting server limits
   for (let i = 0; i < eventTypes.length; i += BATCH_SIZE) {
     const batchEventTypes = eventTypes.slice(i, i + BATCH_SIZE)
-    
+
     const batchPromises = batchEventTypes.map(async (eventType) => {
       let attempt = 0
       while (attempt < MAX_RETRIES) {
@@ -145,7 +147,7 @@ async function fetchEventsByTypes(
             logger.warn(`No data or malformed data for ${eventType} from ${rpcUrl}:`, responseData)
             return []
           }
-          
+
           if (responseData.data.length === 0) {
             // logger.debug(`No events of type ${eventType} found in block range ${startBlock}-${endBlock} on ${rpcUrl}`);
             return [];
@@ -181,7 +183,7 @@ async function fetchEventsByTypes(
 
     const resultsForBatch = await Promise.all(batchPromises)
     resultsForBatch.forEach(eventList => allFetchedEvents.push(...eventList))
-    
+
     // Optional: Add a small delay between batches if still hitting rate limits across different event types
     if (i + BATCH_SIZE < eventTypes.length) {
       await sleep(RATE_LIMIT_DELAY) // Use a small delay
