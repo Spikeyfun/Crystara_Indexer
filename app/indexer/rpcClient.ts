@@ -79,8 +79,6 @@ export async function fetchBlockEvents(
     `${SPIKE_AMM_ADDRESS}::${SPIKE_AMM_MODULE}::SwapEvent`,
     `${SPIKE_AMM_ADDRESS}::${SPIKE_AMM_MODULE}::SyncEvent`,
     `${DEXLYN_AMM_ADDRESS}::${DEXLYN_AMM_MODULE}::SwapEvent`,
-    `${STAKING_ADDRESS}::${STAKING_MODULE}::DepositRewardEvent`,
-
   ];
 
   while (retries < MAX_RETRIES) {
