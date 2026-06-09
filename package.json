@@ -6,6 +6,7 @@
     "node": ">=22.13.0"
   },
   "scripts": {
+    "deploy": "pnpm install --frozen-lockfile && pnpm rebuild && pnpm run build && pnpm exec pm2 restart ecosystem.config.js",
     "dev": "next dev",
     "build": "next build",
     "start": "tsx server.ts",
