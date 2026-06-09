@@ -47,6 +47,9 @@ prisma/sqlite/*.dv
 
 #all db
 *.db
+*.db-journal
+*.db-wal
+*.db-shm
 
 # ===============================
 # Custom Additions
