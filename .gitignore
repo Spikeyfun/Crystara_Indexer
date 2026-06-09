@@ -47,3 +47,11 @@ prisma/sqlite/*.dv
 
 #all db
 *.db
+
+# ===============================
+# Custom Additions
+# ===============================
+tmp/
+backups/
+errors.txt
+.pnpm-store/
