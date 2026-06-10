@@ -1,0 +1,17 @@
+FROM node:22-alpine
+WORKDIR /app
+
+RUN corepack enable pnpm
+
+# Copy the amm_indexer project
+COPY amm_indexer ./amm_indexer
+WORKDIR /app/amm_indexer
+
+# Install dependencies and generate prisma clients
+RUN pnpm install --frozen-lockfile --ignore-scripts
+RUN pnpm run prisma:generate:sqlite
+RUN pnpm run prisma:generate:supabase
+# Build the indexer if necessary, though it seems to use tsx
+# RUN pnpm run build
+
+CMD ["npx", "tsx", "scripts/run-indexer.ts"]
