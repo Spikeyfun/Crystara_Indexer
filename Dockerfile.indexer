@@ -3,15 +3,18 @@ WORKDIR /app
 
 RUN corepack enable pnpm
 
-# Copy the amm_indexer project
-COPY amm_indexer ./amm_indexer
-WORKDIR /app/amm_indexer
+# 1. Copiamos los archivos de dependencias primero para cachear la capa
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
-# Install dependencies and generate prisma clients
+# 2. Instalamos dependencias
 RUN pnpm install --frozen-lockfile --ignore-scripts
+
+# 3. Copiamos el resto del código (ahora asumiendo que haces el build DENTRO de la carpeta amm_indexer)
+COPY . .
+
+# 4. Generamos los clientes de Prisma
 RUN pnpm run prisma:generate:sqlite
 RUN pnpm run prisma:generate:supabase
-# Build the indexer if necessary, though it seems to use tsx
-# RUN pnpm run build
 
+# 5. Ejecutamos el indexador
 CMD ["npx", "tsx", "scripts/run-indexer.ts"]

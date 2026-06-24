@@ -5,13 +5,14 @@ import {
   handleSpikeyAmmSwapEvent,
   handleDexlynSwapEvent,
   handleSyncEvent
-
 } from './handlers';
+import { handleDaoEvent } from './daoHandlers';
 
 const logger = createLogger('eventProcessor');
 
 const MODULE_PATH_SPIKEY_AMM = `${process.env.NEXT_PUBLIC_SUPRA_AMM_SPIKE_ADDRESS}::${process.env.NEXT_PUBLIC_SUPRA_AMM_SPIKE_PAIR_MODULE}`;
 const MODULE_PATH_DEXLYN_AMM = `${process.env.NEXT_PUBLIC_AMM_DEXLYN_ADDRESS}::${process.env.NEXT_PUBLIC_AMM_DEXLYN_PAIR_MODULE}`;
+const NEXT_PUBLIC_DAO_CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_DAO_CONTRACT_ADDRESS || "0x89f01d4584ce004510de6dc7ad8f3c5de5ec80c96d3c4ba5d71bdfe900899070";
 
 export async function processEvents(events: RpcEvent[], tx: any): Promise<boolean> {
   logger.debug(`Processing ${events.length} RpcEvents in current batch.`);
@@ -68,6 +69,16 @@ export async function processEvents(events: RpcEvent[], tx: any): Promise<boolea
               break;
             case `${MODULE_PATH_DEXLYN_AMM}::SwapEvent`:
               handlerCreatedData = await handleDexlynSwapEvent(event, tx);
+              break;
+
+            // DAO Events (Economic Engine & Lifecycle)
+            case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::jubilee::EpochAdvanced`:
+            case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::zeal::GaugeCreated`:
+            case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::restore::BribeDeposited`:
+            case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::legacy::LockCreated`:
+            case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::witness::VoteCast`:
+            case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::herald::ProposalCreated`:
+              handlerCreatedData = await handleDaoEvent(event, tx);
               break;
 
             default:
