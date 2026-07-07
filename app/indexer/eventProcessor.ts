@@ -72,12 +72,27 @@ export async function processEvents(events: RpcEvent[], tx: any): Promise<boolea
               break;
 
             // DAO Events (Economic Engine & Lifecycle)
+            case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::petra::DaoCreated`:
             case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::jubilee::EpochAdvanced`:
             case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::zeal::GaugeCreated`:
+            case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::zeal::Voted`:
             case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::restore::BribeDeposited`:
+            case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::restore::BribeClaimed`:
+            case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::harvest::RewardsClaimed`:
             case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::legacy::LockCreated`:
+            case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::legacy::LockExtended`:
+            case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::legacy::AmountIncreased`:
+            case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::legacy::LockMerged`:
+            case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::legacy::Withdrawn`:
             case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::witness::VoteCast`:
             case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::herald::ProposalCreated`:
+            case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::anchor::ProposalQueued`:
+            case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::anchor::ProposalExecuted`:
+            case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::anchor::ProposalCanceled`:
+            case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::charter::DaoConfigUpdated`:
+            case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::charter::GuardianUpdated`:
+            case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::sentinel::ProtocolPaused`:
+            case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::sentinel::ProtocolUnpaused`:
               handlerCreatedData = await handleDaoEvent(event, tx);
               break;
 

@@ -33,15 +33,19 @@ interface SchedulerStartupConfig {
 }
 
 export async function startIndexer() {
+  const indexerRun = process.env.INDEXER_RUN || 'all'; // 'all', 'prod', or 'dev'
   const schedulerConfig: SchedulerStartupConfig = {};
 
-  if (SUPRA_RPC_URL_TESTNET && CHAIN_ID_SUPRA_TESTNET) {
+  const shouldRunTestnet = SUPRA_RPC_URL_TESTNET && CHAIN_ID_SUPRA_TESTNET && (indexerRun === 'all' || indexerRun === 'dev');
+  const shouldRunMainnet = SUPRA_RPC_URL_MAINNET && CHAIN_ID_SUPRA_MAINNET && (indexerRun === 'all' || indexerRun === 'prod');
+
+  if (shouldRunTestnet) {
     schedulerConfig.testnet = {
       rpcUrl: SUPRA_RPC_URL_TESTNET,
       networkName: POLLER_IDS.TESTNET // Usamos la constante POLLER_IDS
     };
   }
-  if (SUPRA_RPC_URL_MAINNET && CHAIN_ID_SUPRA_MAINNET) {
+  if (shouldRunMainnet) {
     schedulerConfig.mainnet = {
       rpcUrl: SUPRA_RPC_URL_MAINNET,
       networkName: POLLER_IDS.MAINNET // Usamos la constante POLLER_IDS
@@ -68,7 +72,7 @@ export async function startIndexer() {
     maxRequestsPerSecond: parseInt(process.env.MAX_REQUESTS_PER_SECOND || '10', 10),
   };
 
-  if (SUPRA_RPC_URL_TESTNET && CHAIN_ID_SUPRA_TESTNET) {
+  if (shouldRunTestnet) {
     logger.info(`Setting up poller for Testnet (ID: ${POLLER_IDS.TESTNET})`);
     pollers.testnet = new EventPoller(
       POLLER_IDS.TESTNET, // Aquí pasas el networkName al poller
@@ -77,10 +81,10 @@ export async function startIndexer() {
       pollerConfigBase
     );
   } else {
-    logger.warn('Testnet RPC URL or Chain ID not configured. Testnet poller will not start.');
+    logger.warn(`Testnet poller disabled (INDEXER_RUN=${indexerRun} or missing RPC config).`);
   }
 
-  if (SUPRA_RPC_URL_MAINNET && CHAIN_ID_SUPRA_MAINNET) {
+  if (shouldRunMainnet) {
     logger.info(`Setting up poller for Mainnet (ID: ${POLLER_IDS.MAINNET})`);
     pollers.mainnet = new EventPoller(
       POLLER_IDS.MAINNET, // Aquí pasas el networkName al poller
@@ -89,7 +93,7 @@ export async function startIndexer() {
       pollerConfigBase
     );
   } else {
-    logger.warn('Mainnet RPC URL or Chain ID not configured. Mainnet poller will not start.');
+    logger.warn(`Mainnet poller disabled (INDEXER_RUN=${indexerRun} or missing RPC config).`);
   }
 
   const startingPollers: Promise<void>[] = [];

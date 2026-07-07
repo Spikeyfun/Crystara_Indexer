@@ -4,6 +4,7 @@ import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 export const daos = sqliteTable("daos", {
   id: text("id").primaryKey(), // We use UUIDs as strings in SQLite
   daoAddress: text("dao_address").notNull().unique(), // The 0x address of the DAO's main object/FA
+  assetAddress: text("asset_address").unique(), // The 0x address of the DAO's governance token
   creatorAddress: text("creator_address").notNull(),
   name: text("name").notNull(),
   symbol: text("symbol").notNull(),

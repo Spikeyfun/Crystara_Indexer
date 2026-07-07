@@ -6,7 +6,7 @@ import { supabaseDb } from '@/lib/prismadb';
 
 const logger = createLogger('poller');
 
-const BATCH_SIZE = 10;
+const BATCH_SIZE = 50;
 const POLLING_INTERVAL = 2000;
 const DEFAULT_PROGRESS_SAVE_INTERVAL_MS = 30 * 60 * 1000;
 
