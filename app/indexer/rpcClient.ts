@@ -57,6 +57,7 @@ export async function fetchBlockEvents(
   // Ensure we are using V3 URL for fetching events
   const v3Url = rpcUrl.includes('/v3') ? rpcUrl : rpcUrl.replace(/\/rpc\/v1$/, '/rpc/v3');
 
+  console.log("DAO_CONTRACT:", NEXT_PUBLIC_DAO_CONTRACT_ADDRESS);
   const eventTypesToFetch = [
     // AMM Events
     `${SPIKE_AMM_ADDRESS}::${SPIKE_AMM_MODULE}::SwapEvent`,
