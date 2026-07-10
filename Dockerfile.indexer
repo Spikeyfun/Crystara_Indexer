@@ -7,6 +7,7 @@ RUN corepack enable pnpm
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
 # 2. Instalamos dependencias
+ENV CI=true
 RUN pnpm install --frozen-lockfile --ignore-scripts
 
 # 3. Copiamos el resto del código (ahora asumiendo que haces el build DENTRO de la carpeta amm_indexer)
