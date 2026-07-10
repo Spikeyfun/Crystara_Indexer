@@ -9,7 +9,7 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN pnpm config set registry https://registry.npmmirror.com/
 
 # 2. Instalamos dependencias
-RUN pnpm install --frozen-lockfile --ignore-scripts
+RUN npm_config_network_timeout=600000 pnpm install --frozen-lockfile --ignore-scripts
 
 # 3. Copiamos el resto del código (ahora asumiendo que haces el build DENTRO de la carpeta amm_indexer)
 COPY . .
