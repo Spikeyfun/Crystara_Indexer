@@ -195,6 +195,9 @@ export class EventPoller {
         logger.info(`[${this.pollerId}] Fetched ${events.length} events from blocks ${this.currentBlockHeight}-${endBlock}.`);
         const createdData = await supabaseDb.$transaction(async (tx) => { // Transaction for processing events
             return await processEvents(events, tx);
+        }, {
+            timeout: 30000,
+            maxWait: 30000
         });
         if (createdData) {
           this._newSqliteDataCreated = true;
