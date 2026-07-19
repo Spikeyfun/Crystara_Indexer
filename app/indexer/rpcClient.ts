@@ -195,9 +195,8 @@ async function fetchEventsByTypesV3(
           if (attempt < MAX_RETRIES) {
              await sleep(delay);
           } else {
-             logger.error(`Max retries reached for ${eventType}. Skipping this type for this batch.`);
-             successInThisPage = true;
-             keepPaginating = false;
+             logger.error(`Max retries reached for ${eventType}. Throwing error to abort batch.`);
+             throw new Error(`Max retries reached for ${eventType}`);
           }
         }
       }
