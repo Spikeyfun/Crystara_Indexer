@@ -1,5 +1,5 @@
-// Tu archivo indexer.ts (o como se llame el componente padre)
 import { EventPoller } from './poller'
+import { WsEventPoller } from './wsPoller'
 import { createLogger } from './utils'
 import {
   SUPRA_RPC_URL_TESTNET,
@@ -7,8 +7,7 @@ import {
   CHAIN_ID_SUPRA_TESTNET,
   CHAIN_ID_SUPRA_MAINNET
 } from './rpcClient'
-// Asegúrate que la importación de NetworkConfig es la correcta, la de TaskProcessor
-import { startScheduledTasks, stopScheduledTasks, NetworkConfig as SchedulerNetworkConfig } from '../../lib/TaskProcessor'; // Renombrado para claridad si es necesario
+import { startScheduledTasks, stopScheduledTasks, NetworkConfig as SchedulerNetworkConfig } from '../../lib/TaskProcessor';
 
 const logger = createLogger('indexer')
 
@@ -17,23 +16,23 @@ let indexerActive = false;
 interface PollerInstances {
   testnet?: EventPoller;
   mainnet?: EventPoller;
+  testnetWs?: WsEventPoller;
+  mainnetWs?: WsEventPoller;
 }
 let pollers: PollerInstances = {};
 
-// POLLER_IDS es una buena manera de tener estos strings centralizados si los usas en varios sitios.
 const POLLER_IDS = {
   TESTNET: 'supra-testnet',
   MAINNET: 'supra-mainnet'
 };
 
-// Esta interfaz ahora usará la NetworkConfig completa del Scheduler
 interface SchedulerStartupConfig {
-  testnet?: SchedulerNetworkConfig; // Usamos el tipo importado
-  mainnet?: SchedulerNetworkConfig; // Usamos el tipo importado
+  testnet?: SchedulerNetworkConfig;
+  mainnet?: SchedulerNetworkConfig;
 }
 
 export async function startIndexer() {
-  const indexerRun = process.env.INDEXER_RUN || 'all'; // 'all', 'prod', or 'dev'
+  const indexerRun = process.env.INDEXER_RUN || 'all'; 
   const schedulerConfig: SchedulerStartupConfig = {};
 
   const shouldRunTestnet = SUPRA_RPC_URL_TESTNET && CHAIN_ID_SUPRA_TESTNET && (indexerRun === 'all' || indexerRun === 'dev');
@@ -42,22 +41,18 @@ export async function startIndexer() {
   if (shouldRunTestnet) {
     schedulerConfig.testnet = {
       rpcUrl: SUPRA_RPC_URL_TESTNET,
-      networkName: POLLER_IDS.TESTNET // Usamos la constante POLLER_IDS
+      networkName: POLLER_IDS.TESTNET 
     };
   }
   if (shouldRunMainnet) {
     schedulerConfig.mainnet = {
       rpcUrl: SUPRA_RPC_URL_MAINNET,
-      networkName: POLLER_IDS.MAINNET // Usamos la constante POLLER_IDS
+      networkName: POLLER_IDS.MAINNET 
     };
   }
 
   if (indexerActive && (pollers.testnet || pollers.mainnet)) {
     logger.info('Indexer is already running or starting.');
-    if (pollers.testnet) logger.info(`Poller ${POLLER_IDS.TESTNET} status: running (assumed)`);
-    if (pollers.mainnet) logger.info(`Poller ${POLLER_IDS.MAINNET} status: running (assumed)`);
-    // Importante: Pasar la schedulerConfig aquí también si la lógica lo requiere,
-    // aunque startScheduledTasks tiene su propia lógica para no reinicializar si ya hay jobs.
     const pollersMap = new Map<string, EventPoller>();
     if (pollers.testnet) pollersMap.set(POLLER_IDS.TESTNET, pollers.testnet);
     if (pollers.mainnet) pollersMap.set(POLLER_IDS.MAINNET, pollers.mainnet);
@@ -65,7 +60,7 @@ export async function startIndexer() {
     return;
   }
 
-  logger.info('Starting Supra Chain Indexer for Testnet and Mainnet...');
+  logger.info('Starting Supra Chain Indexer (Hybrid REST + WS) for Testnet and Mainnet...');
   indexerActive = true;
 
   const pollerConfigBase = {
@@ -73,35 +68,39 @@ export async function startIndexer() {
   };
 
   if (shouldRunTestnet) {
-    logger.info(`Setting up poller for Testnet (ID: ${POLLER_IDS.TESTNET})`);
+    logger.info(`Setting up REST & WS pollers for Testnet (ID: ${POLLER_IDS.TESTNET})`);
     pollers.testnet = new EventPoller(
-      POLLER_IDS.TESTNET, // Aquí pasas el networkName al poller
+      POLLER_IDS.TESTNET, 
       CHAIN_ID_SUPRA_TESTNET,
       SUPRA_RPC_URL_TESTNET,
       pollerConfigBase
     );
+    pollers.testnetWs = new WsEventPoller(CHAIN_ID_SUPRA_TESTNET);
   } else {
-    logger.warn(`Testnet poller disabled (INDEXER_RUN=${indexerRun} or missing RPC config).`);
+    logger.warn(`Testnet poller disabled.`);
   }
 
   if (shouldRunMainnet) {
-    logger.info(`Setting up poller for Mainnet (ID: ${POLLER_IDS.MAINNET})`);
+    logger.info(`Setting up REST & WS pollers for Mainnet (ID: ${POLLER_IDS.MAINNET})`);
     pollers.mainnet = new EventPoller(
-      POLLER_IDS.MAINNET, // Aquí pasas el networkName al poller
+      POLLER_IDS.MAINNET, 
       CHAIN_ID_SUPRA_MAINNET,
       SUPRA_RPC_URL_MAINNET,
       pollerConfigBase
     );
+    pollers.mainnetWs = new WsEventPoller(CHAIN_ID_SUPRA_MAINNET);
   } else {
-    logger.warn(`Mainnet poller disabled (INDEXER_RUN=${indexerRun} or missing RPC config).`);
+    logger.warn(`Mainnet poller disabled.`);
   }
 
   const startingPollers: Promise<void>[] = [];
+  
+  // Initialize and start REST Pollers (Catch-up)
   if (pollers.testnet) {
     startingPollers.push(
       pollers.testnet.initialize().then(() => pollers.testnet!.start())
       .catch(err => {
-        logger.error(`Error starting Testnet poller:`, err);
+        logger.error(`Error starting Testnet REST poller:`, err);
         pollers.testnet = undefined;
       })
     );
@@ -110,10 +109,19 @@ export async function startIndexer() {
     startingPollers.push(
       pollers.mainnet.initialize().then(() => pollers.mainnet!.start())
       .catch(err => {
-        logger.error(`Error starting Mainnet poller:`, err);
+        logger.error(`Error starting Mainnet REST poller:`, err);
         pollers.mainnet = undefined;
       })
     );
+  }
+
+  // Start WS Pollers (Real-time tip)
+  if (process.env.ENABLE_WS === 'true') {
+    if (pollers.testnetWs) pollers.testnetWs.start();
+    if (pollers.mainnetWs) pollers.mainnetWs.start();
+    logger.info('WebSocket Pollers started.');
+  } else {
+    logger.info('WebSocket Pollers disabled (ENABLE_WS != true). Running in REST-only mode.');
   }
 
   if (startingPollers.length === 0 && Object.keys(schedulerConfig).length === 0) {
@@ -124,11 +132,10 @@ export async function startIndexer() {
      logger.warn('No pollers were configured or started, but scheduler config provided. Attempting to start scheduled tasks.');
   }
 
-  // La schedulerConfig ya contiene los networkName correctos
-      const pollersMap = new Map<string, EventPoller>();
-    if (pollers.testnet) pollersMap.set(POLLER_IDS.TESTNET, pollers.testnet);
-    if (pollers.mainnet) pollersMap.set(POLLER_IDS.MAINNET, pollers.mainnet);
-    startScheduledTasks(schedulerConfig, pollersMap);
+  const pollersMap = new Map<string, EventPoller>();
+  if (pollers.testnet) pollersMap.set(POLLER_IDS.TESTNET, pollers.testnet);
+  if (pollers.mainnet) pollersMap.set(POLLER_IDS.MAINNET, pollers.mainnet);
+  startScheduledTasks(schedulerConfig, pollersMap);
 
   if (startingPollers.length > 0) {
     try {
@@ -140,7 +147,6 @@ export async function startIndexer() {
   }
 }
 
-// ... (el resto de tu archivo stopIndexer, checkIndexerStatus, y el default export se mantienen igual)
 export async function stopIndexer() {
   logger.info('Stopping Supra Chain Indexer...');
   indexerActive = false; 
@@ -149,12 +155,21 @@ export async function stopIndexer() {
 
   const stoppingPollers: Promise<void>[] = [];
   if (pollers.testnet) {
-    logger.info(`Stopping Testnet poller (ID: ${POLLER_IDS.TESTNET})...`);
-    stoppingPollers.push(pollers.testnet.stop().catch(err => logger.error(`Error stopping Testnet poller:`, err)));
+    logger.info(`Stopping Testnet REST poller...`);
+    stoppingPollers.push(pollers.testnet.stop().catch(err => logger.error(`Error stopping Testnet REST poller:`, err)));
   }
   if (pollers.mainnet) {
-    logger.info(`Stopping Mainnet poller (ID: ${POLLER_IDS.MAINNET})...`);
-    stoppingPollers.push(pollers.mainnet.stop().catch(err => logger.error(`Error stopping Mainnet poller:`, err)));
+    logger.info(`Stopping Mainnet REST poller...`);
+    stoppingPollers.push(pollers.mainnet.stop().catch(err => logger.error(`Error stopping Mainnet REST poller:`, err)));
+  }
+
+  if (pollers.testnetWs) {
+    logger.info(`Stopping Testnet WS poller...`);
+    pollers.testnetWs.stop();
+  }
+  if (pollers.mainnetWs) {
+    logger.info(`Stopping Mainnet WS poller...`);
+    pollers.mainnetWs.stop();
   }
 
   if (stoppingPollers.length > 0) {
