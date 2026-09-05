@@ -50,8 +50,10 @@ export async function processEvents(events: RpcEvent[], tx: any): Promise<boolea
             error: null,
           },
           update: {
+            // NOTE: never reset `processed` here — a re-polled SUCCEEDED event
+            // must keep processed=true so the ALREADY_PROCESSED guard below
+            // skips it; failed events stay false and are retried.
             error: null,
-            processed: false,
           },
         });
 
@@ -85,11 +87,13 @@ export async function processEvents(events: RpcEvent[], tx: any): Promise<boolea
             case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::legacy::LockMerged`:
             case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::legacy::Withdrawn`:
             case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::witness::VoteCast`:
+            case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::witness::LateQuorumExtended`:
+            case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::legacy::RebaseCompounded`:
+            case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::restore::BribeRolledOver`:
             case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::herald::ProposalCreated`:
             case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::anchor::ProposalQueued`:
             case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::anchor::ProposalExecuted`:
             case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::anchor::ProposalCanceled`:
-            case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::charter::DaoConfigUpdated`:
             case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::charter::GuardianUpdated`:
             case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::sentinel::ProtocolPaused`:
             case `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::sentinel::ProtocolUnpaused`:
