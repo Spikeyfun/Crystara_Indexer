@@ -129,10 +129,9 @@ async function fetchEventsByTypesV3(
 
           if (!response.ok) {
             if (response.status === 404) {
-               // 404 en V3 significa que el bloque aún no está indexado (retraso en el tip)
-               successInThisPage = true;
-               keepPaginating = false;
-               break;
+               // 404 en V3 significa que el bloque aún no está indexado en la base de datos de eventos del RPC.
+               // Lanzar error obliga al indexador a pausar y reintentar, garantizando no perder eventos.
+               throw new Error(`Block not indexed yet by events API (404) for ${eventType}`);
             }
             throw new Error(`HTTP error ${response.status} for ${eventType}`);
           }
