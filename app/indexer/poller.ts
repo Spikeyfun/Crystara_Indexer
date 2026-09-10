@@ -213,9 +213,12 @@ export class EventPoller {
 
   private async updateLatestBlockHeightIfNeeded() {
     try {
-      const newLatestBlockHeight = await fetchLatestBlockHeight(this.rpcUrl);
+      const BLOCK_DELAY = 10; // Margen de seguridad para que la API de eventos se sincronice
+      const rawLatestBlockHeight = await fetchLatestBlockHeight(this.rpcUrl);
+      const newLatestBlockHeight = Math.max(0, rawLatestBlockHeight - BLOCK_DELAY);
+
       if (newLatestBlockHeight > this.latestBlockHeight) {
-        logger.info(`[${this.pollerId}] Updated latest block height from ${this.latestBlockHeight} to ${newLatestBlockHeight}`);
+        logger.info(`[${this.pollerId}] Updated latest block height from ${this.latestBlockHeight} to ${newLatestBlockHeight} (Raw tip: ${rawLatestBlockHeight})`);
         this.latestBlockHeight = newLatestBlockHeight;
       }
     } catch (error) {
