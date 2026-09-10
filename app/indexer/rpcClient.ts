@@ -105,6 +105,8 @@ async function fetchEventsByTypesV3(
     let allFetchedForType: RpcEvent[] = [];
     let nextCursor: string | null = null;
     let keepPaginating = true;
+    let pagesFetched = 0;
+    const MAX_PAGES_PER_TYPE = 200; // guard anti-bucle (200 páginas × 100 = 20k eventos máx)
 
     while (keepPaginating) {
       let attempt = 0;
@@ -181,7 +183,12 @@ async function fetchEventsByTypesV3(
 
           allFetchedForType.push(...validMappedEvents);
 
-          if (xSupraCursor && !pageHasItemsBeyondEndBlock) {
+          // FIX (paginación): seguir paginando mientras la página tenga items EN rango,
+          // aunque la página también contenga items más allá del endBlock. Cortar solo
+          // si la página quedó íntegramente fuera de rango (página mixta puede tener
+          // más items en rango tras el cursor → detenerse aquí causaba pérdida).
+          const pageHasInRangeItems = validMappedEvents.length > 0;
+          if (xSupraCursor && pageHasInRangeItems && ++pagesFetched < MAX_PAGES_PER_TYPE) {
             nextCursor = xSupraCursor;
           } else {
             keepPaginating = false;

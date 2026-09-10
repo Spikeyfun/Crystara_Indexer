@@ -193,6 +193,17 @@ export class EventPoller {
       
       if (events.length > 0) {
         logger.info(`[${this.pollerId}] Fetched ${events.length} events from blocks ${this.currentBlockHeight}-${endBlock}.`);
+        // FIX (orden): ordenar por (blockHeight, sequence, type) antes de procesar.
+        // El fetch agrupa por TIPO (eventos del mismo block pueden llegar desordenados
+        // entre tipos) — handlers que asumen orden temporal (LockMerged después de
+        // LockCreated, etc.) requieren el orden de ejecución real.
+        events.sort((a: any, b: any) => {
+          const bh = Number(a.blockHeight || 0) - Number(b.blockHeight || 0);
+          if (bh !== 0) return bh;
+          const sq = Number(a.sequence_number || 0) - Number(b.sequence_number || 0);
+          if (sq !== 0) return sq;
+          return String(a.type).localeCompare(String(b.type));
+        });
         const createdData = await supabaseDb.$transaction(async (tx) => { // Transaction for processing events
             return await processEvents(events, tx);
         }, {

@@ -1,13 +1,14 @@
 import { createLogger } from '../app/indexer/utils';
 import cron, { ScheduledTask } from 'node-cron';
 import { synchronizeDatabases } from './tasks/executeSyncDb';
-import { syncAnchorTokensFromSupabaseToSqlite } from './tasks/sync-rules-from-supabase'; // Asegúrate de que la ruta sea correcta
+import { syncAnchorTokensFromSupabaseToSqlite } from './tasks/sync-rules-from-supabase'; // Asegǧrate de que la ruta sea correcta
 import { EventPoller } from '@/app/indexer/poller';
 import { executeOhlcAggregation1mLocal } from './tasks/executeOhlcAggregation';
 import { executeOhlcAggregation5m } from './tasks/executeOhlcAggregation5m';
 import { executeOhlcAggregation1h } from './tasks/executeOhlcAggregation1h';
 import { executeOhlcAggregation1d } from './tasks/executeOhlcAggregation1d';
 import { executeDbCleanup } from './tasks/executeDbCleanup';
+import { runRetryPass } from '@/app/indexer/retryJob';
 
 const logger = createLogger('task-processor');
 
@@ -105,6 +106,22 @@ export async function startScheduledTasks(setupConfig: SchedulerSetupConfig, pol
         }
       }
     });
+
+    // RETRY PASS GLOBAL (cada 5 min, offset para no chocar con el agregador de 5m):
+    // re-procesa eventos fallidos de EventTracking (processed=false) re-fetching
+    // solo los rangos de bloques afectados — RPC proporcional a fallos reales.
+    const retryTaskKey = 'global-retry_pass';
+    if (!activeJobs.has(retryTaskKey)) {
+      const job = cron.schedule('7,22,37,52 * * * *', async () => {
+        try {
+          await runRetryPass();
+        } catch (e: any) {
+          logger.error(`Retry pass cron failed: ${e.message}`);
+        }
+      }, { timezone: "UTC" });
+      activeJobs.set('global-retry_pass', job);
+      logger.info('Scheduling failed-event retry pass with cron: 7,22,37,52 * * * *');
+    }
   }
 
   // --- Schedule Global Tasks ---
