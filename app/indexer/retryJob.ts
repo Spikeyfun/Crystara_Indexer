@@ -41,8 +41,12 @@ interface FailureRow {
 
 export async function runRetryPass(): Promise<void> {
   try {
+    // VENTANA 24h: los fallos viejos son ruido (token muerto, pool borrada, etc.).
+    // Acotar evita re-fetch infinito de bloques perennemente fallidos — el estándar
+    // de la industria (un evento vencido se descarta, no se persigue para siempre).
+    const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
     const failures: any[] = await sqliteDb.eventTracking.findMany({
-      where: { processed: false },
+      where: { processed: false, updatedAt: { gte: twentyFourHoursAgo } },
       orderBy: { blockHeight: 'asc' },
       take: MAX_FAILURES_PER_PASS,
     });
