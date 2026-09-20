@@ -54,15 +54,20 @@ export async function runRetryPass(): Promise<void> {
     if (failures.length === 0) return;
     logger.info(`Retry pass: ${failures.length} eventos fallidos encontrados.`);
 
-    // Agrupar por (network, eventType): el re-fetch es por tipo + rango de bloques
+    // Agrupar por (network): re-fetch por RANGO DE BLOQUES, no por tipo.
+    //
+    // Por qué NO por tipo: el flujo batch necesita el orden real de ejecución.
+    // Un fallo de ProposalCreated (herald) y otro de ProposalExecuted (anchor)
+    // del mismo bloque viven en grupos de tipo distintos; re-procesarlos por
+    // separado perdía el orden y forzaba varios passes. Re-fetch del bloque
+    // completo (todos los tipos) y re-procesar ordenado lo resuelve en uno.
     const groups = new Map<string, FailureGroup>();
     for (const f of failures) {
-      if (!f.network || !f.eventType || f.blockHeight == null) continue;
-      const key = `${f.network}|${f.eventType}`;
-      let g = groups.get(key);
+      if (!f.network || !f.blockHeight) continue; // eventType ya no es requerido
+      let g = groups.get(f.network);
       if (!g) {
-        g = { network: f.network, eventType: f.eventType, blocks: new Set() };
-        groups.set(key, g);
+        g = { network: f.network, blocks: new Set() };
+        groups.set(f.network, g);
       }
       g.blocks.add(f.blockHeight.toNumber?.() ?? Number(f.blockHeight));
     }
@@ -71,7 +76,7 @@ export async function runRetryPass(): Promise<void> {
       try {
         await retryGroup(g);
       } catch (e: any) {
-        logger.warn(`Retry group [${g.network}] ${g.eventType}: ${e.message?.slice(0, 150)}`);
+        logger.warn(`Retry group [${g.network}]: ${e.message?.slice(0, 150)}`);
       }
     }
   } catch (e: any) {
@@ -81,7 +86,6 @@ export async function runRetryPass(): Promise<void> {
 
 interface FailureGroup {
   network: string;
-  eventType: string;
   blocks: Set<number>;
 }
 
@@ -106,31 +110,52 @@ async function retryGroup(g: FailureGroup): Promise<void> {
     // Ampliar el rango ±1 por seguridad de límites del API de eventos
     const s = Math.max(1, rangeStart - 1);
     const e = rangeEnd + 1;
-    logger.info(`Retry: re-fetch ${g.eventType.split('::').pop()} bloques ${s}-${e} [${g.network}]`);
+    logger.info(`Retry: re-fetch bloques ${s}-${e} [${g.network}]`);
     const events = await fetchBlockEvents(rpcUrl, `retry-${g.network}`, s, e);
     reprocessedEvents.push(...events);
     await new Promise(r => setTimeout(r, 300)); // pacing anti-429
   }
 
-  // Filtrar a EXACTAMENTE los eventos fallidos (txHash + seq + type)
-  const wanted = new Set(
-    (await sqliteDb.eventTracking.findMany({
-      where: { network: g.network, eventType: g.eventType, processed: false },
-      select: { transactionHash: true, sequenceNumber: true },
-    })).map(f => `${f.transactionHash}|${f.sequenceNumber}`)
-  );
-  const matched = reprocessedEvents.filter(ev => {
-    const hash = ev.transactionHash || `unknown_tx_hash_for_${ev.type}_block_${ev.blockHeight}`;
-    const seq = ev.sequence_number || `unknown_seq_num_for_${ev.type}_block_${ev.blockHeight}`;
-    return g.blocks.has(Number(ev.blockHeight || 0)) && wanted.has(`${hash}|${seq}`);
+  // Fallos pendientes del grupo: cualquier tipo en los bloques afectados.
+  // Acotado al rango para no cargar todos los fallos de la red en cada pass.
+  const minBlock = BigInt(sorted[0]);
+  const maxBlock = BigInt(sorted[sorted.length - 1]);
+  const pendingRows = await sqliteDb.eventTracking.findMany({
+    where: {
+      network: g.network,
+      processed: false,
+      blockHeight: { gte: minBlock, lte: maxBlock },
+    },
+    select: { transactionHash: true, sequenceNumber: true, eventType: true },
   });
+  const wanted = new Set(
+    pendingRows.map(f => `${f.transactionHash}|${f.sequenceNumber}|${f.eventType}`)
+  );
+
+  // Re-procesar SOLO los eventos de los bloques con fallos, en ORDEN real de
+  // ejecución (blockHeight → sequence_number → type), igual que el poller.
+  // Esto resuelve las carreras del mismo bloque en un único pass.
+  const matched = reprocessedEvents
+    .filter(ev => {
+      if (!g.blocks.has(Number(ev.blockHeight || 0))) return false;
+      const hash = ev.transactionHash || `unknown_tx_hash_for_${ev.type}_block_${ev.blockHeight}`;
+      const seq = ev.sequence_number || `unknown_seq_num_for_${ev.type}_block_${ev.blockHeight}`;
+      return wanted.has(`${hash}|${seq}|${ev.type}`);
+    })
+    .sort((a: any, b: any) => {
+      const bh = Number(a.blockHeight || 0) - Number(b.blockHeight || 0);
+      if (bh !== 0) return bh;
+      const sq = Number(a.sequence_number || 0) - Number(b.sequence_number || 0);
+      if (sq !== 0) return sq;
+      return String(a.type).localeCompare(String(b.type));
+    });
 
   if (matched.length === 0) {
-    logger.info(`Retry: [${g.network}] ${g.eventType.split('::').pop()} — rango re-fetch sin match (${reprocessedEvents.length} eventos, ${g.blocks.size} fallos). Los fallos persistirán para el próximo pass.`);
+    logger.info(`Retry: [${g.network}] rango re-fetch sin match (${reprocessedEvents.length} eventos, ${g.blocks.size} bloques). Los fallos persistirán para el próximo pass.`);
     return;
   }
 
-  logger.info(`Retry: re-procesando ${matched.length} eventos de ${g.eventType.split('::').pop()} [${g.network}]`);
+  logger.info(`Retry: re-procesando ${matched.length} eventos en ${g.blocks.size} bloques [${g.network}]`);
   await processEvents(matched, null);
-  logger.info(`Retry: pass de ${g.eventType.split('::').pop()} [${g.network}] completado.`);
+  logger.info(`Retry: pass de [${g.network}] completado.`);
 }
