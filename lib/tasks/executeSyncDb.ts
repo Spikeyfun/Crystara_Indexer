@@ -26,6 +26,10 @@ export async function synchronizeDatabases(network: string, poller: EventPoller)
       name: localToken.name,
       symbol: localToken.symbol,
       decimals: localToken.decimals,
+      wrappedAddress: localToken.wrappedAddress ?? null,
+      maxSupply: localToken.maxSupply ?? null,
+      circulatingSupply: localToken.circulatingSupply ?? null,
+      minTradeVolume: localToken.minTradeVolume ?? null,
     }));
     
     try {

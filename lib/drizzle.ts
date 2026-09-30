@@ -2,7 +2,7 @@
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { Client } from 'pg';
 // @ts-ignore
-import { pgTable, text, numeric, timestamp, integer, boolean, unique } from "drizzle-orm/pg-core";
+import { pgTable, text, numeric, timestamp, integer, boolean, unique, bigint } from "drizzle-orm/pg-core";
 import * as dotenv from 'dotenv';
 dotenv.config();
 
@@ -12,6 +12,10 @@ export const tokens_v2 = pgTable("tokens_v2", {
   name: text("name").notNull(),
   symbol: text("symbol").notNull(),
   decimals: integer("decimals").notNull(),
+  wrappedAddress: text("wrappedAddress"),
+  maxSupply: bigint("maxSupply", { mode: "bigint" }),
+  circulatingSupply: bigint("circulatingSupply", { mode: "bigint" }),
+  minTradeVolume: numeric("minTradeVolume"),
 });
 
 export const ammpair_v2 = pgTable("ammpair_v2", {
