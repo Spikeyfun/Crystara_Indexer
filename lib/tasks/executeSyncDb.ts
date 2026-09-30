@@ -29,7 +29,7 @@ export async function synchronizeDatabases(network: string, poller: EventPoller)
       wrappedAddress: localToken.wrappedAddress ?? null,
       maxSupply: localToken.maxSupply ?? null,
       circulatingSupply: localToken.circulatingSupply ?? null,
-      minTradeVolume: localToken.minTradeVolume ?? null,
+      minTradeVolume: localToken.minTradeVolume != null ? localToken.minTradeVolume.toString() : null,
     }));
     
     try {
