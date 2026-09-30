@@ -9,6 +9,12 @@ const logger = createLogger('poller');
 const BATCH_SIZE = 50;
 const POLLING_INTERVAL = 2000;
 const DEFAULT_PROGRESS_SAVE_INTERVAL_MS = 30 * 60 * 1000;
+// After this many consecutive failures on the SAME batch start we skip the
+// batch to avoid a permanently stuck poller. 0 disables skipping.
+const DEFAULT_MAX_BATCH_FAILURES_BEFORE_SKIP = 15;
+// How recently the RPC tip must have been fetched successfully for a skip to
+// be allowed (guards against skipping real blocks during an RPC outage).
+const TIP_HEALTHY_WINDOW_MS = 120_000;
 
 interface PollerInstanceConfig {
   maxRequestsPerSecond: number;
@@ -30,12 +36,22 @@ export class EventPoller {
   private lastSavedBlockHeight: number = 0;
   private _newSqliteDataCreated: boolean = false;
 
+  // --- Stuck-poller detection ---
+  private failedBatchStart: number = 0;
+  private consecutiveBatchFailures: number = 0;
+  private lastTipOkAt: number = 0;
+  private readonly maxBatchFailuresBeforeSkip: number;
+
   constructor(pollerId: string, network: string, rpcUrl: string, config: PollerInstanceConfig) {
     this.pollerId = pollerId;
     this.network = network;
     this.rpcUrl = rpcUrl;
     this.maxRequestsPerSecond = config.maxRequestsPerSecond;
     this.progressSaveInterval = config.progressSaveIntervalMs || DEFAULT_PROGRESS_SAVE_INTERVAL_MS;
+    this.maxBatchFailuresBeforeSkip = Math.max(
+      0,
+      parseInt(process.env.MAX_BATCH_FAILURES_BEFORE_SKIP || String(DEFAULT_MAX_BATCH_FAILURES_BEFORE_SKIP), 10)
+    );
     logger.info(`EventPoller instance created for ID: ${this.pollerId}, network: ${this.network}, RPC: ${this.rpcUrl}, Save Interval: ${this.progressSaveInterval / 1000 / 60} mins`);
   }
 
@@ -81,6 +97,7 @@ export class EventPoller {
 
     try {
       this.latestBlockHeight = await fetchLatestBlockHeight(this.rpcUrl);
+      this.lastTipOkAt = Date.now();
       logger.info(`[${this.pollerId}] Initialized. Current Polling Block: ${this.currentBlockHeight}, Latest Chain Block: ${this.latestBlockHeight}`);
     } catch (error) {
       logger.error(`[${this.pollerId}] Failed to fetch latest block height during initialization:`, error);
@@ -126,6 +143,7 @@ export class EventPoller {
 
       } catch (error) {
         logger.error(`[${this.pollerId}] Error in polling loop:`, error instanceof Error ? error.message : String(error));
+        await this.noteBatchFailure();
         await sleep(POLLING_INTERVAL * 2);
       }
     }
@@ -150,6 +168,73 @@ export class EventPoller {
       logger.info(`[${this.pollerId}] Successfully saved progress to DB. LastBlockHeight: ${this.lastSavedBlockHeight}`);
     } catch (error) {
       logger.error(`[${this.pollerId}] Failed to save progress to DB:`, error);
+    }
+  }
+
+  /**
+   * Records a batch failure. When the SAME batch start keeps failing AND the
+   * infrastructure is otherwise healthy (RPC tip fresh, Supabase reachable),
+   * the range is skipped so the poller can move on instead of stalling forever.
+   */
+  private async noteBatchFailure(): Promise<void> {
+    if (this.maxBatchFailuresBeforeSkip <= 0) {
+      return; // skipping disabled
+    }
+
+    const failedAt = this.currentBlockHeight;
+    if (this.failedBatchStart === failedAt) {
+      this.consecutiveBatchFailures++;
+    } else {
+      this.failedBatchStart = failedAt;
+      this.consecutiveBatchFailures = 1;
+    }
+
+    if (this.consecutiveBatchFailures < this.maxBatchFailuresBeforeSkip) {
+      return;
+    }
+
+    // Guard 1: only skip if the RPC tip was fetched successfully very recently,
+    // so an RPC/network outage (where every batch fails) never skips real blocks.
+    const tipHealthy = this.lastTipOkAt > 0 && (Date.now() - this.lastTipOkAt) < TIP_HEALTHY_WINDOW_MS;
+    if (!tipHealthy) {
+      logger.error(
+        `[${this.pollerId}] Batch @${failedAt} failed ${this.consecutiveBatchFailures}x but the RPC tip is stale; ` +
+        `NOT skipping (likely an RPC/network outage). Continuing to retry.`
+      );
+      return;
+    }
+
+    // Guard 2: only skip if Supabase is reachable, so a Supabase outage never
+    // skips real blocks.
+    if (!(await this.isSupabaseHealthy())) {
+      logger.error(
+        `[${this.pollerId}] Batch @${failedAt} failed ${this.consecutiveBatchFailures}x but Supabase is unreachable; ` +
+        `NOT skipping. Continuing to retry.`
+      );
+      return;
+    }
+
+    const skipTo = Math.min(failedAt + BATCH_SIZE, this.latestBlockHeight + 1);
+    if (skipTo <= failedAt) {
+      return;
+    }
+
+    logger.error(
+      `[${this.pollerId}] CRITICAL: batch @${failedAt} failed ${this.consecutiveBatchFailures}x with healthy infra. ` +
+      `Skipping blocks ${failedAt}-${skipTo - 1} to unblock the poller. Events in this range WILL BE MISSING.`
+    );
+    this.highestProcessedBlockInInterval = Math.max(this.highestProcessedBlockInInterval, skipTo - 1);
+    this.currentBlockHeight = skipTo;
+    this.consecutiveBatchFailures = 0;
+    this.failedBatchStart = 0;
+  }
+
+  private async isSupabaseHealthy(): Promise<boolean> {
+    try {
+      await supabaseDb.$queryRaw`SELECT 1`;
+      return true;
+    } catch {
+      return false;
     }
   }
 
@@ -204,12 +289,13 @@ export class EventPoller {
           if (sq !== 0) return sq;
           return String(a.type).localeCompare(String(b.type));
         });
-        const createdData = await supabaseDb.$transaction(async (tx) => { // Transaction for processing events
-            return await processEvents(events, tx);
-        }, {
-            timeout: 30000,
-            maxWait: 30000
-        });
+        // NOTE: processEvents writes swaps to SQLite and manages its OWN
+        // per-event sqlite transaction internally (the `tx` argument is
+        // vestigial). Wrapping the batch in a supabase $transaction was a
+        // no-op that held a Postgres/pooler connection open for the whole
+        // batch and made the poller FAIL the batch whenever Supabase was
+        // slow or unreachable — a silent full-pipeline stall. Removed.
+        const createdData = await processEvents(events, null);
         if (createdData) {
           this._newSqliteDataCreated = true;
         }
@@ -226,6 +312,7 @@ export class EventPoller {
     try {
       const BLOCK_DELAY = 10; // Margen de seguridad para que la API de eventos se sincronice
       const rawLatestBlockHeight = await fetchLatestBlockHeight(this.rpcUrl);
+      this.lastTipOkAt = Date.now();
       const newLatestBlockHeight = Math.max(0, rawLatestBlockHeight - BLOCK_DELAY);
 
       if (newLatestBlockHeight > this.latestBlockHeight) {

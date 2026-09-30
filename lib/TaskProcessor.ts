@@ -8,6 +8,7 @@ import { executeOhlcAggregation5m } from './tasks/executeOhlcAggregation5m';
 import { executeOhlcAggregation1h } from './tasks/executeOhlcAggregation1h';
 import { executeOhlcAggregation1d } from './tasks/executeOhlcAggregation1d';
 import { executeDbCleanup } from './tasks/executeDbCleanup';
+import { runFreshnessWatchdog } from './tasks/freshnessWatchdog';
 import { runRetryPass } from '@/app/indexer/retryJob';
 
 const logger = createLogger('task-processor');
@@ -62,16 +63,28 @@ export async function startScheduledTasks(setupConfig: SchedulerSetupConfig, pol
   if (setupConfig.mainnet) networksToProcess.push(setupConfig.mainnet);
 
   try {
-    // Creamos una promesa para cada red y las ejecutamos en paralelo
-    const syncPromises = networksToProcess.map(networkConfig => 
-      syncAnchorTokensFromSupabaseToSqlite(networkConfig.networkName)
+    // We sync anchor rules with allSettled so a transient Supabase hiccup at
+    // startup can NEVER abort scheduling of the whole pipeline (1m/5m/1h/1d).
+    // Anchors only affect canonical token ordering; running "degraded" is far
+    // better than a silent full stop of OHLC generation.
+    const syncResults = await Promise.allSettled(
+      networksToProcess.map(networkConfig =>
+        syncAnchorTokensFromSupabaseToSqlite(networkConfig.networkName)
+      )
     );
-    await Promise.all(syncPromises);
-    logger.info('Initial anchor token rules synchronization COMPLETED for all networks.');
+    const syncFailures = syncResults.filter(r => r.status === 'rejected');
+    if (syncFailures.length > 0) {
+      logger.error(
+        `Anchor token rules synchronization FAILED for ${syncFailures.length}/${networksToProcess.length} ` +
+        `network(s). Proceeding with scheduled tasks anyway (token ordering may be degraded).`,
+        syncFailures.map((r: any) => r.reason)
+      );
+    } else {
+      logger.info('Initial anchor token rules synchronization COMPLETED for all networks.');
+    }
   } catch (error) {
-    logger.error('CRITICAL: Failed to perform initial sync of anchor token rules. Tasks will not start.', error);
-    // Es crucial detener el proceso si las reglas no se pueden cargar, para evitar que el agregador trabaje con datos incorrectos.
-    return; 
+    // Defensive: Promise.allSettled should not throw, but never let this block scheduling.
+    logger.error('Unexpected error during anchor token rules synchronization. Proceeding with scheduled tasks anyway.', error);
   }
 
   if (networksToProcess.length === 0) {
@@ -122,6 +135,21 @@ export async function startScheduledTasks(setupConfig: SchedulerSetupConfig, pol
       activeJobs.set('global-retry_pass', job);
       logger.info('Scheduling failed-event retry pass with cron: 7,22,37,52 * * * *');
     }
+  }
+
+  // --- Freshness watchdog (every 10 min): makes a frozen pipeline VISIBLE ---
+  const watchdogTaskKey = 'global-freshness-watchdog';
+  if (!activeJobs.has(watchdogTaskKey)) {
+    const schedule = '*/10 * * * *';
+    logger.info(`Scheduling freshness watchdog with cron: ${schedule}`);
+    const job = cron.schedule(schedule, async () => {
+      try {
+        await runFreshnessWatchdog(networksToProcess.map(n => n.networkName));
+      } catch (e: any) {
+        logger.error(`Freshness watchdog cron failed: ${e.message}`);
+      }
+    }, { timezone: "UTC" });
+    activeJobs.set(watchdogTaskKey, job);
   }
 
   // --- Schedule Global Tasks ---
