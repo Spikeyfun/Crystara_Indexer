@@ -1,7 +1,5 @@
-import { sqliteDb } from '@/lib/prismadb';
+import { sqliteDb, supabaseDb } from '@/lib/prismadb';
 import { createLogger } from '@/app/indexer/utils';
-import { getDb, tokens_v2 } from '../drizzle';
-import { inArray } from 'drizzle-orm';
 
 const logger = createLogger('sync-rules-from-supabase');
 
@@ -20,12 +18,10 @@ export async function syncAnchorTokensFromSupabaseToSqlite(network: string) {
     if (tokenAddresses.length > 0) {
       logger.info(`[${network}] Found ${tokenAddresses.length} unique tokens associated with anchor tokens. Syncing them first...`);
       
-      const db = await getDb();
       // 1. Obtener la información completa de los tokens desde Supabase V2
-      const tokensFromSupabase = await db.select()
-        .from(tokens_v2)
-        // @ts-ignore
-        .where(inArray(tokens_v2.id, tokenAddresses));
+      const tokensFromSupabase = await supabaseDb.tokensV2.findMany({
+        where: { id: { in: tokenAddresses } },
+      });
 
       // 2. Sincronizar estos tokens en la base de datos SQLite local
       const tokenSyncPromises = tokensFromSupabase.map((token: any) =>
