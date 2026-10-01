@@ -143,7 +143,7 @@ export class EventPoller {
 
       } catch (error) {
         logger.error(`[${this.pollerId}] Error in polling loop:`, error instanceof Error ? error.message : String(error));
-        await this.noteBatchFailure();
+        await this.noteBatchFailure(error);
         await sleep(POLLING_INTERVAL * 2);
       }
     }
@@ -175,10 +175,24 @@ export class EventPoller {
    * Records a batch failure. When the SAME batch start keeps failing AND the
    * infrastructure is otherwise healthy (RPC tip fresh, Supabase reachable),
    * the range is skipped so the poller can move on instead of stalling forever.
+   *
+   * EXCEPT when the failure is the events API not having indexed the block yet
+   * (404 / `isNotIndexed`): that data WILL become available, so skipping would
+   * silently drop real AMM events. In that case we only wait and retry.
    */
-  private async noteBatchFailure(): Promise<void> {
+  private async noteBatchFailure(error?: any): Promise<void> {
     if (this.maxBatchFailuresBeforeSkip <= 0) {
       return; // skipping disabled
+    }
+
+    // API lag != broken batch. Never count it toward the skip: the events exist,
+    // the RPC just hasn't indexed that block range yet. Skipping here loses swaps.
+    if (error && (error as any).isNotIndexed) {
+      logger.warn(
+        `[${this.pollerId}] Batch @${this.currentBlockHeight} not indexed yet by the events API ` +
+        `(RPC lag). Waiting — NOT skipping (skipping would lose real events).`
+      );
+      return;
     }
 
     const failedAt = this.currentBlockHeight;

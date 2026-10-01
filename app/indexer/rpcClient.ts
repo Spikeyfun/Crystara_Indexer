@@ -75,6 +75,23 @@ export const EVENT_TYPES_TO_FETCH = [
   `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::sentinel::ProtocolUnpaused`,
 ];
 
+/**
+ * Tipos cuyo fallo NO se puede silenciar: si falta uno de estos, el dataset del
+ * AMM queda incompleto (swap/ reservas perdidas) y el poller DEBE reintentar el
+ * rango en vez de avanzar el cursor.
+ *
+ * Todos los demás (DAO) son "best-effort": se reenvían a un webhook externo, no
+ * se guardan localmente, y un fallo de fetch transitorio no debe bloquear la
+ * indexación del AMM. Antes iban todos juntos en un `Promise.all`, así que un
+ * solo blip de un tipo DAO (p.ej. `petra::DaoCreated`, que en la mayoría de los
+ * rangos no tiene eventos) abortaba el fetch de los swaps y congelaba el poller.
+ */
+const CRITICAL_EVENT_TYPES = new Set<string>([
+  `${SPIKE_AMM_ADDRESS}::${SPIKE_AMM_MODULE}::SwapEvent`,
+  `${SPIKE_AMM_ADDRESS}::${SPIKE_AMM_MODULE}::SyncEvent`,
+  `${DEXLYN_AMM_ADDRESS}::${DEXLYN_AMM_MODULE}::SwapEvent`,
+]);
+
 export async function fetchBlockEvents(
   rpcUrl: string,
   network: string,
@@ -106,6 +123,10 @@ async function fetchEventsByTypesV3(
     let nextCursor: string | null = null;
     let keepPaginating = true;
     let pagesFetched = 0;
+    // Último error de la página, para saber si el fallo terminal fue un 404
+    // ("bloque aún no indexado por el API de eventos", es decir lag del RPC y no
+    // un lote roto). El poller usa esta marca para NO saltar el rango.
+    let lastPageError: any = null;
     const MAX_PAGES_PER_TYPE = 200; // guard anti-bucle (200 páginas × 100 = 20k eventos máx)
 
     while (keepPaginating) {
@@ -197,13 +218,19 @@ async function fetchEventsByTypesV3(
           successInThisPage = true;
 
         } catch (error: any) {
+          lastPageError = error;
           attempt++;
           const delay = RETRY_DELAY * Math.pow(2, attempt);
           if (attempt < MAX_RETRIES) {
              await sleep(delay);
           } else {
              logger.error(`Max retries reached for ${eventType}. Throwing error to abort batch.`);
-             throw new Error(`Max retries reached for ${eventType}`);
+             const exhausted: any = new Error(`Max retries reached for ${eventType}`);
+             // Distinguir "el API todavía no indexó este bloque" (lag del RPC) de
+             // un fallo real. El poller NO debe saltar bloques por un 404: esos
+             // eventos SÍ van a existir, saltar el rango los perdería.
+             exhausted.isNotIndexed = /not indexed|\(404\)|\b404\b/i.test(String(lastPageError?.message || ''));
+             throw exhausted;
           }
         }
       }
@@ -211,11 +238,37 @@ async function fetchEventsByTypesV3(
     return allFetchedForType;
   };
 
+  const failedBestEffort: string[] = [];
+
   for (let i = 0; i < eventTypes.length; i += CONCURRENCY_LIMIT) {
     const batch = eventTypes.slice(i, i + CONCURRENCY_LIMIT);
-    const promises = batch.map(eventType => singleEventTypeFetch(eventType));
-    const results = await Promise.all(promises);
-    results.forEach(eventList => allFetchedEvents.push(...eventList));
+    const settled = await Promise.allSettled(
+      batch.map(eventType => singleEventTypeFetch(eventType))
+    );
+
+    settled.forEach((result, idx) => {
+      const eventType = batch[idx];
+      if (result.status === 'fulfilled') {
+        allFetchedEvents.push(...result.value);
+        return;
+      }
+      // Rechazado.
+      if (CRITICAL_EVENT_TYPES.has(eventType)) {
+        // AMM: no se puede tragar el fallo. Abortar para que el poller reintente
+        // el MISMO rango y no se pierda ningún swap.
+        throw result.reason instanceof Error ? result.reason : new Error(String(result.reason));
+      }
+      // DAO (best-effort): registrar y continuar. El AMM no se ve afectado.
+      failedBestEffort.push(eventType);
+    });
+  }
+
+  if (failedBestEffort.length > 0) {
+    const shortTypes = failedBestEffort.map(t => t.split('::').slice(-2).join('::'));
+    logger.warn(
+      `[fetch] ${failedBestEffort.length} tipo(s) best-effort fallaron en bloques ${startBlock}-${endBlock}. ` +
+      `Se omiten para no bloquear el AMM (los eventos DAO de este rango pueden requerir backfill): ${shortTypes.join(', ')}`
+    );
   }
 
   return allFetchedEvents;
