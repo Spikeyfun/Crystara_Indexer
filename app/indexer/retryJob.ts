@@ -30,7 +30,10 @@ import { createLogger } from './utils';
 const logger = createLogger('retryJob');
 
 const MAX_FAILURES_PER_PASS = 200;
-const MAX_RANGE_SPAN = 400; // bloques por fetch coalescido (evita rangos gigantes)
+// Debe ser MENOR que el `MAX_BLOCK_RANGE` (100) de rpcClient: ese fetch CLAMPA los
+// rangos mayores sin avisar al llamador. Con 90 mantenemos margen para el ±1 que
+// añade retryGroup sin cruzar el límite.
+const MAX_RANGE_SPAN = 90;
 
 interface FailureRow {
   network: string;
@@ -110,7 +113,13 @@ async function retryGroup(g: FailureGroup): Promise<void> {
     ? (process.env.SUPRA_RPC_URL_MAINNET || 'https://rpc-mainnet.supra.com/rpc/v1')
     : (process.env.SUPRA_RPC_URL_TESTNET || 'https://rpc-testnet.supra.com/rpc/v1');
 
-  // Coalescer blockHeights contiguos (gap ≤ 2) en rangos acotados
+  // Coalescer blockHeights contiguos (gap ≤ 2) en rangos acotados.
+  //
+  // IMPORTANTE — `MAX_RANGE_SPAN` no puede superar el `MAX_BLOCK_RANGE` (100) del
+  // RPC: `fetchBlockEvents` CLAMPA los rangos mayores sin avisar al llamador, así
+  // que pedir 400 devolvía solo los primeros 100 y los 300 restantes se perdían
+  // en silencio (el retryJob creía haberlos reprocesado). Por eso cada rango se
+  // divide en trozos de `MAX_RANGE_SPAN` antes de pedir nada.
   const sorted = [...g.blocks].sort((a, b) => a - b);
   const ranges: Array<[number, number]> = [];
   if (sorted.length > 0) {
@@ -125,11 +134,19 @@ async function retryGroup(g: FailureGroup): Promise<void> {
   // Huecos: re-fetch del rango completo (no solo bloques sueltos).
   for (const [s, e] of g.gapRanges) ranges.push([s, e]);
 
-  if (ranges.length === 0) return;
+  // Trocear TODOS los rangos (normal y de hueco) para no exceder el límite del RPC.
+  const safeRanges: Array<[number, number]> = [];
+  for (const [s, e] of ranges) {
+    for (let cur = s; cur <= e; cur += MAX_RANGE_SPAN) {
+      safeRanges.push([cur, Math.min(cur + MAX_RANGE_SPAN - 1, e)]);
+    }
+  }
+
+  if (safeRanges.length === 0) return;
 
   let reprocessedEvents: RpcEvent[] = [];
   const bestEffortFailedInRanges: string[] = [];
-  for (const [rangeStart, rangeEnd] of ranges) {
+  for (const [rangeStart, rangeEnd] of safeRanges) {
     // Ampliar el rango ±1 por seguridad de límites del API de eventos
     const s = Math.max(1, rangeStart - 1);
     const e = rangeEnd + 1;

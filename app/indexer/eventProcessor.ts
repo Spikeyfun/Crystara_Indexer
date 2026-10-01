@@ -187,6 +187,9 @@ export async function processEvents(events: RpcEvent[], tx: any): Promise<boolea
             data: {
               error: errorMessage.substring(0, 1000),
               processed: false,
+              // Ver markDaoBatchFailed: refresca updatedAt para que un evento
+              // que sigue fallando no expire de la ventana de 24h del retryJob.
+              updatedAt: new Date(),
             },
         });
         logger.warn(`Error for event ${eventUniqueIdentifierForLog} has been logged to EventTracking.`);
@@ -247,7 +250,14 @@ async function markDaoBatchFailed(batch: RpcEvent[], errorMessage: string): Prom
           sequenceNumber: e.processedSequenceNumber,
           eventType: e.type,
         },
-        data: { processed: false, error: errorMessage.substring(0, 1000) },
+        // `updatedAt` se refresca a propósito: EventTracking no tiene @updatedAt,
+        // así que Prisma solo lo setea al INSERTAR. Sin esto, un evento que
+        // sigue fallando mantiene su updatedAt original y, a las 24h, el
+        // retryJob deja de verlo (filtra por `updatedAt >= now-24h`) — el evento
+        // queda huérfano sin que nadie lo reintente más. Refrescarlo hace que
+        // la ventana signifique "24h sin tocarse" en vez de "24h desde el
+        // primer fallo", que es la semántica correcta para reintentos.
+        data: { processed: false, error: errorMessage.substring(0, 1000), updatedAt: new Date() },
       });
     } catch (err: any) {
       logger.error(`Could not mark DAO event failed (${e.type}): ${err.message}`);

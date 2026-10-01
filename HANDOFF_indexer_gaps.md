@@ -110,11 +110,45 @@ no tocar el deploy ni el schema.
 - **Cierra el hueco solo si el re-fetch salió limpio.** Si el re-fetch vuelve a fallar en
   los tipos DAO, el hueco queda abierto para el siguiente pass (si no, se cerraría un hueco
   que sigue incompleto).
+- **Trocea los rangos** en trozos de ≤ `MAX_RANGE_SPAN` (90) antes de pedir nada.
 
 **Validado localmente:** el write/lectura/parseo del marcador contra la DB SQLite real
-(crear → leer → parsear `"1000-1050"` → `1000..1050` → borrar). **No** se ejecutó el
-`runRetryPass` completo a propósito, porque reprocesar dispararía eventos al webhook de
-**producción** (`daos.hoglet.xyz`) — eso se prueba en el VPS.
+(crear → leer → parsear `"1000-1050"` → `1000..1050` → borrar). El troceado de rangos se
+verificó con 4 casos (hueco de 150, de 400, el peor caso del coalescer con 200 fallos, y
+uno chico) — ninguno excede el límite del RPC y la cobertura de bloques es completa.
+**No** se ejecutó el `runRetryPass` completo a propósito, porque reprocesar dispararía
+eventos al webhook de **producción** (`daos.hoglet.xyz`) — eso se prueba en el VPS.
+
+### 🐛 Bug latente encontrado y corregido: truncado silencioso de rangos
+
+Al revisar la eficiencia encontré un bug **preexistente** (y que agravaba el replay de
+huecos). Dos constantes no coincidían:
+
+```ts
+retryJob.ts  MAX_RANGE_SPAN  = 400   // lo que el retryJob pedía
+rpcClient.ts MAX_BLOCK_RANGE = 100   // lo que el RPC realmente devolvía
+```
+
+`fetchBlockEvents` **clampa** los rangos mayores a 100 **sin avisar al llamador**:
+
+```
+retryJob pide bloques 1000-1400 (400)
+  → rpcClient: "exceeds MAX_BLOCK_RANGE 100. Clamping."
+  → devuelve SOLO 1000-1100
+  → el retryJob cree que reprocesó todo
+  → 1101-1400: nunca vistos, nunca marcados  ← PÉRDIDA SILENCIOSA
+```
+
+Y era peor de lo que parecía: `MAX_RANGE_SPAN` **ni siquiera se usaba** — el coalescer
+agrupaba por `gap ≤ 2` sin tope, así que 200 fallos separados por 2 bloques se convertían
+en un rango de 400. La constante era decorativa.
+
+Para los huecos era especialmente dañino: el `retryJob` marcaba el hueco como
+`processed=true` ("cerrado") habiendo recuperado **solo una parte**.
+
+**Corrección:** `MAX_RANGE_SPAN = 90` (deja margen para el ±1 que añade el propio retryJob)
+y **troceado explícito** de todos los rangos — normales y de hueco — antes de pedir nada.
+Verificado con 4 casos: 0 rangos exceden el límite y la cobertura de bloques es completa.
 
 ---
 
@@ -261,14 +295,65 @@ Si quieren recuperar ese histórico:
 
 ## 4. Resumen de archivos
 
+### En `amm_indexer` (este repo)
+
 ```
 app/indexer/gapLog.ts       NUEVO  — registro durable de huecos (reusa EventTracking)
 app/indexer/rpcClient.ts           — allSettled, tipos críticos vs best-effort, isNotIndexed
 app/indexer/poller.ts              — no saltar en 404, registrar huecos (skip y fetch DAO)
 app/indexer/retryJob.ts            — replay de huecos, cierre condicional
+app/indexer/eventProcessor.ts      — refresca updatedAt al marcar un evento como fallido
 ```
 
-Sin cambios en: schemas, migraciones, `docker-compose`, contratos, ni el worker de D1.
+### En `dao-hoglet-cloudflare/Full-stack` (repo del webhook — deploy aparte)
+
+```
+src/app/api/indexer/webhook/route.ts   — tipo no manejado devuelve 501 (antes 200 + pérdida silenciosa)
+```
+
+> **Ojo:** este segundo cambio está en **otro repositorio** y **otro deploy**. Si solo se
+> despliega el `amm_indexer`, el fix del webhook no entra. Y al revés también.
+
+---
+
+## 4b. Por qué el cambio del webhook (501) es la mitad del fix
+
+Los dos cambios son complementarios. Uno sin el otro no arregla nada:
+
+| Cambio | Qué arregla |
+|---|---|
+| **A** — webhook responde 501 a tipos no manejados | Que el evento **no se marque como procesado** cuando en realidad no se procesó |
+| **B** — `updatedAt` se refresca en cada reintento | Que el evento **siga reintentándose** y no expire a las 24h |
+
+**El detalle que hace B indispensable.** `EventTracking.updatedAt` es
+`DateTime @default(now())` — **sin** `@updatedAt`. Prisma solo lo setea al **insertar**,
+nunca al actualizar. Y el `retryJob` filtra:
+
+```ts
+where: { processed: false, updatedAt: { gte: now - 24h } }   // retryJob.ts:50
+```
+
+Sin B: el evento se inserta a las 10:00 → se reintenta a las 10:05, 10:10… pero
+`updatedAt` **sigue siendo 10:00** → a las 10:00 del día siguiente cae fuera de la ventana
+y **el retryJob deja de verlo para siempre**. Queda huérfano en la DB: evidencia, pero
+nadie lo reintenta más.
+
+Con B: `updatedAt` se renueva en cada intento → la ventana significa *"24h sin tocarse"*,
+que es la semántica correcta.
+
+**Cómo saber en una semana qué no se procesó** (esto es lo que preguntabas):
+
+```sql
+-- Eventos pendientes (se reintentan cada 5 min)
+SELECT eventType, COUNT(*) AS veces, MIN(createdAt) AS primer_fallo, MAX(error)
+FROM EventTracking
+WHERE processed = 0
+GROUP BY eventType
+ORDER BY veces DESC;
+```
+
+Un `eventType` con muchas filas y `updatedAt` reciente = algo que **sigue fallando ahora**.
+Ese es el signal para investigar.
 
 ---
 
