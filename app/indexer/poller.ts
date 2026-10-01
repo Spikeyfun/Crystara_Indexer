@@ -1,4 +1,5 @@
-import { fetchBlockEvents, fetchLatestBlockHeight } from './rpcClient';
+import { fetchBlockEventsDetailed, fetchLatestBlockHeight } from './rpcClient';
+import { recordEventGap } from './gapLog';
 import { RpcEvent } from './types'; // Import RpcEvent from types.ts
 import { processEvents } from './eventProcessor';
 import { sleep, createLogger } from './utils';
@@ -235,8 +236,12 @@ export class EventPoller {
 
     logger.error(
       `[${this.pollerId}] CRITICAL: batch @${failedAt} failed ${this.consecutiveBatchFailures}x with healthy infra. ` +
-      `Skipping blocks ${failedAt}-${skipTo - 1} to unblock the poller. Events in this range WILL BE MISSING.`
+      `Skipping blocks ${failedAt}-${skipTo - 1} to unblock the poller. ` +
+      `El rango NO se pierde: queda registrado para replay (retryJob).`
     );
+    // Durable antes de avanzar el cursor: si el proceso muere entre el skip y el
+    // record, perderíamos el rango para siempre.
+    await recordEventGap(this.pollerId, failedAt, skipTo - 1, `BATCH_SKIP tras ${this.consecutiveBatchFailures} fallos`);
     this.highestProcessedBlockInInterval = Math.max(this.highestProcessedBlockInInterval, skipTo - 1);
     this.currentBlockHeight = skipTo;
     this.consecutiveBatchFailures = 0;
@@ -288,7 +293,21 @@ export class EventPoller {
 
     let events: RpcEvent[] = [];
     try {
-      events = await fetchBlockEvents(this.rpcUrl, this.pollerId, this.currentBlockHeight, endBlock + 1);
+      const { events: fetchedEvents, failedBestEffort } = await fetchBlockEventsDetailed(
+        this.rpcUrl, this.pollerId, this.currentBlockHeight, endBlock + 1
+      );
+      events = fetchedEvents;
+
+      // Tipos DAO que no se pudieron fetchear: el AMM igual avanza, pero el
+      // rango queda registrado para replay (si no, se perderían en silencio).
+      if (failedBestEffort.length > 0) {
+        await recordEventGap(
+          this.pollerId,
+          this.currentBlockHeight,
+          endBlock,
+          `best-effort fetch: ${failedBestEffort.map(t => t.split('::').slice(-2).join('::')).join(', ')}`
+        );
+      }
       
       if (events.length > 0) {
         logger.info(`[${this.pollerId}] Fetched ${events.length} events from blocks ${this.currentBlockHeight}-${endBlock}.`);

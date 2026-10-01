@@ -92,12 +92,22 @@ const CRITICAL_EVENT_TYPES = new Set<string>([
   `${DEXLYN_AMM_ADDRESS}::${DEXLYN_AMM_MODULE}::SwapEvent`,
 ]);
 
-export async function fetchBlockEvents(
+/**
+ * Resultado del fetch: los eventos recolectados y la lista de tipos
+ * "best-effort" que fallaron (para poder registrar el hueco y, en el replay de
+ * retryJob, NO cerrarlo mientras siga fallando).
+ */
+export interface FetchBlockEventsResult {
+  events: RpcEvent[];
+  failedBestEffort: string[];
+}
+
+export async function fetchBlockEventsDetailed(
   rpcUrl: string,
   network: string,
   startBlock: number,
   endBlock: number
-): Promise<RpcEvent[]> {
+): Promise<FetchBlockEventsResult> {
   if (endBlock - startBlock > MAX_BLOCK_RANGE) {
     logger.warn(`Requested block range ${startBlock}-${endBlock} exceeds MAX_BLOCK_RANGE ${MAX_BLOCK_RANGE}. Clamping.`)
     endBlock = startBlock + MAX_BLOCK_RANGE
@@ -109,13 +119,23 @@ export async function fetchBlockEvents(
   return await fetchEventsByTypesV3(v3Url, network, EVENT_TYPES_TO_FETCH, startBlock, endBlock);
 }
 
+/** Compatibilidad: misma firma de antes, devuelve solo los eventos. */
+export async function fetchBlockEvents(
+  rpcUrl: string,
+  network: string,
+  startBlock: number,
+  endBlock: number
+): Promise<RpcEvent[]> {
+  return (await fetchBlockEventsDetailed(rpcUrl, network, startBlock, endBlock)).events;
+}
+
 async function fetchEventsByTypesV3(
   rpcUrl: string,
   network: string,
   eventTypes: string[],
   startBlock: number,
   endBlock: number
-): Promise<RpcEvent[]> {
+): Promise<FetchBlockEventsResult> {
   const allFetchedEvents: RpcEvent[] = [];
 
   const singleEventTypeFetch = async (eventType: string): Promise<RpcEvent[]> => {
@@ -267,11 +287,11 @@ async function fetchEventsByTypesV3(
     const shortTypes = failedBestEffort.map(t => t.split('::').slice(-2).join('::'));
     logger.warn(
       `[fetch] ${failedBestEffort.length} tipo(s) best-effort fallaron en bloques ${startBlock}-${endBlock}. ` +
-      `Se omiten para no bloquear el AMM (los eventos DAO de este rango pueden requerir backfill): ${shortTypes.join(', ')}`
+      `Se omiten para no bloquear el AMM; el llamador decide si registra el rango para replay: ${shortTypes.join(', ')}`
     );
   }
 
-  return allFetchedEvents;
+  return { events: allFetchedEvents, failedBestEffort };
 }
 
 async function sleep(ms: number) {

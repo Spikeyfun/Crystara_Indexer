@@ -21,7 +21,8 @@
  */
 
 import { sqliteDb } from '@/lib/prismadb';
-import { fetchBlockEvents } from './rpcClient';
+import { fetchBlockEventsDetailed } from './rpcClient';
+import { GAP_MARKER } from './gapLog';
 import { RpcEvent } from './types';
 import { processEvents } from './eventProcessor';
 import { createLogger } from './utils';
@@ -66,10 +67,23 @@ export async function runRetryPass(): Promise<void> {
       if (!f.network || !f.blockHeight) continue; // eventType ya no es requerido
       let g = groups.get(f.network);
       if (!g) {
-        g = { network: f.network, blocks: new Set() };
+        g = { network: f.network, blocks: new Set(), gapRanges: [] };
         groups.set(f.network, g);
       }
       g.blocks.add(f.blockHeight.toNumber?.() ?? Number(f.blockHeight));
+
+      // Marcador de hueco: un rango que el poller saltó o cuyo fetch best-effort
+      // falló. Se codifica como sequenceNumber "start-end".
+      if (f.transactionHash === GAP_MARKER) {
+        const m = String(f.sequenceNumber || '').match(/^(\d+)-(\d+)$/);
+        if (m) {
+          const s = Number(m[1]);
+          const e = Number(m[2]);
+          if (Number.isFinite(s) && Number.isFinite(e) && e >= s) {
+            g.gapRanges.push([s, e]);
+          }
+        }
+      }
     }
 
     for (const g of groups.values()) {
@@ -87,6 +101,8 @@ export async function runRetryPass(): Promise<void> {
 interface FailureGroup {
   network: string;
   blocks: Set<number>;
+  /** Rangos [start, end] de huecos a re-fetchear completos (skip / fallo de fetch). */
+  gapRanges: Array<[number, number]>;
 }
 
 async function retryGroup(g: FailureGroup): Promise<void> {
@@ -97,29 +113,40 @@ async function retryGroup(g: FailureGroup): Promise<void> {
   // Coalescer blockHeights contiguos (gap ≤ 2) en rangos acotados
   const sorted = [...g.blocks].sort((a, b) => a - b);
   const ranges: Array<[number, number]> = [];
-  let start = sorted[0], prev = sorted[0];
-  for (let i = 1; i < sorted.length; i++) {
-    if (sorted[i] - prev <= 2) { prev = sorted[i]; continue; }
+  if (sorted.length > 0) {
+    let start = sorted[0], prev = sorted[0];
+    for (let i = 1; i < sorted.length; i++) {
+      if (sorted[i] - prev <= 2) { prev = sorted[i]; continue; }
+      ranges.push([start, prev]);
+      start = prev = sorted[i];
+    }
     ranges.push([start, prev]);
-    start = prev = sorted[i];
   }
-  ranges.push([start, prev]);
+  // Huecos: re-fetch del rango completo (no solo bloques sueltos).
+  for (const [s, e] of g.gapRanges) ranges.push([s, e]);
+
+  if (ranges.length === 0) return;
 
   let reprocessedEvents: RpcEvent[] = [];
+  const bestEffortFailedInRanges: string[] = [];
   for (const [rangeStart, rangeEnd] of ranges) {
     // Ampliar el rango ±1 por seguridad de límites del API de eventos
     const s = Math.max(1, rangeStart - 1);
     const e = rangeEnd + 1;
     logger.info(`Retry: re-fetch bloques ${s}-${e} [${g.network}]`);
-    const events = await fetchBlockEvents(rpcUrl, `retry-${g.network}`, s, e);
+    const { events, failedBestEffort } = await fetchBlockEventsDetailed(rpcUrl, `retry-${g.network}`, s, e);
     reprocessedEvents.push(...events);
+    bestEffortFailedInRanges.push(...failedBestEffort);
     await new Promise(r => setTimeout(r, 300)); // pacing anti-429
   }
 
+  const inGap = (bh: number) => g.gapRanges.some(([s, e]) => bh >= s && bh <= e);
+
   // Fallos pendientes del grupo: cualquier tipo en los bloques afectados.
   // Acotado al rango para no cargar todos los fallos de la red en cada pass.
-  const minBlock = BigInt(sorted[0]);
-  const maxBlock = BigInt(sorted[sorted.length - 1]);
+  const allBlocks = [...sorted, ...g.gapRanges.flat()];
+  const minBlock = BigInt(Math.min(...allBlocks));
+  const maxBlock = BigInt(Math.max(...allBlocks));
   const pendingRows = await sqliteDb.eventTracking.findMany({
     where: {
       network: g.network,
@@ -129,15 +156,20 @@ async function retryGroup(g: FailureGroup): Promise<void> {
     select: { transactionHash: true, sequenceNumber: true, eventType: true },
   });
   const wanted = new Set(
-    pendingRows.map(f => `${f.transactionHash}|${f.sequenceNumber}|${f.eventType}`)
+    pendingRows
+      .filter(f => f.transactionHash !== GAP_MARKER) // los huecos no son eventos exactos
+      .map(f => `${f.transactionHash}|${f.sequenceNumber}|${f.eventType}`)
   );
 
-  // Re-procesar SOLO los eventos de los bloques con fallos, en ORDEN real de
-  // ejecución (blockHeight → sequence_number → type), igual que el poller.
-  // Esto resuelve las carreras del mismo bloque en un único pass.
+  // Re-procesar en ORDEN real de ejecución (blockHeight → sequence_number → type).
+  // Dentro de un hueco: TODO el rango (no hay "fallo exacto" que filtrar; el
+  // processEvents es idempotente, los ya procesados se saltan solos).
+  // Fuera de un hueco: SOLO los eventos con fallo registrado (comportamiento previo).
   const matched = reprocessedEvents
     .filter(ev => {
-      if (!g.blocks.has(Number(ev.blockHeight || 0))) return false;
+      const bh = Number(ev.blockHeight || 0);
+      if (inGap(bh)) return true;
+      if (!g.blocks.has(bh)) return false;
       const hash = ev.transactionHash || `unknown_tx_hash_for_${ev.type}_block_${ev.blockHeight}`;
       const seq = ev.sequence_number || `unknown_seq_num_for_${ev.type}_block_${ev.blockHeight}`;
       return wanted.has(`${hash}|${seq}|${ev.type}`);
@@ -150,12 +182,32 @@ async function retryGroup(g: FailureGroup): Promise<void> {
       return String(a.type).localeCompare(String(b.type));
     });
 
-  if (matched.length === 0) {
-    logger.info(`Retry: [${g.network}] rango re-fetch sin match (${reprocessedEvents.length} eventos, ${g.blocks.size} bloques). Los fallos persistirán para el próximo pass.`);
-    return;
+  if (matched.length > 0) {
+    logger.info(`Retry: re-procesando ${matched.length} eventos (${g.blocks.size} bloques, ${g.gapRanges.length} huecos) [${g.network}]`);
+    await processEvents(matched, null);
+  } else {
+    logger.info(`Retry: [${g.network}] sin eventos a re-procesar (${reprocessedEvents.length} fetcheados, ${g.gapRanges.length} huecos).`);
   }
 
-  logger.info(`Retry: re-procesando ${matched.length} eventos en ${g.blocks.size} bloques [${g.network}]`);
-  await processEvents(matched, null);
+  // Cerrar los huecos SOLO si el re-fetch no volvió a fallar en best-effort.
+  // Si volvió a fallar, el hueco debe seguir abierto para el próximo pass —
+  // cerrarlo aquí lo perdería en silencio.
+  if (g.gapRanges.length > 0) {
+    if (bestEffortFailedInRanges.length === 0) {
+      await sqliteDb.eventTracking.updateMany({
+        where: {
+          network: g.network,
+          transactionHash: GAP_MARKER,
+          processed: false,
+          blockHeight: { gte: minBlock, lte: maxBlock },
+        },
+        data: { processed: true, error: null },
+      });
+      logger.info(`Retry: [${g.network}] ${g.gapRanges.length} hueco(s) cerrados.`);
+    } else {
+      logger.warn(`Retry: [${g.network}] huecos NO cerrados — el re-fetch volvió a fallar en ${bestEffortFailedInRanges.length} tipo(s).`);
+    }
+  }
+
   logger.info(`Retry: pass de [${g.network}] completado.`);
 }
