@@ -5,6 +5,25 @@
 
 ---
 
+## 0. TL;DR para el dev
+
+**Es un `git pull` + deploy.** El código está hecho, compila limpio (0 errores nuevos) y
+probado a nivel de base de datos. Después, **una sola verificación de 30 segundos** (§3 Tarea 2).
+
+```
+1. git pull && pnpm install && docker compose up -d --build
+2. docker compose logs -f --tail 200      # mirar la tabla de logs en §3 Tarea 1
+3. VERIFICAR EL .db (lo importante):      # §3 Tarea 2 — 3 comandos
+```
+
+**Lo único que puede salir mal** es que el archivo SQLite no esté en un volumen persistente
+(§3 Tarea 2). Si tu compose ya lo monta —que es lo más probable, porque si no el indexador
+no habría arrancado nunca— **no tenés que tocar nada, solo verificar**.
+
+Nada de esto requiere cambios de schema, migraciones ni tocar el AMM.
+
+---
+
 ## 1. Resumen: qué estaba pasando
 
 El dev reportó este error repetido en los logs del `amm_indexer`:
@@ -150,35 +169,64 @@ contra la carpeta del proyecto.
 - **todo el OHLC 1m** — que **no existe en Supabase** (verificado: Supra tiene 1d/1h/5m,
   y `1m → 0 filas`). El spike monitor del bot de Telegram lee el 1m de ahí.
 
-**Cómo verificarlo:**
+> **Dato confirmado en el repo:** `.gitignore` tiene `*.db`, y `git ls-files` confirma que
+> `prisma/sqlite/dev.db` **no está versionado**. El `Dockerfile.indexer` hace `COPY . .`,
+> así que **el `.db` tampoco entra al contenedor desde git**: en el contenedor nace de cero
+> en cada build. Por eso el indexador hoy debe estar funcionando o bien (a) porque el compose
+> del VPS monta un volumen con un `.db` ya inicializado, o (b) porque alguien corrió
+> `prisma db push` a mano una vez.
+>
+> Además el `CMD` es `npx tsx scripts/run-indexer.ts`, que **no** corre `prisma db push`
+> para el schema sqlite. Si tu compose NO monta un `.db` inicializado, las tablas no
+> existirían y el indexador no arrancaría — así que **si hoy funciona, es que algo de esto
+> ya está resuelto en el compose real**. Por eso la instrucción es *verificar*, no *cambiar*.
+
+**Cómo verificarlo (30 segundos, solo lectura):**
 
 ```bash
-# 1. Ver los volúmenes declarados en el compose real
-cat docker-compose.yml            # (en el repo está vacío; el real está en el VPS)
+# 1. ¿Qué volúmenes declara el compose real?
+cd /ruta/al/proyecto/amm_indexer
+docker compose config | grep -A3 volumes
 
-# 2. Ver qué archivo tiene abierto el proceso
-docker exec <container> ls -la /app/*.db
-docker exec <container> sh -c 'ls -la /app/dev.db'
+# 2. ¿Qué .db tiene abierto el proceso EN VIVO?
+docker compose exec <servicio> sh -c 'ls -la /app/*.db /app/prisma/sqlite/*.db 2>/dev/null'
 
-# 3. Confirmar que sobrevive a un restart
-docker compose restart <servicio>
-docker exec <container> sh -c 'ls -la /app/dev.db'
+# 3. La prueba definitiva: ¿el archivo tiene datos y pesa?
+docker compose exec <servicio> sh -c 'ls -la $(find /app -name "*.db" 2>/dev/null | head -1)'
 ```
 
-**Si NO está en un volumen**, agregar un bind mount al compose (junto a los que ya hay) y
-documentarlo acá:
+Un `.db` sano pesa varios MB y **crece**. Si ves un archivo de 0–20 KB, o que no cambia de
+tamaño entre dos consultas, estás frente a una base vacía → **Tarea 2bis**.
+
+**Tarea 2bis — solo si la prueba da archivo vacío/pequeño:**
+
+Agregar un bind mount al compose (junto a los que ya tengas) y pre-inicializar el `.db`:
 
 ```yaml
 volumes:
-  - ./data:/app/data          # ← el .db debería vivir acá
+  - ./data:/app/data        # el .db debe vivir acá
 ```
 
-y cambiar la ruta del schema (o `STATE_DIR`-style) para que apunte a `/app/data/dev.db`.
-Esto es un cambio de deploy — **no lo apliqué**; lo dejo a criterio del dev.
+y en el schema cambiar `url = "file:./dev.db"` por `url = "file:/app/data/dev.db"`, o mejor,
+volverlo configurable:
 
-> Nota: el spike monitor del bot depende de este mismo `dev.db` (lo lee por
-> `INDEXER_SQLITE_PATH`). Si el archivo se regenera vacío, el bot simplemente no tiene
-> velas 1m y no alerta.
+```prisma
+datasource db {
+  provider = "sqlite"
+  url      = env("SQLITE_DATABASE_URL")   # y setear SQLITE_DATABASE_URL=file:/app/data/dev.db
+}
+```
+
+Luego, **una sola vez**, inicializar las tablas dentro del volumen:
+
+```bash
+docker compose exec <servicio> sh -c 'npx prisma db push --schema=./prisma/sqlite/schema.prisma'
+```
+
+> **No apliqué este cambio a propósito.** El `docker-compose.yml` del repo está vacío (el real
+> vive en el VPS) y `*.db` está gitignored, así que cualquier cambio de deploy aquí sería a
+> ciegas. **Si tu compose ya monta el volumen y todo funciona, no toques nada** — solo
+> verificá el punto 3.
 
 ### Tarea 3 — Confirmar `SUPRA_RPC_URL_MAINNET`
 
