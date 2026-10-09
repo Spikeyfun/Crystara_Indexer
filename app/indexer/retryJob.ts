@@ -178,7 +178,12 @@ async function retryGroup(g: FailureGroup): Promise<void> {
       .map(f => `${f.transactionHash}|${f.sequenceNumber}|${f.eventType}`)
   );
 
-  // Re-procesar en ORDEN real de ejecución (blockHeight → sequence_number → type).
+  // Re-procesar en orden best-effort (blockHeight → sequence → type). Mismo
+  // criterio que el poller: `sequence_number` es por-stream, así que NO es orden
+  // de ejecución real entre txs — pero sí ordena bien los eventos de un mismo
+  // stream (varios SyncEvent del mismo par). NO añadir transactionHash como clave
+  // primaria (rompería ese orden y corrompería reservas del AMM). Los
+  // consumidores entre tipos son agnósticos al orden (webhook multi-pass).
   // Dentro de un hueco: TODO el rango (no hay "fallo exacto" que filtrar; el
   // processEvents es idempotente, los ya procesados se saltan solos).
   // Fuera de un hueco: SOLO los eventos con fallo registrado (comportamiento previo).

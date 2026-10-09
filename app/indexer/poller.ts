@@ -312,9 +312,22 @@ export class EventPoller {
       if (events.length > 0) {
         logger.info(`[${this.pollerId}] Fetched ${events.length} events from blocks ${this.currentBlockHeight}-${endBlock}.`);
         // FIX (orden): ordenar por (blockHeight, sequence, type) antes de procesar.
-        // El fetch agrupa por TIPO (eventos del mismo block pueden llegar desordenados
-        // entre tipos) — handlers que asumen orden temporal (LockMerged después de
-        // LockCreated, etc.) requieren el orden de ejecución real.
+        // El fetch agrupa por TIPO (eventos del mismo block pueden llegar
+        // desordenados entre tipos).
+        //
+        // IMPORTANTE — `sequence_number` es por STREAM de evento (su `guid`), NO un
+        // orden global del bloque, y la API v3 events-by-type no expone índice
+        // global (verificado en el OpenAPI de Supra). Por eso este sort NO recupera
+        // el orden de ejecución real ENTRE transacciones — pero SÍ ordena bien los
+        // eventos de un MISMO stream (mismo tipo, seq creciente). Eso es lo que
+        // necesita el AMM: varios SyncEvent del mismo par en un bloque deben
+        // aplicarse en orden (el último fija las reservas). NO meter
+        // transactionHash como clave primaria: rompería ese orden (el hash de la tx
+        // es aleatorio) y corrompería las reservas.
+        //
+        // Los consumidores DEBEN ser agnósticos al orden ENTRE tipos: el webhook
+        // DAO reintenta en varias pasadas los eventos dependientes hasta que su
+        // creación esté visible.
         events.sort((a: any, b: any) => {
           const bh = Number(a.blockHeight || 0) - Number(b.blockHeight || 0);
           if (bh !== 0) return bh;
