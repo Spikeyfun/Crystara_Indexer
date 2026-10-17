@@ -13,6 +13,7 @@ const logger = createLogger('eventProcessor');
 const MODULE_PATH_SPIKEY_AMM = `${process.env.NEXT_PUBLIC_SUPRA_AMM_SPIKE_ADDRESS}::${process.env.NEXT_PUBLIC_SUPRA_AMM_SPIKE_PAIR_MODULE}`;
 const MODULE_PATH_DEXLYN_AMM = `${process.env.NEXT_PUBLIC_AMM_DEXLYN_ADDRESS}::${process.env.NEXT_PUBLIC_AMM_DEXLYN_PAIR_MODULE}`;
 const NEXT_PUBLIC_DAO_CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_DAO_CONTRACT_ADDRESS || "0x89f01d4584ce004510de6dc7ad8f3c5de5ec80c96d3c4ba5d71bdfe900899070";
+const NEXT_PUBLIC_DAO_ROUTER_ADDRESS = process.env.NEXT_PUBLIC_DAO_ROUTER_ADDRESS || "0x81d6612bb40d99e79fa99114a82953a3a19971b37b147ea269ce4a535288fbb8";
 
 /**
  * Is this event forwarded to the DAO webhook (D1 sync) rather than handled
@@ -20,8 +21,10 @@ const NEXT_PUBLIC_DAO_CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_DAO_CONTRACT_AD
  */
 function isDaoWebhookEvent(type: string): boolean {
   const dao = NEXT_PUBLIC_DAO_CONTRACT_ADDRESS;
+  const router = NEXT_PUBLIC_DAO_ROUTER_ADDRESS;
   return (
     type === `${dao}::petra::DaoCreated` ||
+    type === `${router}::dao_setup::StaticDaoActivated` ||
     type === `${dao}::jubilee::EpochAdvanced` ||
     type === `${dao}::zeal::GaugeCreated` ||
     type === `${dao}::zeal::Voted` ||
