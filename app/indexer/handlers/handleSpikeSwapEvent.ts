@@ -115,7 +115,9 @@ export async function handleSpikeyAmmSwapEvent(event: RpcEvent, tx: TransactionC
       transactionHash: event.processedTransactionHash,
       eventIndex: parseInt(event.sequence_number),
       blockNumber: BigInt(event.blockHeight || 0),
-      blockTimestamp: new Date(Number(event.timestamp) * 1000),
+      blockTimestamp: (event.timestamp && Number(event.timestamp) > 0)
+        ? new Date(Number(event.timestamp) * 1000)
+        : new Date(),
       sender: spikeyAmmSwapEventData.sender,
       to: spikeyAmmSwapEventData.to,
       amount0In: BigInt(spikeyAmmSwapEventData.amount0_in),

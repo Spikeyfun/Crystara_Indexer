@@ -200,7 +200,7 @@ async function fetchEventsByTypesV3(
             if (rawTs > 1e15) eventTimestamp = Math.floor(rawTs / 1e6);
             else if (rawTs > 1e12) eventTimestamp = Math.floor(rawTs / 1e3);
             else if (rawTs > 0) eventTimestamp = Math.floor(rawTs);
-            else eventTimestamp = 0;
+            else eventTimestamp = Math.floor(Date.now() / 1000);
 
             return {
               type: ev.type || eventType,

@@ -100,8 +100,8 @@ export async function startScheduledTasks(setupConfig: SchedulerSetupConfig, pol
       }
 
       const schedules = {
-        '1m_cycle': { schedule: '* * * * *', task: () => runMinuteCycleForNetwork(networkConfig, pollerInstance), description: '1-minute local aggregation and DB sync' },
-        '5m_agg':   { schedule: '*/5 * * * *', task: () => executeOhlcAggregation5m(networkName), description: '5-minute remote aggregation' },
+        '1m_cycle': { schedule: '*/3 * * * *', task: () => runMinuteCycleForNetwork(networkConfig, pollerInstance), description: '3-minute local aggregation and DB sync' },
+        '5m_agg':   { schedule: '*/10 * * * *', task: () => executeOhlcAggregation5m(networkName), description: '10-minute remote aggregation' },
         '1h_agg':   { schedule: '2 * * * *', task: () => executeOhlcAggregation1h(networkName), description: '1-hour remote aggregation' },
         '1d_agg':   { schedule: '3 0 * * *', task: () => executeOhlcAggregation1d(networkName), description: '1-day remote aggregation' },
       };
