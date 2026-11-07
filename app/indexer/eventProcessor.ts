@@ -7,6 +7,8 @@ import {
   handleSyncEvent
 } from './handlers';
 import { handleDaoEventBatch } from './daoHandlers';
+import { eventQueue } from './eventQueue';
+import { fuzzyMatch } from './utils/eventMatching';
 
 const logger = createLogger('eventProcessor');
 
@@ -15,42 +17,55 @@ const MODULE_PATH_DEXLYN_AMM = `${process.env.NEXT_PUBLIC_AMM_DEXLYN_ADDRESS}::$
 const NEXT_PUBLIC_DAO_CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_DAO_CONTRACT_ADDRESS || "0x89f01d4584ce004510de6dc7ad8f3c5de5ec80c96d3c4ba5d71bdfe900899070";
 const NEXT_PUBLIC_DAO_ROUTER_ADDRESS = process.env.NEXT_PUBLIC_DAO_ROUTER_ADDRESS || "0x81d6612bb40d99e79fa99114a82953a3a19971b37b147ea269ce4a535288fbb8";
 
+const DAO_EVENT_PATTERNS = [
+  '::petra::DaoCreated',
+  '::dao_setup::StaticDaoActivated',
+  '::jubilee::EpochAdvanced',
+  '::zeal::GaugeCreated',
+  '::zeal::Voted',
+  '::restore::BribeDeposited',
+  '::restore::BribeClaimed',
+  '::harvest::RewardsClaimed',
+  '::legacy::LockCreated',
+  '::legacy::LockExtended',
+  '::legacy::AmountIncreased',
+  '::legacy::LockMerged',
+  '::legacy::Withdrawn',
+  '::witness::VoteCast',
+  '::witness::LateQuorumExtended',
+  '::legacy::RebaseCompounded',
+  '::restore::BribeRolledOver',
+  '::herald::ProposalCreated',
+  '::anchor::ProposalQueued',
+  '::anchor::ProposalExecuted',
+  '::anchor::ProposalCanceled',
+  '::charter::GuardianUpdated',
+  '::sentinel::ProtocolPaused',
+  '::sentinel::ProtocolUnpaused',
+];
+
 /**
  * Is this event forwarded to the DAO webhook (D1 sync) rather than handled
- * locally in this indexer's own database?
+ * locally in this indexer's own database? Uses fuzzyMatch for address normalization.
  */
 function isDaoWebhookEvent(type: string): boolean {
   const dao = NEXT_PUBLIC_DAO_CONTRACT_ADDRESS;
   const router = NEXT_PUBLIC_DAO_ROUTER_ADDRESS;
-  return (
-    type === `${dao}::petra::DaoCreated` ||
-    type === `${router}::dao_setup::StaticDaoActivated` ||
-    type === `${dao}::jubilee::EpochAdvanced` ||
-    type === `${dao}::zeal::GaugeCreated` ||
-    type === `${dao}::zeal::Voted` ||
-    type === `${dao}::restore::BribeDeposited` ||
-    type === `${dao}::restore::BribeClaimed` ||
-    type === `${dao}::harvest::RewardsClaimed` ||
-    type === `${dao}::legacy::LockCreated` ||
-    type === `${dao}::legacy::LockExtended` ||
-    type === `${dao}::legacy::AmountIncreased` ||
-    type === `${dao}::legacy::LockMerged` ||
-    type === `${dao}::legacy::Withdrawn` ||
-    type === `${dao}::witness::VoteCast` ||
-    type === `${dao}::witness::LateQuorumExtended` ||
-    type === `${dao}::legacy::RebaseCompounded` ||
-    type === `${dao}::restore::BribeRolledOver` ||
-    type === `${dao}::herald::ProposalCreated` ||
-    type === `${dao}::anchor::ProposalQueued` ||
-    type === `${dao}::anchor::ProposalExecuted` ||
-    type === `${dao}::anchor::ProposalCanceled` ||
-    type === `${dao}::charter::GuardianUpdated` ||
-    type === `${dao}::sentinel::ProtocolPaused` ||
-    type === `${dao}::sentinel::ProtocolUnpaused`
-  );
+  return DAO_EVENT_PATTERNS.some((pattern) => {
+    const targetAddr = pattern.includes('dao_setup') ? router : dao;
+    return fuzzyMatch(type, `${targetAddr}${pattern}`);
+  });
 }
 
+/**
+ * Public entrypoint to process events. Serialized through EventQueue to prevent
+ * SQLite write collisions (SQLITE_BUSY: database is locked).
+ */
 export async function processEvents(events: RpcEvent[], tx: any): Promise<boolean> {
+  return eventQueue.enqueue(() => processEventsInternal(events, tx));
+}
+
+async function processEventsInternal(events: RpcEvent[], tx: any): Promise<boolean> {
   logger.debug(`Processing ${events.length} RpcEvents in current batch.`);
 
   let createdNewData = false; // Initialize flag once for the entire batch
@@ -138,19 +153,14 @@ export async function processEvents(events: RpcEvent[], tx: any): Promise<boolea
         }
 
         let handlerCreatedData = false; // Flag for current event handler
-        switch (event.type) {
-            case `${MODULE_PATH_SPIKEY_AMM}::SwapEvent`:
-              handlerCreatedData = await handleSpikeyAmmSwapEvent(event, tx);
-              break;
-            case `${MODULE_PATH_SPIKEY_AMM}::SyncEvent`:
-              handlerCreatedData = await handleSyncEvent(event, tx);
-              break;
-            case `${MODULE_PATH_DEXLYN_AMM}::SwapEvent`:
-              handlerCreatedData = await handleDexlynSwapEvent(event, tx);
-              break;
-
-            default:
-                logger.warn(`[${event.network}] Unknown event type: ${event.type}`);
+        if (fuzzyMatch(event.type, `${MODULE_PATH_SPIKEY_AMM}::SwapEvent`)) {
+          handlerCreatedData = await handleSpikeyAmmSwapEvent(event, tx);
+        } else if (fuzzyMatch(event.type, `${MODULE_PATH_SPIKEY_AMM}::SyncEvent`)) {
+          handlerCreatedData = await handleSyncEvent(event, tx);
+        } else if (fuzzyMatch(event.type, `${MODULE_PATH_DEXLYN_AMM}::SwapEvent`)) {
+          handlerCreatedData = await handleDexlynSwapEvent(event, tx);
+        } else {
+          logger.warn(`[${event.network}] Unknown event type: ${event.type}`);
         }
         if (handlerCreatedData) {
           createdNewData = true;
