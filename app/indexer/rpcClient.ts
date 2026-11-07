@@ -1,6 +1,7 @@
 import 'dotenv/config'
 import { createLogger } from './utils'
 import { RpcEvent } from './types';
+import { fuzzyMatch } from './utils/eventMatching';
 
 const logger = createLogger('rpcClient')
 
@@ -76,6 +77,15 @@ export const EVENT_TYPES_TO_FETCH = [
   `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::sentinel::ProtocolPaused`,
   `${NEXT_PUBLIC_DAO_CONTRACT_ADDRESS}::sentinel::ProtocolUnpaused`,
 ];
+
+/**
+ * Check if an event type matches any target type in EVENT_TYPES_TO_FETCH,
+ * using fuzzy address matching (tolerating single-digit vs zero-padded addresses).
+ */
+export function isTargetEvent(eventType: string): boolean {
+  if (!eventType) return false;
+  return EVENT_TYPES_TO_FETCH.some((target) => fuzzyMatch(eventType, target));
+}
 
 /**
  * Tipos cuyo fallo NO se puede silenciar: si falta uno de estos, el dataset del

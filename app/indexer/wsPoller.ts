@@ -1,63 +1,107 @@
 import WebSocket from 'ws';
 import { RpcEvent } from './types';
 import { processEvents } from './eventProcessor';
-import { createLogger, sleep } from './utils';
-import { EVENT_TYPES_TO_FETCH } from './rpcClient';
-import { supabaseDb } from '@/lib/prismadb';
+import { createLogger } from './utils';
+import { isTargetEvent } from './rpcClient';
 
 const logger = createLogger('wsPoller');
+
+const DEFAULT_MAINNET_WS_URLS = [
+  'wss://rpc-mainnet-citadel.supra.com/rpc/v4/ws',
+  'wss://rpc-mainnet.supra.com/rpc/v4/ws',
+];
+
+const DEFAULT_TESTNET_WS_URLS = [
+  'wss://rpc-testnet.supra.com/rpc/v4/ws',
+];
 
 export class WsEventPoller {
   private ws: WebSocket | null = null;
   private isRunning: boolean = false;
+  private isAlive: boolean = false;
   private reconnectAttempts: number = 0;
-  private readonly maxReconnectAttempts: number = 10;
-  private readonly wsUrl: string;
+  private currentEndpointIndex: number = 0;
+  private readonly wsUrls: string[];
   private readonly network: string;
   private pingInterval: NodeJS.Timeout | null = null;
+  private reconnectTimer: NodeJS.Timeout | null = null;
+  private lastReceivedBlockHeight: number = 0;
 
   constructor(network: string) {
     this.network = network;
-    // V4 WS endpoint based on Supra documentation
-    this.wsUrl = network === 'supra-mainnet' 
-      ? 'wss://rpc-mainnet.supra.com/rpc/v4/ws'
-      : 'wss://rpc-testnet.supra.com/rpc/v4/ws';
+
+    const envWsUrls = process.env.SUPRA_WS_URLS || process.env.SUPRA_WS_URL;
+    if (envWsUrls) {
+      this.wsUrls = envWsUrls.split(',').map((u) => u.trim()).filter(Boolean);
+    } else {
+      this.wsUrls = network === 'supra-mainnet' ? DEFAULT_MAINNET_WS_URLS : DEFAULT_TESTNET_WS_URLS;
+    }
   }
 
-  async start() {
+  public get currentWsUrl(): string {
+    return this.wsUrls[this.currentEndpointIndex % this.wsUrls.length];
+  }
+
+  public getStatus() {
+    return {
+      isRunning: this.isRunning,
+      connected: this.ws?.readyState === WebSocket.OPEN,
+      currentUrl: this.currentWsUrl,
+      lastBlockHeight: this.lastReceivedBlockHeight,
+      reconnectAttempts: this.reconnectAttempts,
+    };
+  }
+
+  async start(): Promise<void> {
     if (this.isRunning) return;
     this.isRunning = true;
-    logger.info(`[WS] Starting WebSocket poller for ${this.network} on ${this.wsUrl}`);
+    logger.info(`[WS] Starting WebSocket poller for ${this.network} across ${this.wsUrls.length} endpoints`);
     this.connect();
   }
 
-  private connect() {
+  private connect(): void {
     if (!this.isRunning) return;
 
-    logger.info(`[WS] Connecting to ${this.wsUrl}...`);
-    this.ws = new WebSocket(this.wsUrl);
+    const targetUrl = this.currentWsUrl;
+    logger.info(`[WS] Connecting to endpoint [${this.currentEndpointIndex + 1}/${this.wsUrls.length}]: ${targetUrl}`);
+
+    try {
+      this.ws = new WebSocket(targetUrl, {
+        handshakeTimeout: 10000,
+      });
+    } catch (err) {
+      logger.error(`[WS] WebSocket instant instantiation failure:`, err);
+      this.scheduleReconnect();
+      return;
+    }
+
+    this.isAlive = false;
 
     this.ws.on('open', () => {
-      logger.info(`[WS] Connected successfully.`);
+      this.isAlive = true;
       this.reconnectAttempts = 0;
-      
+      logger.info(`[WS] Connected successfully to ${targetUrl}`);
+
       // Subscribe to newBlocks with transactions
       const subscribeMsg = {
-        jsonrpc: "2.0",
-        method: "supra_subscribe",
-        params: ["newBlocks", { includeTransactions: true, includeProof: false }],
-        id: 1
+        jsonrpc: '2.0',
+        method: 'supra_subscribe',
+        params: ['newBlocks', { includeTransactions: true, includeProof: false }],
+        id: 1,
       };
-      
-      this.ws?.send(JSON.stringify(subscribeMsg));
-      logger.info(`[WS] Sent subscription request for newBlocks.`);
 
-      // Keep connection alive
-      this.pingInterval = setInterval(() => {
-        if (this.ws?.readyState === WebSocket.OPEN) {
-          this.ws.ping();
-        }
-      }, 30000);
+      try {
+        this.ws?.send(JSON.stringify(subscribeMsg));
+        logger.info(`[WS] Sent subscription request for newBlocks.`);
+      } catch (err) {
+        logger.error(`[WS] Failed to send subscription request:`, err);
+      }
+
+      this.setupHeartbeat();
+    });
+
+    this.ws.on('pong', () => {
+      this.isAlive = true;
     });
 
     this.ws.on('message', async (data: WebSocket.RawData) => {
@@ -75,39 +119,71 @@ export class WsEventPoller {
           await this.handleBlock(payload.params.result);
         }
       } catch (err) {
-        logger.error(`[WS] Error parsing message:`, err);
+        logger.error(`[WS] Error processing message payload:`, err);
       }
     });
 
-    this.ws.on('error', (err) => {
-      logger.error(`[WS] Connection error:`, err);
+    this.ws.on('error', (err: any) => {
+      logger.error(`[WS] Socket error on ${targetUrl}: ${err?.message || err}`);
     });
 
-    this.ws.on('close', () => {
-      logger.warn(`[WS] Connection closed.`);
-      this.cleanup();
-      this.reconnect();
+    this.ws.on('close', (code, reason) => {
+      logger.warn(`[WS] Connection closed (code: ${code}, reason: ${reason || 'none'}).`);
+      this.cleanupSocket();
+      this.scheduleReconnect();
     });
   }
 
-  private async handleBlock(block: any) {
+  private setupHeartbeat(): void {
+    this.cleanupHeartbeat();
+
+    this.pingInterval = setInterval(() => {
+      if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
+        return;
+      }
+
+      if (!this.isAlive) {
+        logger.warn(`[WS] Heartbeat timeout: no pong received within window. Terminating socket to trigger reconnect...`);
+        this.ws.terminate();
+        return;
+      }
+
+      this.isAlive = false;
+      this.ws.ping();
+    }, 20000);
+  }
+
+  private async handleBlock(block: any): Promise<void> {
     if (!block || !block.transactions || !Array.isArray(block.transactions)) {
-      return; // Not a valid block with transactions
+      return;
     }
 
-    const blockHeight = block.header?.height || block.block_height || 0;
+    const blockHeight = Number(block.header?.height ?? block.height ?? block.block_height ?? 0);
+    if (blockHeight > 0) {
+      this.lastReceivedBlockHeight = blockHeight;
+    }
+
+    const rawBlockTs = Number(block.header?.timestamp ?? block.timestamp ?? 0);
     const eventsToProcess: RpcEvent[] = [];
 
     // Extract events from transactions
     for (const tx of block.transactions) {
-      if (!tx.events || !Array.isArray(tx.events)) continue;
+      const txHash = tx.hash || tx.tx_hash || tx.digest || '';
+      
+      // Events can be under tx.events OR tx.output.Move.events
+      const txEvents = Array.isArray(tx.events) 
+        ? tx.events 
+        : Array.isArray(tx.output?.Move?.events)
+          ? tx.output.Move.events
+          : [];
 
-      for (const ev of tx.events) {
-        // Filter against our whitelist
-        if (EVENT_TYPES_TO_FETCH.includes(ev.type)) {
-          let rawTs = Number(block.header?.timestamp || ev.data?.timestamp || 0);
+      for (const ev of txEvents) {
+        if (!ev || !ev.type) continue;
+
+        if (isTargetEvent(ev.type)) {
+          let rawTs = Number(ev.data?.timestamp || rawBlockTs || 0);
           let eventTimestamp = 0;
-          
+
           if (rawTs > 1e15) eventTimestamp = Math.floor(rawTs / 1e6);
           else if (rawTs > 1e12) eventTimestamp = Math.floor(rawTs / 1e3);
           else if (rawTs > 0) eventTimestamp = Math.floor(rawTs);
@@ -115,66 +191,80 @@ export class WsEventPoller {
           eventsToProcess.push({
             type: ev.type,
             guid: ev.guid,
-            sequence_number: String(ev.sequence_number),
+            sequence_number: String(ev.sequence_number ?? ev.seq_num ?? '0'),
             timestamp: eventTimestamp,
             data: ev.data,
             network: this.network,
             blockHeight: blockHeight.toString(),
-            transactionHash: tx.hash || '',
+            transactionHash: txHash,
             processedTransactionHash: '',
-            processedSequenceNumber: ''
+            processedSequenceNumber: '',
           });
         }
       }
     }
 
     if (eventsToProcess.length > 0) {
-      logger.info(`[WS] Found ${eventsToProcess.length} target events in block ${blockHeight}. Processing...`);
+      logger.info(`[WS] Block ${blockHeight}: captured ${eventsToProcess.length} target events. Dispatching to queue...`);
       try {
-        // We pass null for tx because processEvents manages its own transaction internally
         await processEvents(eventsToProcess, null);
-        logger.info(`[WS] Successfully processed events from block ${blockHeight}`);
-      } catch (err) {
-        logger.error(`[WS] Failed to process events from block ${blockHeight}:`, err);
+        logger.info(`[WS] Block ${blockHeight}: successfully processed ${eventsToProcess.length} events`);
+      } catch (err: any) {
+        logger.error(`[WS] Block ${blockHeight}: error processing events:`, err?.message || err);
       }
     } else {
-      if (Number(blockHeight) % 10 === 0) {
-        logger.debug(`[WS] Processed up to block ${blockHeight} (no relevant events)`);
+      if (blockHeight % 50 === 0) {
+        logger.debug(`[WS] Stream healthy at block ${blockHeight} (no target AMM/DAO events)`);
       }
     }
   }
 
-  private reconnect() {
+  private scheduleReconnect(): void {
     if (!this.isRunning) return;
 
     this.reconnectAttempts++;
-    if (this.reconnectAttempts > this.maxReconnectAttempts) {
-      logger.error(`[WS] Max reconnect attempts reached. Giving up.`);
-      return;
-    }
+    // Rotate endpoint on reconnect
+    this.currentEndpointIndex = (this.currentEndpointIndex + 1) % this.wsUrls.length;
 
-    const delay = Math.min(5000 * Math.pow(1.5, this.reconnectAttempts), 60000);
-    logger.info(`[WS] Attempting to reconnect in ${delay / 1000}s (Attempt ${this.reconnectAttempts})...`);
-    
-    setTimeout(() => {
+    // Exponential backoff capped at 30 seconds: 1s, 2s, 4s, 8s, 16s, 30s
+    const delay = Math.min(1000 * Math.pow(2, Math.min(this.reconnectAttempts - 1, 5)), 30000) + Math.random() * 500;
+    const nextUrl = this.currentWsUrl;
+
+    logger.info(
+      `[WS] Reconnecting attempt ${this.reconnectAttempts} in ${(delay / 1000).toFixed(1)}s -> next endpoint: ${nextUrl}`
+    );
+
+    if (this.reconnectTimer) clearTimeout(this.reconnectTimer);
+    this.reconnectTimer = setTimeout(() => {
       this.connect();
     }, delay);
   }
 
-  private cleanup() {
+  private cleanupHeartbeat(): void {
     if (this.pingInterval) {
       clearInterval(this.pingInterval);
       this.pingInterval = null;
     }
   }
 
-  stop() {
-    logger.info(`[WS] Stopping WebSocket poller...`);
-    this.isRunning = false;
-    this.cleanup();
+  private cleanupSocket(): void {
+    this.cleanupHeartbeat();
     if (this.ws) {
-      this.ws.close();
+      this.ws.removeAllListeners();
+      try {
+        this.ws.close();
+      } catch (_) {}
       this.ws = null;
     }
+  }
+
+  stop(): void {
+    logger.info(`[WS] Stopping WebSocket poller...`);
+    this.isRunning = false;
+    if (this.reconnectTimer) {
+      clearTimeout(this.reconnectTimer);
+      this.reconnectTimer = null;
+    }
+    this.cleanupSocket();
   }
 }

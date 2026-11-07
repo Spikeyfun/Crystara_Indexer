@@ -185,6 +185,10 @@ export function checkIndexerStatus() {
   if (indexerActive) {
     status += ` Testnet poller: ${pollers.testnet ? 'configured' : 'not configured/failed'}.`;
     status += ` Mainnet poller: ${pollers.mainnet ? 'configured' : 'not configured/failed'}.`;
+    if (pollers.mainnetWs) {
+      const wsStatus = pollers.mainnetWs.getStatus();
+      status += ` Mainnet WS: ${wsStatus.connected ? 'connected' : 'disconnected'} (url=${wsStatus.currentUrl}, lastBlock=${wsStatus.lastBlockHeight}).`;
+    }
   }
   return status;
 }
